@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="208.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="70.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="70.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="35.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <HBox alignment="CENTER" fillHeight="false" spacing="5.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+         <children>
+            <Label text="Tile Height" />
+            <ChoiceBox fx:id="gridCondition" />
+            <Spinner fx:id="requiredValue" prefWidth="90.0" />
+         </children>
+      </HBox>
+      <HBox fx:id="overlayBox" GridPane.columnIndex="1" />
+      <HBox fx:id="underlayBox" GridPane.columnIndex="2" />
+      <Button fx:id="deleteBtn" mnemonicParsing="false" text="x" GridPane.columnIndex="3" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

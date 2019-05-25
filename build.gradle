@@ -1,0 +1,39 @@
+
+group = 'RSPSi Editor'
+version = '1.16.0'
+
+wrapper {
+    gradleVersion = '5.1'
+}
+
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://repo.adobe.com/nexus/content/repositories/public/"}
+    }
+
+    dependencies {
+        // https://mvnrepository.com/artifact/org.projectlombok/lombok
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+        // https://mvnrepository.com/artifact/org.lwjgl/lwjgl
+        compile group: 'org.lwjgl', name: 'lwjgl', version: '3.2.2'
+    // https://mvnrepository.com/artifact/org.lwjgl/lwjgl-opengl
+        compile group: 'org.lwjgl', name: 'lwjgl-opengl', version: '3.2.2'
+// https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main
+        compile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
+
+        // https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main
+       // compile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.4.0'
+        annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    }
+
+}
+

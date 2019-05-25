@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="vboxContainer" alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+         <content>
+            <FlowPane fx:id="swatchFlowPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="5.0" style="-fx-border-insets: 1; -fx-border-color: #1e1e1e; -fx-border-radius: 3; -fx-background-color: #202020;" vgap="5.0">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </FlowPane>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

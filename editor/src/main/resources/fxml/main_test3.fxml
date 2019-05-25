@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox id="main-pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1024.0" style="-fx-background-color: #3c3c3c;" styleClass="root" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+      <BorderPane VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <top>
+            <HBox fx:id="headerBar" alignment="TOP_CENTER" prefHeight="32.0" style="-fx-background-radius: 6;" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="4.0" />
+               </BorderPane.margin>
+               <children>
+                  <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="iconView" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/logo128.png" />
+                           </image>
+                        </ImageView>
+                      <MenuBar id="menubar" fx:id="toolbar" style="-fx-background-color: transparent;">
+                        <menus>
+                          <Menu id="fileMenu" mnemonicParsing="false" text="File">
+                            <items>
+                              <MenuItem fx:id="newMapButton" mnemonicParsing="false" text="New">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                              <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="Open From">
+                                       <items>
+                                          <MenuItem fx:id="openCoordinateButton" mnemonicParsing="false" text="Coordinates" />
+                                          <MenuItem fx:id="openHashButton" mnemonicParsing="false" text="Hash" />
+                                          <MenuItem fx:id="openFileButton" mnemonicParsing="false" text="File" />
+                                       </items>
+                                    </Menu>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="preferencesMenuItem" disable="true" mnemonicParsing="false" text="Preferences…" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="ESCAPE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                            </items>
+                          </Menu>
+                          <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                    <MenuItem fx:id="undoMenuItem" disable="true" mnemonicParsing="false" text="Undo">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                                    <MenuItem fx:id="redoMenuItem" disable="true" mnemonicParsing="false" text="Redo">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="copySelectedTilesBtn" mnemonicParsing="false" text="Copy">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                              <MenuItem fx:id="deleteSelectedTilesBtn" mnemonicParsing="false" text="Delete" />
+                                    <MenuItem fx:id="pasteTilesBtn" disable="true" mnemonicParsing="false" text="Paste">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="addObjectToSwatchBtn" mnemonicParsing="false" text="Add objects to swatches">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                            </items>
+                          </Menu>
+                              <Menu mnemonicParsing="false" text="View">
+                                <items>
+                                    <CheckMenuItem fx:id="hiddenTilesCheckItem" mnemonicParsing="false" text="Show hidden tiles" />
+                                    <CheckMenuItem fx:id="allHeightsCheckItem" mnemonicParsing="false" text="Show all height levels" />
+                                    <CheckMenuItem fx:id="disableBlendingCheckItem" mnemonicParsing="false" text="Disable blending" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <CheckMenuItem fx:id="showBlockedFlag" mnemonicParsing="false" text="Show unwalkable flags" />
+                                    <CheckMenuItem fx:id="showBridgeFlag" mnemonicParsing="false" text="Show bridge flags" />
+                                    <CheckMenuItem fx:id="showLowestFlag" mnemonicParsing="false" text="Show lowest plane flags" />
+                                    <CheckMenuItem fx:id="showLowerZFlag" mnemonicParsing="false" text="Show render on z - 1 flag" />
+                                    <CheckMenuItem fx:id="showDisableFlag" mnemonicParsing="false" text="Show disable render flags" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <CheckMenuItem fx:id="showAnimsMenuItem" mnemonicParsing="false" text="Show animations" />
+                                    <CheckMenuItem fx:id="showMapIconObjs" mnemonicParsing="false" text="Show mapicons as objects" />
+                                    <CheckMenuItem fx:id="showObjectsCheckItem" mnemonicParsing="false" selected="true" text="Show objects" />
+                                    <CheckMenuItem fx:id="showOverlaysCheckItem" mnemonicParsing="false" selected="true" text="Show overlays" />
+                                </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Tiles">
+                                 <items>
+                                    <MenuItem fx:id="copyTileFlags" mnemonicParsing="false" text="Copy flags from tile" />
+                                    <MenuItem fx:id="copyTileHeights" mnemonicParsing="false" text="Copy heights from tile" />
+                                    <MenuItem fx:id="getOverlayFromTile" mnemonicParsing="false" text="Get overlay from tile" />
+                                    <MenuItem fx:id="getUnderlayFromTile" mnemonicParsing="false" text="Get underlay from tile" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="setFlagsToTiles" mnemonicParsing="false" text="Set flags to tiles" />
+                                    <MenuItem fx:id="setHeightsToTiles" mnemonicParsing="false" text="Set heights to tiles" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Tools">
+                                <items>
+                                    <MenuItem fx:id="importTilesBtn" mnemonicParsing="false" text="Import prefab">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                                    <MenuItem fx:id="exportTilesBtn" mnemonicParsing="false" text="Export selected tiles">
+                                       <accelerator>
+                                          <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                       </accelerator>
+                                    </MenuItem>
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="showObjectViewBtn" mnemonicParsing="false" text="Show object view" />
+                                    <CheckMenuItem fx:id="showFPSCheckItem" mnemonicParsing="false" text="Show FPS/debug" />
+                                </items>
+                              </Menu>
+                          <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                              <MenuItem fx:id="openTutorialBtn" mnemonicParsing="false" text="Tutorial" />
+                                    <MenuItem fx:id="contactMeBtn" mnemonicParsing="false" text="Contact me" />
+                            </items>
+                          </Menu>
+                        </menus>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                      </MenuBar>
+                     </children>
+                     <padding>
+                        <Insets top="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="controlBox" alignment="TOP_RIGHT" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="90.0" spacing="2.0">
+                     <padding>
+                        <Insets right="3.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" />
+               </padding>
+            </HBox>
+         </top>
+         <bottom>
+            <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="TOP_CENTER" spacing="12.0">
+                     <children>
+                        <ToggleButton fx:id="selectTileBtn" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" selected="true" text="S_T">
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="toolGroup" />
+                           </toggleGroup>
+                           <tooltip>
+                              <Tooltip text="Select Tile">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Tooltip>
+                           </tooltip>
+                        </ToggleButton>
+                        <ToggleButton fx:id="selectObjectBtn" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="S_O" toggleGroup="$toolGroup">
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Select Object">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Tooltip>
+                           </tooltip>
+                        </ToggleButton>
+                        <ToggleButton fx:id="deleteObjectBtn" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="D_O" toggleGroup="$toolGroup">
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Delete Object">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Tooltip>
+                           </tooltip>
+                        </ToggleButton>
+                        <ToggleButton fx:id="heightModifyBtn" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="H_M" toggleGroup="$toolGroup">
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Modify Height">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Tooltip>
+                           </tooltip>
+                        </ToggleButton>
+                        <ToggleButton fx:id="setFlagBtn" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="S_F" toggleGroup="$toolGroup">
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Set Tile Flags">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Tooltip>
+                           </tooltip>
+                        </ToggleButton>
+                     </children>
+                     <padding>
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                     </padding>
+                  </VBox>
+                  <VBox minHeight="500.0" minWidth="500.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" spacing="12.0" style="-fx-background-color: #2b2b2b;">
+                           <children>
+                              <HBox spacing="12.0">
+                                 <children>
+                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Underlay">
+                                       <font>
+                                          <Font size="9.0" fx:id="x31" />
+                                       </font>
+                                       <textFill>
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x41" />
+                                       </textFill>
+                                    </Label>
+                                    <ComboBox id="small-combo-box" fx:id="brushTypeSelection1" focusTraversable="false" prefHeight="32.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="14.0" layoutY="14.0" spacing="12.0">
+                                 <children>
+                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Overlay">
+                                       <font>
+                                          <Font size="9.0" fx:id="x311" />
+                                       </font>
+                                       <textFill>
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x411" />
+                                       </textFill>
+                                    </Label>
+                                    <ComboBox id="small-combo-box" fx:id="brushTypeSelection11" focusTraversable="false" prefHeight="32.0" />
+                                  <HBox alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: #2b2b2b;">
+                                    <children>
+                                      <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Tile Height" HBox.hgrow="ALWAYS">
+                                        <font>
+                                          <Font size="9.0" fx:id="x3" />
+                                        </font>
+                                        <textFill>
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+                                        </textFill>
+                                      </Label>
+                                          <Slider fx:id="heightLevelSlider" blockIncrement="1.0" focusTraversable="false" majorTickUnit="8.0" max="800.0" maxWidth="120.0" minorTickCount="0" snapToTicks="true" value="400.0">
+                                             <tooltip>
+                                                <Tooltip fx:id="heightLevelTooltip" text="400" />
+                                             </tooltip>
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                   <items>
+                                                      <MenuItem fx:id="setTileHeightMenuItem" mnemonicParsing="false" text="Set tile height" />
+                                                   </items>
+                                                </ContextMenu>
+                                             </contextMenu>
+                                          </Slider>
+                                          <Separator focusTraversable="false" orientation="VERTICAL" />
+                                          <ComboBox fx:id="objectSelectionType" focusTraversable="false">
+                                             <HBox.margin>
+                                                <Insets bottom="3.0" top="3.0" />
+                                             </HBox.margin>
+                                          </ComboBox>
+                                    </children>
+                                    <padding>
+                                      <Insets left="13.0" right="3.0" />
+                                    </padding>
+                                  </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="269.0" layoutY="14.0" spacing="12.0">
+                                 <children>
+                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Underlay">
+                                       <font>
+                                          <Font size="9.0" fx:id="x313" />
+                                       </font>
+                                       <textFill>
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x413" />
+                                       </textFill>
+                                    </Label>
+                                    <ComboBox id="small-combo-box" fx:id="brushTypeSelection12" focusTraversable="false" prefHeight="32.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="5.0" top="4.0" />
+                           </padding>
+                        </HBox>
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <children>
+                              <AnchorPane id="mapPane" fx:id="mapPane" maxHeight="256.0" maxWidth="256.0" prefHeight="192.0" prefWidth="192.0" StackPane.alignment="TOP_RIGHT" />
+                              <AnchorPane fx:id="gamePane" minHeight="100.0" minWidth="100.0" style="-fx-background-color: #1b1b1b;" />
+                           </children>
+                        </StackPane>
+                        <HBox alignment="CENTER_LEFT" prefHeight="14.0" style="-fx-background-color: #2b2b2b; -fx-border-width: 1 0 0 0; -fx-border-radius: 0 0 6 0; -fx-background-radius: 0 0 6 0;" VBox.vgrow="NEVER">
+                           <children>
+                              <Label text="Label">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Height Level">
+                                       <font>
+                                          <Font size="9.0" fx:id="x312" />
+                                       </font>
+                                       <textFill>
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x412" />
+                                       </textFill>
+                                    </Label>
+                                    <Spinner fx:id="currentHeightSpinner" editable="true" focusTraversable="false" maxWidth="55.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <TitledPane alignment="TOP_CENTER" animated="false" collapsible="false" focusTraversable="false" text="Minimap" VBox.vgrow="NEVER">
+                    <content>
+                      <AnchorPane>
+                           <children>
+                              <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+                  <TitledPane alignment="TOP_CENTER" animated="false" collapsible="false" focusTraversable="false" text="Tile Flags">
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <CheckBox fx:id="unwalkableCheck" focusTraversable="false" mnemonicParsing="false" text="Unwalkable Flag (1)">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </CheckBox>
+                                    <CheckBox fx:id="bridgeCheck" focusTraversable="false" mnemonicParsing="false" text="Bridge Flag (2)" />
+                                    <CheckBox fx:id="forceLowestCheck" focusTraversable="false" mnemonicParsing="false" text="Remove Roof Flag (4)" />
+                                    <CheckBox fx:id="drawOnLowerZCheck" focusTraversable="false" mnemonicParsing="false" text="Render on Z - 1 (8)" />
+                                    <CheckBox fx:id="disableRenderCheck" focusTraversable="false" mnemonicParsing="false" text="Don't Draw on Map Flag (16)" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+  </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>

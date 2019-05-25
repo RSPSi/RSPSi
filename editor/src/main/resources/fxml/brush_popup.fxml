@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainBorder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #4a4a4a;" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox fx:id="vboxContainer" alignment="CENTER" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <FlowPane fx:id="swatchFlowPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="5.0" style="-fx-border-insets: 1; -fx-border-color: #1e1e1e; -fx-border-radius: 3; -fx-background-color: #202020;" vgap="5.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <VBox spacing="5.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label text="Size:" HBox.hgrow="NEVER" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <TextField prefWidth="40.0" />
+                     </children>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Slider min="1.0" value="1.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox spacing="5.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label text="Hardness:" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <TextField prefWidth="40.0" />
+                     </children>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Slider min="1.0" value="100.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </top>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</BorderPane>

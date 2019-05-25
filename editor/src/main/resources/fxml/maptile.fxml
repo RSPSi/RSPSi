@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<StackPane prefHeight="64.0" prefWidth="64.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="hashLabel" text="Label" StackPane.alignment="BOTTOM_CENTER" />
+   </children>
+</StackPane>

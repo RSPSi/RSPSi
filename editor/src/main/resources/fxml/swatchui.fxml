@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainBorder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #4a4a4a;" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox fx:id="vboxContainer" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" />
+         </BorderPane.margin>
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <FlowPane fx:id="swatchFlowPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="5.0" style="-fx-border-insets: 1; -fx-border-color: #1e1e1e; -fx-border-radius: 3; -fx-background-color: #202020;" vgap="5.0">
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+            <Button fx:id="objectViewBtn" mnemonicParsing="false" text="Show Object View" />
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <BorderPane fx:id="titleContainer" BorderPane.alignment="TOP_CENTER">
+         <padding>
+            <Insets left="25.0" right="15.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </BorderPane.margin>
+         <right>
+            <HBox spacing="3.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="saveBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="35.0" text="S">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Save Swatch" />
+                     </tooltip>
+                  </Button>
+                  <Button fx:id="loadBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="35.0" text="L">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Load Swatch" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </HBox>
+         </right>
+      </BorderPane>
+   </top>
+</BorderPane>

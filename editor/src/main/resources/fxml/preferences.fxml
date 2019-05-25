@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="900.0" style="-fx-background-color: #1d1d1d;" styleClass="root" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+      <BorderPane style="-fx-background-color: #3c3c3c;" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="1.0" right="1.0" top="1.0" />
+         </VBox.margin>
+         <right>
+            <HBox fx:id="controlBox" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="90.0" spacing="2.0" BorderPane.alignment="TOP_RIGHT">
+               <padding>
+                  <Insets right="3.0" />
+               </padding>
+            </HBox>
+         </right>
+         <center>
+            <Label text="Preferences" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+      <HBox fx:id="dockContainer" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #2b2b2b;" VBox.vgrow="ALWAYS">
+         <children>
+            <AnchorPane fx:id="leftBar" minWidth="10.0" style="-fx-background-color: #2b2b2b;" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                  <VBox fx:id="vboxList" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="234.0" spacing="10.0" style="-fx-background-color: #4a4a4a;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <TreeView maxWidth="-Infinity" prefHeight="100.0" showRoot="false" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </AnchorPane>
+            <VBox prefWidth="500.0" style="-fx-background-color: #2b2b2b;" HBox.hgrow="ALWAYS">
+               <children>
+                  <StackPane alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #4a4a4a;" VBox.vgrow="ALWAYS" />
+               </children>
+               <HBox.margin>
+                  <Insets left="1.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="1.0" />
+         </padding>
+         <VBox.margin>
+            <Insets left="1.0" right="1.0" top="1.0" />
+         </VBox.margin>
+      </HBox>
+  </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>

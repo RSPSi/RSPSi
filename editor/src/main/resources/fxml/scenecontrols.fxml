@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="20.0" prefWidth="112.0" spacing="3.0" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button id="controls-button" fx:id="minimizeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="30.0" HBox.hgrow="NEVER" />
+      <Button id="controls-button" fx:id="maximizeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="30.0" HBox.hgrow="NEVER" />
+      <Button id="close-button" fx:id="closeButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="45.0" HBox.hgrow="NEVER" />
+   </children>
+   <padding>
+      <Insets left="3.0" right="3.0" />
+   </padding>
+</HBox>

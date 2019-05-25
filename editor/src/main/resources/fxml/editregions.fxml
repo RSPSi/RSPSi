@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="9.0">
+         <children>
+            <Label text="LS" />
+            <TextField fx:id="landscapeId" prefWidth="90.0" promptText="Landscape ID" />
+            <Label text="OBJ" />
+            <TextField fx:id="objectsId" prefWidth="90.0" promptText="Objects ID" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+         </padding>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="BOTTOM_CENTER" spacing="15.0">
+         <children>
+            <Button fx:id="okButton" minWidth="70.0" mnemonicParsing="false" text="OK" />
+            <Button fx:id="cancelButton" minWidth="70.0" mnemonicParsing="false" text="Cancel" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="18.0" top="12.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

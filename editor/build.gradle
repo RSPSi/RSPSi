@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    dependencies {
+        // provides javafx-gradle-plugin
+       // classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: "8.8.2"
+        // provides proguard.gradle.ProGuardTask (including all requirements)
+        classpath 'net.sf.proguard:proguard-gradle:6.0.2'
+    }
+}
+
+apply plugin: 'application'
+
+run {
+	applicationDefaultJvmArgs = [""]
+	standardInput = System.in
+
+}
+// In this section you declare the dependencies for your production and test code
+dependencies  {
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+	compile group: 'org.tukaani', name: 'xz', version: '1.6'
+	compile group: 'org.brotli', name: 'dec', version: '0.1.2'
+	
+    compile group: 'com.google.guava', name: 'guava', version: '23.1-jre'
+	
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.1'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
+	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+	
+	compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
+	//compile group: 'org.drombler.commons', name: 'drombler-commons-docking-fx', version: '0.10'
+
+	compile group: 'org.jfree', name: 'fxgraphics2d', version: '1.5'
+	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
+	compile 'org.greenrobot:eventbus:3.1.1'
+	
+	compile 'org.controlsfx:controlsfx:8.40.14'
+	compile project(':Client')
+}
+
+mainClassName = 'com.rspsi.LauncherWindow'
+
+jar {
+	archiveName = "Editor.jar"
+	manifest {
+		attributes(
+			'Main-Class': 'com.rspsi.LauncherWindow'
+			
+		)
+	}
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it).matching{ exclude{it.path.contains('META-INF') } } }
+
+}
+
+
+task myProguardTask(type: proguard.gradle.ProGuardTask) {
+    configuration 'proguard.conf'
+    
+    configurations.runtime.resolve().each {
+        libraryjars file(it.getAbsolutePath())
+    }
+
+    injars 'build/libs/Editor.jar'
+    outjars 'build/libs/deploy/Editor.jar'
+}
+
+//defaultTask 'jar'
+
+
+jar.finalizedBy(myProguardTask)

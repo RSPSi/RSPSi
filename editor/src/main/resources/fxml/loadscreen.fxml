@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox id="main-pane" styleClass="root" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane fx:id="topBar" style="-fx-background-color: #4a4a4a; -fx-border-color: #1d1d1d; -fx-border-width: 0 0 1 0;" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <right>
+            <HBox fx:id="controlBox" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="90.0" spacing="2.0" BorderPane.alignment="TOP_RIGHT">
+               <padding>
+                  <Insets right="3.0" />
+               </padding>
+            </HBox>
+         </right>
+         <center>
+            <Label text="RSPSi Map Editor" BorderPane.alignment="CENTER" />
+         </center>
+         <left>
+            <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="32.0" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
+               </padding>
+            </HBox>
+         </left>
+      </BorderPane>
+      <BorderPane>
+         <top>
+            <HBox alignment="CENTER" fillHeight="false" spacing="9.0" style="-fx-background-color: #4a4a4a;" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <children>
+                  <Label text="Cache:" />
+                  <AnchorPane HBox.hgrow="ALWAYS">
+                     <children>
+                        <ComboBox fx:id="cacheLocation" editable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <Button fx:id="browseButton" mnemonicParsing="false" text="Browse...">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="12.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
+         </top>
+         <center>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <Accordion style="-fx-background-color: #4a4a4a;">
+                    <panes>
+                      <TitledPane fx:id="pluginTitlePane" animated="false" expanded="false" text="Plugins">
+                           <content>
+                              <HBox alignment="CENTER" style="-fx-border-color: #1d1d1d; -fx-border-width: 0 0 1 0; -fx-border-insets: 0 0 -1 0;">
+                                 <children>
+                                    <AnchorPane fx:id="leftBar1" minWidth="10.0">
+                                       <children>
+                                          <VBox fx:id="vboxList1" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Enabled">
+                                                   <VBox.margin>
+                                                      <Insets left="8.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <ListView fx:id="enabledPlugins" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="leftBar" minWidth="10.0" HBox.hgrow="NEVER">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <children>
+                                          <VBox fx:id="vboxList" alignment="CENTER" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                             <children>
+                                                <Button fx:id="disablePluginButton" mnemonicParsing="false" text="&gt;&gt;" />
+                                                <Button fx:id="enablePluginButton" mnemonicParsing="false" text="&lt;&lt;" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="leftBar11" minWidth="10.0">
+                                       <children>
+                                          <VBox fx:id="vboxList11" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Disabled">
+                                                   <VBox.margin>
+                                                      <Insets left="8.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <ListView fx:id="disabledPlugins" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </VBox>
+         </center>
+         <bottom>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0" style="-fx-background-color: #4a4a4a;">
+                     <children>
+                        <Button fx:id="launchButton" mnemonicParsing="false" prefWidth="80.0" text="Launch" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" prefWidth="80.0" text="Cancel" />
+                     </children>
+                     <padding>
+                        <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </bottom>
+      </BorderPane>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>

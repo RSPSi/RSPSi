@@ -1,0 +1,22 @@
+description = 'Client'
+
+dependencies {
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'com.google.guava', name: 'guava', version: '23.1-jre'
+	compile group: 'org.tukaani', name: 'xz', version: '1.6'
+	compile group: 'org.brotli', name: 'dec', version: '0.1.2'
+    compile group: 'com.google.guava', name: 'guava', version: '23.1-jre'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.1'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
+	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+	compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
+	compile group: 'org.jfree', name: 'fxgraphics2d', version: '1.7'
+	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
+	compile 'org.greenrobot:eventbus:3.1.1'
+	// https://mvnrepository.com/artifact/org.lwjgl/lwjgl
+	
+	// https://mvnrepository.com/artifact/com.google.inject/guice
+	//compile group: 'com.google.inject', name: 'guice', version: '4.2.1'
+	
+}
+
