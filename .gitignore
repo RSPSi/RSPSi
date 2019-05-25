@@ -1,5 +1,8 @@
 .gradle/
 .idea/
 gradle/
+bin/
+build/
+out/
 /gradlew.bat
 /gradlew
