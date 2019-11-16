@@ -11,6 +11,9 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ClientPluginLoader {
 	
 	private static int count = 0;
@@ -27,7 +30,7 @@ public class ClientPluginLoader {
 	
 	public static void loadPlugins() {
 		File pluginPath = new File("plugins" + File.separator + "active");
-		System.out.println("Plugin folder contains " + pluginPath.listFiles().length + " files.");
+		log.info("Plugin folder contains {} files.", pluginPath.listFiles().length);
 		File[] plugins = pluginPath.listFiles((File dir, String name) -> name.endsWith(".jar"));
 		
 		List<URL> urls = Lists.newArrayList();
@@ -37,7 +40,7 @@ public class ClientPluginLoader {
 			try {
 				URL url = pluginFile.toURI().toURL();
 				urls.add(url);
-				System.out.println("Added url " + url.toString());
+				log.info("Added {} to plugin URL", url.toString());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -50,7 +53,7 @@ public class ClientPluginLoader {
         	plugin.initializePlugin();
         	count++;
         });
-        System.out.println("Loaded " + count + " client plugins!");
+        log.info("Loaded {} client plugins!", count);
         try {
 			urlClassLoader.close();
 		} catch (IOException e) {
