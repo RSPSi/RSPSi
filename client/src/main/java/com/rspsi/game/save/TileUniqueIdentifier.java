@@ -24,14 +24,14 @@ public class TileUniqueIdentifier {
 	public boolean equals(Object o) {
 		if(o instanceof TileUniqueIdentifier) {
 			TileUniqueIdentifier t = (TileUniqueIdentifier) o;
-			return t.getVector().equals(this.getVector()) && t.getKey() == this.getKey();
+			return t.vector.equals(this.vector) && t.key == this.key;
 		}
 		return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return (int) (key - vector.hashCode());
+		return (int) (key + vector.hashCode());
 	}
 
 }
