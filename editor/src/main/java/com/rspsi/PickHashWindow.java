@@ -31,7 +31,7 @@ public class PickHashWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hash.fxml"));
 	
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
@@ -78,19 +78,13 @@ public class PickHashWindow extends Application {
 	}
 	
 	public boolean valid() {
-		return !hashText.getText().isEmpty();
+		return !hashText.getText().isEmpty() && okClicked;
 	}
 	
 	public void reset() {
-		hashText.setText("");
 		okClicked = false;
 	}
 	
-	private BooleanProperty completed = new SimpleBooleanProperty(false);
-	
-    public BooleanProperty getCompleted() {
-		return completed;
-	}
 
 	@FXML
     private TextField hashText;

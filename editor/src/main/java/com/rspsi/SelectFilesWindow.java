@@ -2,11 +2,15 @@ package com.rspsi;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.commons.compress.utils.Lists;
 
+import com.google.common.collect.Maps;
 import com.jagex.chunk.Chunk;
 import com.rspsi.controls.SelectFilesNode;
+import com.rspsi.misc.Location;
 import com.rspsi.resources.ResourceLoader;
 import com.rspsi.util.FXUtils;
 
@@ -29,13 +33,15 @@ public class SelectFilesWindow extends Application {
 	private Stage stage;
 	private boolean okClicked;
 	
+	private Map<Location, SelectFilesNode> cachedNodes = Maps.newConcurrentMap();
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/selectfiles.fxml"));
 	
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
@@ -50,15 +56,26 @@ public class SelectFilesWindow extends Application {
 		widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		RowConstraints defaultRow = new RowConstraints();
+		
+		Consumer<SelectFilesNode> cacheNode = (node) -> {
+			Location location = new Location(GridPane.getColumnIndex(node), GridPane.getRowIndex(node), 0);
+			cachedNodes.put(location, node);
+		};
 	
 		widthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
 	
 				if(oldVal < newVal) {//Increase
-					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getRowCount(gridPane));
+					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getRowCount(gridPane), newVal - 1, false);
 					
 					gridPane.addColumn(newVal - 1, nodes.toArray(new SelectFilesNode[nodes.size()]));
 
 				} else if(oldVal > newVal) {
+					gridPane.getChildrenUnmodifiable()
+					.stream()
+					.filter(node -> node instanceof SelectFilesNode)
+					.filter(node -> GridPane.getColumnIndex(node) == oldVal - 1)
+					.map(node -> (SelectFilesNode) node)
+					.forEach(cacheNode);
 					FXUtils.deleteColumn(gridPane, oldVal - 1);
 				}
 
@@ -68,11 +85,16 @@ public class SelectFilesWindow extends Application {
 		lengthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
 	
 				if(oldVal < newVal) {//Increase
-					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getColumnCount(gridPane));
+					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getColumnCount(gridPane), newVal - 1, true);
 					gridPane.addRow(newVal - 1, nodes.toArray(new SelectFilesNode[nodes.size()]));
 
 				} else if(oldVal > newVal) {
-
+					gridPane.getChildrenUnmodifiable()
+					.stream()
+					.filter(node -> node instanceof SelectFilesNode)
+					.filter(node -> GridPane.getRowIndex(node) == oldVal - 1)
+					.map(node -> (SelectFilesNode) node)
+					.forEach(cacheNode);
 					FXUtils.deleteRow(gridPane, oldVal - 1);
 				}
 			stage.sizeToScene();
@@ -96,12 +118,14 @@ public class SelectFilesWindow extends Application {
 		});
 	}
 	
-	private List<SelectFilesNode> generateSelectNodes(int count) {
+	private List<SelectFilesNode> generateSelectNodes(int count, int index, boolean row) {
 
 		List<SelectFilesNode> nodes = Lists.newArrayList();
 		for(int i = 0;i<count;i++)
 			try {
-				nodes.add(new SelectFilesNode(stage));
+				Location location = new Location(row ? i : index, row ? index : i, 0);
+				
+				nodes.add(cachedNodes.getOrDefault(location, new SelectFilesNode(stage)));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -157,14 +181,7 @@ public class SelectFilesWindow extends Application {
 	}
 	
 	public void reset() {
-		gridPane.getChildren().clear();
-		widthSpinner.getValueFactory().setValue(1);
-		lengthSpinner.getValueFactory().setValue(1);
-		try {
-			gridPane.add(new SelectFilesNode(stage), 0, 0);
-		} catch(Exception ex) {
-			
-		}
+		cachedNodes.clear();
 	}
 	
 	public boolean valid() {

@@ -31,7 +31,7 @@ public class PickCoordinatesWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/coords.fxml"));
 	
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
@@ -87,12 +87,12 @@ public class PickCoordinatesWindow extends Application {
 	}
 	
 	public boolean valid() {
-		return !xCoordinate.getText().isEmpty() && !yCoordinate.getText().isEmpty();
+		return !xCoordinate.getText().isEmpty() && !yCoordinate.getText().isEmpty() && okClicked;
 	}
 	
 	public void reset() {
-		xCoordinate.setText("");
-		yCoordinate.setText("");
+		//xCoordinate.setText("");
+		//yCoordinate.setText("");
 		okClicked = false;
 	}
 	

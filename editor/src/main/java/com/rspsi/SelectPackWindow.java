@@ -30,7 +30,7 @@ public class SelectPackWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/selectpackfile.fxml"));
 	
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
@@ -85,11 +85,11 @@ public class SelectPackWindow extends Application {
 	
 
 	public void reset() {
-		landscapeText.setText("");
+		okClicked = false;
 	}
 	
 	public boolean valid() {
-		return !landscapeText.getText().isEmpty();
+		return okClicked && !landscapeText.getText().isEmpty();
 	}
 
     @FXML
