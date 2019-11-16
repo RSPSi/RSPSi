@@ -19,7 +19,7 @@ public abstract class Texture {
 	protected int width;
 	protected int height;
 	protected int averageTextureColour;
-	protected double brightness = 0.6;
+	protected double brightness = 0.8;
 	
 	public Texture(int width, int height) {
 		this.width = width;
@@ -74,26 +74,34 @@ public abstract class Texture {
 		if (averageTextureColour > 0)
 			return averageTextureColour;
 
-		int r = 0;
-		int g = 0;
-		int b = 0;
-		
-		int count = palette.length;
-
-		for(int colour : palette) {
-			r += colour >> 16 & 0xff;
-			g += colour >> 8 & 0xff;
-			b += colour & 0xff;
-		}
-
-		int rgb = (r / count << 16) + (g / count << 8) + b / count;
-		rgb = ColourUtils.exponent(rgb, 1.4D);
-		if (rgb <= 0) {
-			rgb = 1;
-		}
-
+		int rgb = averageColorForPixels(pixels);
 		averageTextureColour = rgb;
 		return rgb;
+	}
+	
+	private static int averageColorForPixels(int[] pixels) {
+		int redTotal = 0;
+		int greenTotal = 0;
+		int blueTotal = 0;
+		int totalPixels = pixels.length;
+
+		for (int i = 0; i < totalPixels; i++) {
+			if (pixels[i] == 0xff00ff) {
+				totalPixels--;
+				continue;
+			}
+
+			redTotal += pixels[i] >> 16 & 0xff;
+			greenTotal += pixels[i] >> 8 & 0xff;
+			blueTotal += pixels[i] & 0xff;
+		}
+
+		int averageRGB = (redTotal / totalPixels << 16) + (greenTotal / totalPixels << 8) + blueTotal / totalPixels;
+		if (averageRGB == 0) {
+			averageRGB = 1;
+		}
+
+		return averageRGB;
 	}
 
 	public int getWidth() {
