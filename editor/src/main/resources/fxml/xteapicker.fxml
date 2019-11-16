@@ -24,7 +24,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="4.0">
                      <children>
-                        <TextField fx:id="landscapeText" editable="false" focusTraversable="false" promptText=".PACK File" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="landscapeText" editable="false" focusTraversable="false" promptText="XTEA .json" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="10.0" />
                            </font>

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="main-pane" styleClass="root" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="main-pane" styleClass="root" stylesheets="@../css/layout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane fx:id="topBar" style="-fx-background-color: #4a4a4a; -fx-border-color: #1d1d1d; -fx-border-width: 0 0 1 0;" VBox.vgrow="NEVER">
          <VBox.margin>
@@ -44,13 +44,13 @@
                   <Insets />
                </BorderPane.margin>
                <children>
-                  <Label text="Cache:" />
+                  <Label minWidth="36.0" text="Cache:" />
                   <AnchorPane HBox.hgrow="ALWAYS">
                      <children>
                         <ComboBox fx:id="cacheLocation" editable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <Button fx:id="browseButton" mnemonicParsing="false" text="Browse...">
+                  <Button fx:id="browseButton" minWidth="53.0" mnemonicParsing="false" text="Browse...">
                      <font>
                         <Font size="10.0" />
                      </font>

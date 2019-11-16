@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField fx:id="hashText" promptText="X Coordinate" text="Region Hash">
+      <TextField fx:id="hashText" promptText="Region Hash">
          <VBox.margin>
             <Insets left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
