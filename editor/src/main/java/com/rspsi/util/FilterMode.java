@@ -10,11 +10,14 @@ public enum FilterMode {
 	GZIP("gzip files (*.gz)", "*.gz"),
 	SWATCH ("Swatch files (*.jswatch)" , "*.jswatch"), 
 	PNG("Image files (*.png)", "*.png"),
-	NONE(" (*.)", "*.");
+	JSON("JSON Files (*.json)", "*.json"),
+	NONE(" (*.)", "*."),
+	
+	;
 
 	private ExtensionFilter extensionFilter;
 
-	private FilterMode(String extensionDisplayName, String... extensions) {
+	FilterMode(String extensionDisplayName, String... extensions) {
 		extensionFilter = new ExtensionFilter(extensionDisplayName, extensions);
 	}
 
