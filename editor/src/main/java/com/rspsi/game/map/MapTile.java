@@ -3,6 +3,8 @@ package com.rspsi.game.map;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.map.MapIndexLoader;
@@ -11,10 +13,15 @@ import com.jagex.map.MapRegion;
 import com.jagex.map.SceneGraph;
 import com.jagex.net.ResourceResponse;
 
+import com.rspsi.cache.CacheFileType;
 import net.coobird.thumbnailator.Thumbnails;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MapTile {
-		
+
+	private static final ExecutorService executorService = Executors.newCachedThreadPool();
 		private int hash;
 		private boolean loaded;
 		
@@ -26,18 +33,21 @@ public class MapTile {
 		private byte[] landscapeBytes;
 		private int regionX, regionY;
 		private RegionView view;
-		
+
+
+		@Subscribe(threadMode = ThreadMode.ASYNC)
 		public void onResourceResponse(ResourceResponse response) {
-			if(response.getRequest().getType() == 3) {
+			if(response.getRequest().getType() == CacheFileType.MAP) {
 				int fileId = response.getRequest().getFile();
 				if(fileId == landscapeId) {
+					System.out.println("Delivered!");
 					landscapeBytes = response.decompress();
 					landscapeId = -1;
-					Thread t = new Thread(() -> {
+					executorService.submit(() -> {
 						loadChunk();
 						generateImages();
 					});
-					t.start();
+
 				}
 			}
 		}
@@ -45,7 +55,7 @@ public class MapTile {
 		
 		
 		public void init() {
-
+			EventBus.getDefault().register(this);
 			sceneGraph = new SceneGraph(64, 64, 4);
 			mapRegion = new MapRegion(sceneGraph, 64, 64);
 			
@@ -53,7 +63,7 @@ public class MapTile {
 		
 		public int[] drawMinimapOriented(int plane) {
 			int pixels = 256 * 256;
-			int raster[] = new int[pixels];
+            int[] raster = new int[pixels];
 			for (int i = 0; i < pixels; i++) {
 				raster[i] = 0;
 			}
@@ -76,7 +86,7 @@ public class MapTile {
 		
 		public int[] drawMinimapBasic(int plane) {
 			int pixels = 256 * 256;
-			int raster[] = new int[pixels];
+            int[] raster = new int[pixels];
 			for (int i = 0; i < pixels; i++) {
 				raster[i] = 0;
 			}
@@ -110,7 +120,7 @@ public class MapTile {
 						}
 					}
 				}
-				mapRegion.decodeRegionMapData(landscapeBytes, 0, 0, regionX, regionY);
+				mapRegion.unpackTiles(landscapeBytes, 0, 0, regionX, regionY);
 				mapRegion.method171(sceneGraph);
 
 
@@ -125,7 +135,7 @@ public class MapTile {
 		
 
 			System.out.println("Requested " + landscapeId);
-			Client.getSingleton().getProvider().requestFile(3, landscapeId);
+			Client.getSingleton().getProvider().requestMap(landscapeId, hash);
 
 			loaded = true;
 			return false;

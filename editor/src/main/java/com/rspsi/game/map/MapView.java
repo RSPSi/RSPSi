@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -51,7 +52,7 @@ public class MapView extends JFrame {
 	
 	@Subscribe(threadMode = ThreadMode.ASYNC)
 	public void onResourceResponse(ResourceResponse response) {
-		if(response.getRequest().getType() == 3) {
+		if(response.getRequest().getType() == CacheFileType.MAP) {
 			for(Component component : jPanel.getComponents()) {
 				if(component instanceof RegionView) {
 					RegionView view = (RegionView) component;
