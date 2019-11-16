@@ -1,17 +1,15 @@
 package com.jagex.entity.model;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 import org.major.cache.anim.FrameConstants;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jagex.Client;
 import com.jagex.cache.anim.Frame;
 import com.jagex.cache.anim.FrameBase;
 import com.jagex.cache.loader.anim.FrameLoader;
+import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.entity.Renderable;
 import com.jagex.io.Buffer;
@@ -20,10 +18,13 @@ import com.jagex.util.ObjectKey;
 import com.rspsi.misc.ToolType;
 import com.rspsi.options.Options;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Mesh extends Renderable {
 
 	// Class30_Sub2_Sub4_Sub6
-	
+
 
 	public static boolean aBoolean1684;
 	public static int resourceCount;
@@ -71,8 +72,8 @@ public class Mesh extends Renderable {
 			return false;
 		return x <= j1 || x <= k1 || x <= l1;
 	}
-	
-	
+
+
 
 	public boolean fitsOnSingleSquare;
 	public int minimumX;
@@ -110,7 +111,7 @@ public class Mesh extends Renderable {
 	public int[] vertexZ;
 	public int vertices;
 	private boolean translucent;
-	
+
 	//public List<Vector3f> vertexes;
 
 	protected Mesh() {
@@ -156,7 +157,7 @@ public class Mesh extends Renderable {
 			super.normals = new VertexNormal[vertices];
 			for (int index = 0; index < vertices; index++) {
 				VertexNormal parent = super.normals[index] = new VertexNormal();
-				VertexNormal copied = ((Renderable) model).getNormal(index);
+				VertexNormal copied = model.getNormal(index);
 				parent.setX(copied.getX());
 				parent.setY(copied.getY());
 				parent.setZ(copied.getZ());
@@ -192,7 +193,7 @@ public class Mesh extends Renderable {
 		minimumZ = model.minimumZ;
 		maximumX = model.maximumX;
 	}
-	
+
 
 	public Mesh(ModelHeader header) {
 		vertices = header.getVertices();
@@ -769,6 +770,79 @@ public class Mesh extends Renderable {
 		}
 	}
 
+	private int extremeX = -1, extremeY = -1, extremeZ = -1;
+	private int centerX = -1, centerY = -1, centerZ = -1;
+	public void calculateExtreme(int orientation){
+		if(this.extremeX == -1) {
+			int var2 = 0;
+			int var3 = 0;
+			int var4 = 0;
+			int var5 = 0;
+			int var6 = 0;
+			int var7 = 0;
+			int var8 = Constants.COSINE[orientation];
+			int var9 = Constants.SINE[orientation];
+
+			for(int var10 = 0; var10 < this.vertices; ++var10) {
+				int var11 = method3027(this.vertexX[var10], this.vertexZ[var10], var8, var9);
+				int var12 = this.vertexY[var10];
+				int var13 = method3028(this.vertexX[var10], this.vertexZ[var10], var8, var9);
+				if(var11 < var2) {
+					var2 = var11;
+				}
+
+				if(var11 > var5) {
+					var5 = var11;
+				}
+
+				if(var12 < var3) {
+					var3 = var12;
+				}
+
+				if(var12 > var6) {
+					var6 = var12;
+				}
+
+				if(var13 < var4) {
+					var4 = var13;
+				}
+
+				if(var13 > var7) {
+					var7 = var13;
+				}
+			}
+
+			this.centerX = (var5 + var2) / 2;
+			this.centerY = (var6 + var3) / 2;
+			this.centerZ = (var7 + var4) / 2;
+			this.extremeX = (var5 - var2 + 1) / 2;
+			this.extremeY = (var6 - var3 + 1) / 2;
+			this.extremeZ = (var7 - var4 + 1) / 2;
+			if(this.extremeX < 32) {
+				this.extremeX = 32;
+			}
+
+			if(this.extremeZ < 32) {
+				this.extremeZ = 32;
+			}
+
+			//TODO: Figure out what this does
+			/*if(this.field1672) {
+				this.extremeX += 8;
+				this.extremeZ += 8;
+			}*/
+
+		}
+	}
+
+	private static final int method3027(int var0, int var1, int var2, int var3) {
+		return var0 * var2 + var3 * var1 >> 16;
+	}
+
+	private static final int method3028(int var0, int var1, int var2, int var3) {
+		return var2 * var1 - var3 * var0 >> 16;
+	}
+
 	public void computeBounds() {
 		super.modelHeight = 0;
 		boundingPlaneRadius = 0;
@@ -1058,11 +1132,15 @@ public class Mesh extends Renderable {
 		texturedFaceIndexY = model.texturedFaceIndexY;
 		texturedFaceIndexZ = model.texturedFaceIndexZ;
 	}
+	
+	private static ObjectKey activeKey;
 
 	private void renderFaces(GameRasterizer rasterizer, boolean flag, boolean multiTileFlag, ObjectKey key, int z) {
 		for (int j = 0; j < boundingSphereRadius; j++) {
 			rasterizer.depthListIndices[j] = 0;
 		}
+		
+		activeKey = key;
 
 		for (int face = 0; face < faces; face++) {
 			if (faceTypes == null || faceTypes[face] != -1) {
@@ -1074,7 +1152,7 @@ public class Mesh extends Renderable {
 				int k4 = rasterizer.vertexScreenX[indexZ];
 
 				if (flag && (i3 == -5000 || l3 == -5000 || k4 == -5000)) {
-					rasterizer.cullFaces[face] = true;
+					rasterizer.cullFacesOther[face] = true;
 					int j5 = (rasterizer.vertexScreenZ[indexX] + rasterizer.vertexScreenZ[indexY] + rasterizer.vertexScreenZ[indexZ]) / 3
 							+ boundingCylinderRadius;
 					rasterizer.faceList[j5][rasterizer.depthListIndices[j5]++] = face;
@@ -1082,7 +1160,7 @@ public class Mesh extends Renderable {
 					if (key != null && multiTileFlag) {
 						if (insideTriangle(mouseX, mouseY, rasterizer.vertexScreenY[indexX], rasterizer.vertexScreenY[indexY],
 								rasterizer.vertexScreenY[indexZ], i3, l3, k4)) {
-							resourceIDTag[resourceCount++] = key;
+
 
 							boolean correctTool = (Options.currentTool.get() == ToolType.SELECT_OBJECT || Options.currentTool.get() == ToolType.DELETE_OBJECT);
 							if (Options.currentHeight.get() == z && correctTool) {
@@ -1090,35 +1168,32 @@ public class Mesh extends Renderable {
 
 								int selectionType = Options.objectSelectionType.get() - 1;
 								if (selectionType == -1 || type == selectionType) {
-									Client.hoveredUID = key;
+									resourceIDTag[resourceCount++] = key;// ObjectKey.closestToCamera(Client.hoveredUID, key, Client.getSingleton().xCameraPos, Client.getSingleton().yCameraPos, Client.getSingleton().zCameraPos);
+									if(Client.hoveredUID == null)
+										Client.hoveredUID = key;
 								}
 							}
 
 							multiTileFlag = false;
-						} else if (Client.hoveredUID == key) {
+						} else if (Objects.equals(Client.hoveredUID, key)) {
 							Client.hoveredUID = null;
-							translucent = false;
 						}
 					}
 
+					translucent = false;
+					//translucent = false;
 					if(key != null) {
 						if (Options.currentTool.get() == ToolType.SELECT_OBJECT
 							|| Options.currentTool.get() == ToolType.DELETE_OBJECT)
-						if (Client.hoveredUID == key && z == Options.currentHeight.get()) {
-							translucent = true;
-						} else {
+							translucent = Objects.equals(Client.hoveredUID, key) && z == Options.currentHeight.get();
+						else
 							translucent = false;
-						}
 					}
 					if ((i3 - l3) * (rasterizer.vertexScreenY[indexZ] - rasterizer.vertexScreenY[indexY])
 							- (rasterizer.vertexScreenY[indexX] - rasterizer.vertexScreenY[indexY]) * (k4 - l3) > 0) {
-						rasterizer.cullFaces[face] = false;
-						if (i3 < 0 || l3 < 0 || k4 < 0 || i3 > rasterizer.getMaxRight() || l3 > rasterizer.getMaxRight()
-								|| k4 > rasterizer.getMaxRight()) {
-							rasterizer.cullFaces[face] = true;
-						} else {
-							rasterizer.cullFaces[face] = false;
-						}
+						rasterizer.cullFacesOther[face] = false;
+						rasterizer.cullFaces[face] = i3 < 0 || l3 < 0 || k4 < 0 || i3 > rasterizer.getMaxRight() || l3 > rasterizer.getMaxRight()
+								|| k4 > rasterizer.getMaxRight();
 						int k5 = (rasterizer.vertexScreenZ[indexX] + rasterizer.vertexScreenZ[indexY] + rasterizer.vertexScreenZ[indexZ]) / 3
 								+ boundingCylinderRadius;
 						rasterizer.faceList[k5][rasterizer.depthListIndices[k5]++] = face;
@@ -1131,7 +1206,7 @@ public class Mesh extends Renderable {
 			for (int i1 = boundingSphereRadius - 1; i1 >= 0; i1--) {
 				int l1 = rasterizer.depthListIndices[i1];
 				if (l1 > 0) {
-					int ai[] = rasterizer.faceList[i1];
+					int[] ai = rasterizer.faceList[i1];
 					for (int j3 = 0; j3 < l1; j3++) {
 						renderFace(rasterizer, ai[j3]);
 					}
@@ -1148,7 +1223,7 @@ public class Mesh extends Renderable {
 		for (int i2 = boundingSphereRadius - 1; i2 >= 0; i2--) {
 			int k2 = rasterizer.depthListIndices[i2];
 			if (k2 > 0) {
-				int ai1[] = rasterizer.faceList[i2];
+				int[] ai1 = rasterizer.faceList[i2];
 				for (int i4 = 0; i4 < k2; i4++) {
 					int l4 = ai1[i4];
 					int l5 = facePriorities[l4];
@@ -1180,8 +1255,8 @@ public class Mesh extends Renderable {
 		}
 		int i6 = 0;
 		int k6 = rasterizer.anIntArray1673[10];
-		int ai2[] = rasterizer.anIntArrayArray1674[10];
-		int ai3[] = rasterizer.anIntArray1675;
+		int[] ai2 = rasterizer.anIntArrayArray1674[10];
+		int[] ai3 = rasterizer.anIntArray1675;
 		if (i6 == k6) {
 			i6 = 0;
 			k6 = rasterizer.anIntArray1673[11];
@@ -1238,7 +1313,7 @@ public class Mesh extends Renderable {
 				}
 			}
 			int i7 = rasterizer.anIntArray1673[l6];
-			int ai4[] = rasterizer.anIntArrayArray1674[l6];
+			int[] ai4 = rasterizer.anIntArrayArray1674[l6];
 			for (int j7 = 0; j7 < i7; j7++) {
 				renderFace(rasterizer, ai4[j7]);
 			}
@@ -1262,7 +1337,7 @@ public class Mesh extends Renderable {
 	}
 
 	private void renderFace(GameRasterizer rasterizer, int index) {
-		if (rasterizer.cullFaces[index]) {
+		if (rasterizer.cullFacesOther[index]) {
 			method485(rasterizer, index);
 			return;
 		}
@@ -1271,7 +1346,7 @@ public class Mesh extends Renderable {
 		int faceZ = faceIndexZ[index];
 		rasterizer.restrictEdges = rasterizer.cullFaces[index];
 		if (selected) {
-			rasterizer.currentAlpha = 50;
+			rasterizer.currentAlpha = translucent ? 100 : 50;
 		}
 		if (translucent) {
 			rasterizer.currentAlpha = 140;
@@ -1288,16 +1363,18 @@ public class Mesh extends Renderable {
 		} else {
 			type = faceTypes[index] & 3;
 		}
-		boolean ignoreTextures = translucent || selected;
+		boolean ignoreTextures = translucent || selected || texturedFaceIndexX == null;
 
 		if (type == 0 && !ignoreTextures) {
 			rasterizer.drawShadedTriangle(rasterizer.vertexScreenY[faceX], rasterizer.vertexScreenY[faceY], rasterizer.vertexScreenY[faceZ], rasterizer.vertexScreenX[faceX],
 					rasterizer.vertexScreenX[faceY], rasterizer.vertexScreenX[faceZ], shadedFaceColoursX[index], shadedFaceColoursY[index], shadedFaceColoursZ[index]);
 		} else if (type == 1 || ignoreTextures) {
-			int colour = translucent ? 16118771 : selected ? 0xc5dce6 : rasterizer.colourPalette[shadedFaceColoursX[index]];
+			int colour = selected ? 0xc5dce6 : translucent ? 16118771 : rasterizer.colourPalette[shadedFaceColoursX[index]];
 			rasterizer.drawShadedTriangle(rasterizer.vertexScreenY[faceX], rasterizer.vertexScreenY[faceY], rasterizer.vertexScreenY[faceZ], rasterizer.vertexScreenX[faceX],
 					rasterizer.vertexScreenX[faceY], rasterizer.vertexScreenX[faceZ], colour);
 		} else if (type == 2 || type == 3) {
+			
+			try {
 			int k1 = faceTypes[index] >> 2;
 			int texFaceX = texturedFaceIndexX[k1];
 			int texFaceY = texturedFaceIndexY[k1];
@@ -1306,20 +1383,26 @@ public class Mesh extends Renderable {
 			int colourX = shadedFaceColoursX[index];
 			int colourY = shadedFaceColoursX[index];
 			int colourZ = shadedFaceColoursX[index];
-			
+
 			if(type == 2) {
 				colourY =  shadedFaceColoursY[index];
 				colourZ =  shadedFaceColoursZ[index];
 			}
-			
+
 			rasterizer.drawTexturedTriangle(rasterizer.vertexScreenY[faceX], rasterizer.vertexScreenY[faceY], rasterizer.vertexScreenY[faceZ], rasterizer.vertexScreenX[faceX],
 					rasterizer.vertexScreenX[faceY], rasterizer.vertexScreenX[faceZ], colourX, colourY, colourZ,
 					rasterizer.camera_vertex_x[texFaceX], rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ], rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY],
 					rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX], rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceColourOrTextureId[index]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		}
 	}
 
 	private void method485(GameRasterizer rasterizer, int i) {
+
+		boolean ignoreTextures = translucent || selected || texturedFaceIndexX == null;
+
 		int viewX = rasterizer.viewCenter.getX();
 		int viewY = rasterizer.viewCenter.getY();
 		int l = 0;
@@ -1411,12 +1494,13 @@ public class Mesh extends Renderable {
 				} else {
 					l7 = faceTypes[i] & 3;
 				}
-				if (l7 == 0 && !translucent) {
+
+				if (l7 == 0 && !ignoreTextures) {
 					rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[1],
 							rasterizer.anIntArray1680[2]);
-				} else if (l7 == 1 || translucent) {
+				} else if (l7 == 1 || ignoreTextures) {
 					rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5,
-							translucent ? 16118771 : rasterizer.colourPalette[shadedFaceColoursX[i]]);
+							selected ? 0xc5dce6 : translucent ? 16118771 : rasterizer.colourPalette[shadedFaceColoursX[i]]);
 				} else if (l7 == 2) {
 					int j8 = faceTypes[i] >> 2;
 					int k9 = texturedFaceIndexX[j8];
@@ -1448,20 +1532,18 @@ public class Mesh extends Renderable {
 				} else {
 					i8 = faceTypes[i] & 3;
 				}
-				if (i8 == 0) {
+				if (i8 == 0 && !ignoreTextures) {
 					rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[1],
 							rasterizer.anIntArray1680[2]);
 					rasterizer.drawShadedTriangle(i7, k7, rasterizer.anIntArray1679[3], j3, j5, rasterizer.anIntArray1678[3],
 							rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[2], rasterizer.anIntArray1680[3]);
 					return;
-				}
-				if (i8 == 1 || translucent) {
-					int l8 = rasterizer.colourPalette[shadedFaceColoursX[i]];
+				} else if (i8 == 1 || ignoreTextures) {
+					int l8 =  selected ? 0xc5dce6 : translucent ? 16118771 : rasterizer.colourPalette[shadedFaceColoursX[i]];
 					rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, l8);
 					rasterizer.drawShadedTriangle(i7, k7, rasterizer.anIntArray1679[3], j3, j5, rasterizer.anIntArray1678[3], l8);
 					return;
-				}
-				if (i8 == 2) {
+				} else if (i8 == 2) {
 					int i9 = faceTypes[i] >> 2;
 					int i10 = texturedFaceIndexX[i9];
 					int i11 = texturedFaceIndexY[i9];
@@ -1476,8 +1558,7 @@ public class Mesh extends Renderable {
 							rasterizer.camera_vertex_y[i12], rasterizer.camera_vertex_z[i10], rasterizer.camera_vertex_z[i11], rasterizer.camera_vertex_z[i12],
 							faceColourOrTextureId[i]);
 					return;
-				}
-				if (i8 == 3) {
+				} else if (i8 == 3) {
 					int j9 = faceTypes[i] >> 2;
 					int j10 = texturedFaceIndexX[j9];
 					int j11 = texturedFaceIndexY[j9];
@@ -1536,7 +1617,7 @@ public class Mesh extends Renderable {
 		}
 
 		if (faceSkin != null) {
-			int sizes[] = new int[256];
+			int[] sizes = new int[256];
 			int count = 0;
 
 			for (int index = 0; index < faces; index++) {
@@ -1621,6 +1702,7 @@ public class Mesh extends Renderable {
 		try {
 			renderFaces(rasterizer, false, false, null, plane);
 		} catch (Exception _ex) {
+			_ex.printStackTrace();
 		}
 	}
 
@@ -1690,7 +1772,8 @@ public class Mesh extends Renderable {
 			if (mouseSceneX > sceneLowerX && mouseSceneX < sceneMaximumX && mouseSceneY > sceneLowerY && mouseSceneY < sceneMaximumY) {
 				if (fitsOnSingleSquare) {
 					resourceIDTag[resourceCount++] = key;
-					Client.hoveredUID = resourceIDTag[0];
+					if(Client.hoveredUID == null)
+						Client.hoveredUID = key;
 				} else {
 					flag1 = true;
 				}
@@ -1746,6 +1829,7 @@ public class Mesh extends Renderable {
 		try {
 			renderFaces(rasterizer, flag, flag1, key, z);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -1756,7 +1840,7 @@ public class Mesh extends Renderable {
 			vertexZ[index] = -x;
 		}
 	}
-	
+
 	public void offsetVertices(int x, int y, int z) {
 		for (int index = 0; index < vertices; index++) {
 			vertexX[index] += x;
@@ -1772,7 +1856,7 @@ public class Mesh extends Renderable {
 			vertexZ[vertex] = vertexZ[vertex] * y / 128;
 		}
 	}
-	
+
     public void scale2(int i) {
         for (int i1 = 0; i1 < vertices; i1++) {
             vertexX[i1] = vertexX[i1] / i;
@@ -1970,11 +2054,11 @@ public class Mesh extends Renderable {
 			vertexZ[vertex] += z;
 		}
 	}
-	
+
     public void convertTexturesTo317(short[] textureIds, int[] texa, int[] texb, int[] texc, boolean osrs) {
         int set = 0;
         int set2 = 0;
-        int max = 50;
+        int max = TextureLoader.instance.count();
         if (textureIds != null) {
             texturedFaceIndexX = new int[faces];
             texturedFaceIndexY = new int[faces];
@@ -2015,7 +2099,7 @@ public class Mesh extends Renderable {
             this.texturedFaces = set;
         }
     }
-    
+
 	public void filterTriangles() {
 		for (int triangleId = 0; triangleId < faceIndexX.length; triangleId++) {
 			int l = faceIndexX[triangleId];
@@ -2046,14 +2130,15 @@ public class Mesh extends Renderable {
 			}
 		}
 	}
-    
+
     public int getZVertexMax() {
     	return 50;
     }
-    
-    public Mesh clone() {
+
+    @Override
+    public Mesh copy() {
     	Mesh mesh = new Mesh();
-    	
+
     	Mesh model = this;
     	mesh.fitsOnSingleSquare = (model.fitsOnSingleSquare);
     	mesh.minimumX = (model.minimumX);
@@ -2070,7 +2155,7 @@ public class Mesh extends Renderable {
     	mesh.shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
     	mesh.faceAlphas = copyArray(model.faceAlphas);
 		mesh.faceColourOrTextureId = copyArray(model.faceColourOrTextureId);
-		mesh.faceGroups = (model.faceGroups);
+		mesh.faceGroups = copyArray(model.faceGroups);
 		mesh.facePriorities = copyArray(model.facePriorities);
 		mesh.faces = (model.faces);
 		mesh.faceSkin = copyArray(model.faceSkin);
@@ -2084,7 +2169,7 @@ public class Mesh extends Renderable {
 		mesh.texturedFaceIndexY = copyArray(model.texturedFaceIndexY);
 		mesh.texturedFaceIndexZ = copyArray(model.texturedFaceIndexZ);
 		mesh.faceTypes = copyArray(model.faceTypes);
-		mesh.vertexGroups = model.vertexGroups;
+		mesh.vertexGroups = copyArray(model.vertexGroups);
 		mesh.vertexBones = copyArray(model.vertexBones);
 		mesh.vertexX = copyArray(model.vertexX);
 		mesh.vertexY = copyArray(model.vertexY);
@@ -2092,14 +2177,40 @@ public class Mesh extends Renderable {
 		mesh.vertices = model.vertices;
 		return mesh;
     }
-    
+
     protected static int[] copyArray(int[] a) {
     	if(a == null)
     		return null;
        return Arrays.copyOf(a, a.length);
     }
-    
-    
+    protected static int[][] copyArray(int[][] a) {
+    	if(a == null)
+    		return null;
+       return Arrays.copyOf(a, a.length);
+    }
+
+	public void retexture(int found, int replace) {
+		if(faceColourOrTextureId != null)
+			for (int face = 0; face < faces; face++) {
+				if (faceColourOrTextureId [face] == found) {
+					faceColourOrTextureId [face] = replace;
+				}
+			}
+
+	}
 
     protected byte[] texture_coordinates;
+
+	/*	public List<Triangle> getTriangles() {
+			List<Vertex> vertices = getVertices();
+			return IntStream.of(0, faces).mapToObj(index -> new Triangle(vertices.get(this.faceIndexX[index]), vertices.get(this.faceIndexY[index]), vertices.get(this.faceIndexZ[index]))).collect(Collectors.toList());
+		}
+	
+		public List<Vertex> getVertices(){
+			return IntStream.range(0, vertices).mapToObj(index -> new Vertex(this.vertexX[index], this.vertexY[index], this.vertexZ[index])).collect(Collectors.toList());
+		}
+	*/
+	@Getter
+	@Setter
+	private int sceneId;
 }

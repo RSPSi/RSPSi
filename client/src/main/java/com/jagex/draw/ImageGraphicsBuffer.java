@@ -7,18 +7,23 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
+import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 import com.jagex.draw.raster.GameRaster;
 import com.jagex.draw.raster.GameRasterizer;
+import com.jagex.util.ColourUtils;
 
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.WritableImage;
 import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
 import net.coobird.thumbnailator.resizers.DefaultResizerFactory;
 import net.coobird.thumbnailator.resizers.Resizer;
 
 public class ImageGraphicsBuffer extends ProducingGraphicsBuffer {
 	
-	private BufferedImage finalImage;
+	public WritableImage finalImage;
 
 	public ImageGraphicsBuffer(int width, int height, GameRaster raster) {
 		super.pixels = new int[width * height + 1];
@@ -28,7 +33,7 @@ public class ImageGraphicsBuffer extends ProducingGraphicsBuffer {
 						new DataBufferInt(pixels, pixels.length), null),
 				false, new Hashtable<>());
 		super.raster = raster;
-		finalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		finalImage = new WritableImage(width, height);
 		super.setWidth(width);
 		super.setHeight(height);
 	
@@ -45,9 +50,8 @@ public class ImageGraphicsBuffer extends ProducingGraphicsBuffer {
 	}
 
 	public void clearPixels(int rgb) {
-
 		for (int i = 0; i < pixels.length; i++) {
-			pixels[i] = rgb;
+			pixels[i] = 0xFF000000 | rgb;
 		}
 	}
 
@@ -57,23 +61,23 @@ public class ImageGraphicsBuffer extends ProducingGraphicsBuffer {
 	}
 
 	public void finalize() {
-		finalImage.getGraphics().drawImage(image, 0, 0, this);
+		int[] pixelCopy = Arrays.copyOf(pixels, pixels.length);
+		for(int i = 0;i<pixelCopy.length;i++)
+			pixelCopy[i] = 0xFF000000 | pixelCopy[i];
+		finalImage.getPixelWriter().setPixels(0, 0, getWidth(), getHeight(), PixelFormat.getIntArgbInstance(), IntBuffer.wrap(pixelCopy), getWidth());
 	}
 	
 	@Override
 	public BufferedImage getImage() {
+		return null;
+	}
+	
+	public WritableImage getFXImage() {
 		return finalImage;
 	}
 	
 	public Graphics2D getGraphics() {
 		return (Graphics2D) image.getGraphics();
 	}
-	
-	public BufferedImage getImage(int width, int height) {
-		Resizer resizer = DefaultResizerFactory.getInstance().getResizer(new Dimension(finalImage.getWidth(), finalImage.getHeight()), new Dimension(width, height));
-		BufferedImage scaledImage = new FixedSizeThumbnailMaker(width, height, true, true).resizer(resizer).make(finalImage);
-		return scaledImage;
-	}
-	
-	
+
 }

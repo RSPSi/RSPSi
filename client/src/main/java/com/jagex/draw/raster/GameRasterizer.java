@@ -10,19 +10,20 @@ import com.jagex.util.Constants;
 import com.jagex.util.Point2D;
 
 public class GameRasterizer extends GameRaster {
-	
+
 	private static GameRasterizer instance;
-	
+
 	public static GameRasterizer getInstance() {
 		return instance;
 	}
-	
+
 	public static void setInstance(GameRasterizer rasterizer) {
 		instance = rasterizer;
 	}
 
 	public boolean[] aBooleanArray1663 = new boolean[4096];
 	 public boolean[] cullFaces = new boolean[4096];
+	 public boolean[] cullFacesOther = new boolean[4096];
 	 public int[] vertexScreenX = new int[4096];
 	 public int[] vertexScreenY = new int[4096];
 	 public int[] vertexScreenZ = new int[4096];
@@ -51,9 +52,6 @@ public class GameRasterizer extends GameRaster {
 	boolean currentTextureTransparent;
 	int anInt1477;
 
-	{
-		
-	}
 
 
 	public void dispose() {
@@ -62,7 +60,7 @@ public class GameRasterizer extends GameRaster {
 		colourPalette = null;
 	}
 
-	public void drawLine(int pixels[], int i, int j, int k, int startX, int endX, int j1, int k1) {
+	public void drawLine(int[] pixels, int i, int j, int k, int startX, int endX, int j1, int k1) {
 		if (approximateAlphaBlending) {
 			int l1;
 			if (restrictEdges) {
@@ -870,7 +868,7 @@ public class GameRasterizer extends GameRaster {
 			k += this.width;
 		}
 	}
-	
+
 
 	public void render_texture_triangle(int y_a, int y_b, int y_c, int x_a, int x_b, int x_c, int z_a, int z_b, int z_c, int grad_a, int grad_b, int grad_c, int Px, int Mx, int Nx, int Pz, int My, int Nz, int Py, int Mz, int Ny, int t_id, int color, boolean floor, boolean isFloor) {
 		if (t_id < 0 || t_id >= TextureDef.textures.length)
@@ -879,7 +877,7 @@ public class GameRasterizer extends GameRaster {
 			return;
 		}
 
-		
+
 		TextureDef def = TextureDef.textures[t_id];
 		if (def == null)
 		{
@@ -888,12 +886,12 @@ public class GameRasterizer extends GameRaster {
 		}
 
 		Texture tex = TextureLoader.getTexture(t_id);
-		
+
 		if(tex == null || TextureLoader.getTexturePixels(t_id) == null) {
 			drawShadedTriangle(y_a, y_b, y_c, x_a, x_b, x_c, grad_a, grad_b, grad_c);
 			return;
 		}
-		int texture[] = TextureLoader.getTexturePixels(t_id);
+        int[] texture = TextureLoader.getTexturePixels(t_id);
 
         if (color >= 0xffff)
             color = -1;
@@ -988,7 +986,7 @@ public class GameRasterizer extends GameRaster {
                     col_b -= col_b_off * y_b;
                     y_b = 0;
                 }
-                double jA = y_a - viewCenter.getX();
+                int jA = y_a - viewCenter.getX();
                 Oa += Va * jA;
                 Ob += Vb * jA;
                 Oc += Vc * jA;
@@ -1102,7 +1100,7 @@ public class GameRasterizer extends GameRaster {
                 col_c -= col_b_off * y_c;
                 y_c = 0;
             }
-            double l8 = y_a - viewCenter.getY();
+            int l8 = y_a - viewCenter.getY();
             Oa += Va * l8;
             Ob += Vb * l8;
             Oc += Vc * l8;
@@ -1222,7 +1220,7 @@ public class GameRasterizer extends GameRaster {
                     col_c -= col_c_off * y_c;
                     y_c = 0;
                 }
-                double i9 = y_b - viewCenter.getY();
+                int i9 = y_b - viewCenter.getY();
                 Oa += Va * i9;
                 Ob += Vb * i9;
                 Oc += Vc * i9;
@@ -1335,7 +1333,7 @@ public class GameRasterizer extends GameRaster {
                 col_a -= col_c_off * y_a;
                 y_a = 0;
             }
-            double j9 = y_b - viewCenter.getY();
+            int j9 = y_b - viewCenter.getY();
             Oa += Va * j9;
             Ob += Vb * j9;
             Oc += Vc * j9;
@@ -1453,7 +1451,7 @@ public class GameRasterizer extends GameRaster {
                 col_a -= col_a_off * y_a;
                 y_a = 0;
             }
-            double k9 = y_c - viewCenter.getY();
+            int k9 = y_c - viewCenter.getY();
             Oa += Va * k9;
             Ob += Vb * k9;
             Oc += Vc * k9;
@@ -1564,7 +1562,7 @@ public class GameRasterizer extends GameRaster {
             col_b -= col_a_off * y_b;
             y_b = 0;
         }
-        double l9 = y_c - viewCenter.getY();
+        int l9 = y_c - viewCenter.getY();
         Oa += Va * l9;
         Ob += Vb * l9;
         Oc += Vc * l9;
@@ -1643,8 +1641,8 @@ public class GameRasterizer extends GameRaster {
         }
         return;
     }
-	
-	 private void drawTexturedScanline(int dest[], int texture[],  int dest_off, int start_x, int end_x, int shadeValue, int gradient, int start_col, int end_col, int arg7, int arg8, int arg9, int arg10, int arg11, int arg12, int color, boolean force, boolean floor, int z1, int z2) {
+
+	 private void drawTexturedScanline(int[] dest, int[] texture, int dest_off, int start_x, int end_x, int shadeValue, int gradient, int start_col, int end_col, int arg7, int arg8, int arg9, int arg10, int arg11, int arg12, int color, boolean force, boolean floor, int z1, int z2) {
 	        boolean isObject = floor;
 	        int rgb = 0;
 	        int loops = 0;
@@ -1686,7 +1684,7 @@ public class GameRasterizer extends GameRaster {
 	        dest_off += start_x;
 	        int j4 = 0;
 	        int l4 = 0;
-	        double l6 = start_x - viewCenter.getX();
+	        int l6 = start_x - viewCenter.getX();
 	        arg7 += (arg10 >> 3) * l6;
 	        arg8 += (arg11 >> 3) * l6;
 	        arg9 += (arg12 >> 3) * l6;
@@ -1753,7 +1751,7 @@ public class GameRasterizer extends GameRaster {
 	                        }
 	                    }
 	                } else {
-	                	
+
 	                }
 	                if (!isObject) {
 	                    int tex = texture[(loops & 0x3f80) + (rgb >> 7)];
@@ -1828,13 +1826,13 @@ public class GameRasterizer extends GameRaster {
 	            loops += l7;
 	        }
 	    }
-	
+
 
 	public void drawTexturedTriangle(int faceYX, int faceYY, int faceYZ, int faceXX, int faceXY, int faceXZ, int k1, int l1, int i2, int j2,
 			int k2, int l2, int i3, int j3, int k3, int l3, int i4, int j4, int textureId) {
 
-		int pixels[] = TextureLoader.getTexturePixels(textureId);
-		
+        int[] pixels = TextureLoader.getTexturePixels(textureId);
+
 		if(pixels == null) {
 			drawShadedTriangle(faceYX, faceYY, faceYZ, faceXX, faceXY, faceXZ, k1, l1, i2);
 			return;
@@ -1899,7 +1897,7 @@ public class GameRasterizer extends GameRaster {
 					l1 -= l7 * faceYY;
 					faceYY = 0;
 				}
-				double k8 = faceYX - viewCenter.getY();
+				int k8 = faceYX - viewCenter.getY();
 				l4 += j5 * k8;
 				k5 += i6 * k8;
 				j6 += l6 * k8;
@@ -1978,7 +1976,7 @@ public class GameRasterizer extends GameRaster {
 				i2 -= l7 * faceYZ;
 				faceYZ = 0;
 			}
-			double l8 = faceYX - viewCenter.getY();
+			int l8 = faceYX - viewCenter.getY();
 			l4 += j5 * l8;
 			k5 += i6 * l8;
 			j6 += l6 * l8;
@@ -2065,7 +2063,7 @@ public class GameRasterizer extends GameRaster {
 					i2 -= j8 * faceYZ;
 					faceYZ = 0;
 				}
-				double i9 = faceYY - viewCenter.getY();
+				int i9 = faceYY - viewCenter.getY();
 				l4 += j5 * i9;
 				k5 += i6 * i9;
 				j6 += l6 * i9;
@@ -2144,7 +2142,7 @@ public class GameRasterizer extends GameRaster {
 				k1 -= j8 * faceYX;
 				faceYX = 0;
 			}
-			double j9 = faceYY - viewCenter.getY();
+			int j9 = faceYY - viewCenter.getY();
 			l4 += j5 * j9;
 			k5 += i6 * j9;
 			j6 += l6 * j9;
@@ -2230,7 +2228,7 @@ public class GameRasterizer extends GameRaster {
 				k1 -= j7 * faceYX;
 				faceYX = 0;
 			}
-			double k9 = faceYZ - viewCenter.getY();
+			int k9 = faceYZ - viewCenter.getY();
 			l4 += j5 * k9;
 			k5 += i6 * k9;
 			j6 += l6 * k9;
@@ -2307,7 +2305,7 @@ public class GameRasterizer extends GameRaster {
 			l1 -= j7 * faceYY;
 			faceYY = 0;
 		}
-		double l9 = faceYZ - viewCenter.getY();
+		int l9 = faceYZ - viewCenter.getY();
 		l4 += j5 * l9;
 		k5 += i6 * l9;
 		j6 += l6 * l9;
@@ -2759,7 +2757,7 @@ public class GameRasterizer extends GameRaster {
 		}
 	}
 
-	public void method377(int ai[], int i, int j, int k, int l, int i1) {
+	public void method377(int[] ai, int i, int j, int k, int l, int i1) {
 		if (restrictEdges) {
 			if (i1 > this.maxRight) {
 				i1 = this.maxRight;
@@ -2800,8 +2798,8 @@ public class GameRasterizer extends GameRaster {
 
 	}
 
-	public void drawTexturedLine(int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1,
-			int i2, int j2, int k2, int l2, int i3) {
+	public void drawTexturedLine(int[] ai, int[] ai1, int i, int j, int k, int l, int i1, int j1, int k1, int l1,
+                                 int i2, int j2, int k2, int l2, int i3) {
 		if (l >= i1)
 			return;
 		int j3;
@@ -2833,7 +2831,7 @@ public class GameRasterizer extends GameRaster {
 		k += l;
 		int j4 = 0;
 		int l4 = 0;
-		double l6 = l - viewCenter.getX();
+		int l6 = l - viewCenter.getX();
 		l1 += (k2 >> 3) * l6;
 		i2 += (l2 >> 3) * l6;
 		j2 += (i3 >> 3) * l6;
@@ -3085,7 +3083,7 @@ public class GameRasterizer extends GameRaster {
 				colourPalette[j++] = colour;
 			}
 		}
-		
+
 		/*BufferedImage img = new BufferedImage(1024, 64, BufferedImage.TYPE_INT_RGB);
 		System.out.println("palette len " + colourPalette.length);
 		for (int idx = 0; idx < colourPalette.length; idx++) {
@@ -3094,13 +3092,17 @@ public class GameRasterizer extends GameRaster {
 			int yPos = idx / 1024;
 			img.setRGB(xPos, yPos, color.getRGB());
 		}
-		
+
 		  try { ImageIO.write(img, "png", new File("F:/data/palette.png")); } catch (IOException
 		  e) {   e.printStackTrace(); }*/
+		
+
+
+	}
+	
+	public void setTextureBrightness(double exponent) {
 		if(TextureLoader.instance != null)
 			TextureLoader.instance.setBrightness(exponent);
-
-
 	}
 
 	public void useViewport() {

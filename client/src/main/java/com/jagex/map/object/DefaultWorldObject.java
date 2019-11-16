@@ -44,11 +44,11 @@ public abstract class DefaultWorldObject implements WorldObject {
 	}
 
 	@JsonIgnore
-	public int getLocHash(Chunk chunk) {
+	public int getLocHash() {
 
 		int y = key.getY() & 63;
 		int x = key.getX() & 63;
-		return getPlane() << 12 | x << 6 | y;
+		return plane << 12 | x << 6 | y;
 	}
 
 	@Override
@@ -141,11 +141,11 @@ public abstract class DefaultWorldObject implements WorldObject {
 
 	public void setSelected(boolean selected) {
 		if (primary != null) {
-			primary = primary.clone();
+			primary = primary.copy();
 			primary.selected = selected;
 		}
 		if (secondary != null) {
-			secondary = secondary.clone();
+			secondary = secondary.copy();
 			secondary.selected = selected;
 		}
 		this.selected = selected;

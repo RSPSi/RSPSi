@@ -1,8 +1,10 @@
 package com.jagex.chunk;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
 
+import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -10,13 +12,16 @@ import org.greenrobot.eventbus.ThreadMode;
 import com.google.common.collect.Lists;
 import com.jagex.Client;
 import com.jagex.cache.def.ObjectDefinition;
+import com.jagex.cache.def.RSArea;
 import com.jagex.cache.graphics.IndexedImage;
 import com.jagex.cache.graphics.Sprite;
+import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.draw.ImageGraphicsBuffer;
 import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.entity.object.AnimableObject;
 import com.jagex.map.MapRegion;
+import com.jagex.map.SceneGraph;
 import com.jagex.map.object.SpawnedObject;
 import com.jagex.net.ResourceResponse;
 import com.jagex.util.BitFlag;
@@ -25,8 +30,15 @@ import com.rspsi.options.Options;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import lombok.Setter;
 
 public class Chunk {
+	
+	private static final GameRasterizer rasterizer = new GameRasterizer();
+	
+	static {
+		rasterizer.setBrightness(0.6);
+	}
 	
 	private Client client;
 	
@@ -35,7 +47,7 @@ public class Chunk {
 
 	@Subscribe(threadMode = ThreadMode.ASYNC)
 	public void onResourceResponse(ResourceResponse response) {
-		if(response.getRequest().getType() == 3) {
+		if(response.getRequest().getType() == CacheFileType.MAP) {
 			int fileId = response.getRequest().getFile();
 			if(fileId == tileMapId) {
 				tileMapData = response.decompress();
@@ -57,6 +69,8 @@ public class Chunk {
 
 	public int tileMapId = -1;
 	public int objectMapId = -1;
+	public String objectMapName;
+	public String tileMapName;
 	public int regionHash;
 	public byte[] tileMapData;
 
@@ -66,21 +80,16 @@ public class Chunk {
 
 	public int offsetX, offsetY;
 
-	public ImageGraphicsBuffer minimapImageBuffer;
+	public ImageGraphicsBuffer minimapImageBuffer = new ImageGraphicsBuffer(256, 256, rasterizer);
 	
-	public GameRasterizer rasterizer;
-	
-	protected Client clientReference;
-
 	public int regionX, regionY;
 
-	private int[] mapObjectX;
+	private static int[] mapObjectX = new int[1000];
+	private static int[] mapObjectY = new int[1000];
+	private static byte[] mapObjectSelected = new byte[1000];
+	protected Sprite largeMinimapSprite = new Sprite(256, 256);
 
-	private int[] mapObjectY;
-	private byte[] mapObjectSelected;
-	protected Sprite largeMinimapSprite;
-
-	private Sprite[] mapObjectSprites;
+	private static Sprite[] mapObjectSprites = new Sprite[1000];
 	private ArrayDeque<AnimableObject> incompleteAnimables;
 
 	private ArrayDeque<SpawnedObject> spawns;
@@ -102,19 +111,13 @@ public class Chunk {
 
 		EventBus.getDefault().register(this);
 		this.client = client;
+		this.scenegraph = client.sceneGraph;
 		this.mapRegion = client.mapRegion;
-		mapObjectSprites = new Sprite[1000];
-		mapObjectSelected = new byte[1000];
-		mapObjectX = new int[1000];
-		mapObjectY = new int[1000];
+		
 		incompleteAnimables = new ArrayDeque<AnimableObject>();
 		spawns = new ArrayDeque<SpawnedObject>();
-		this.clientReference = client;
 		//sceneGraph = new SceneGraph(this, 64, 64, 4);
-		rasterizer = new GameRasterizer();
-		rasterizer.setBrightness(0.6);
-		minimapImageBuffer = new ImageGraphicsBuffer(256, 256, rasterizer);
-		largeMinimapSprite = new Sprite(256, 256);
+	
 		
 	}
 	public Chunk(int hash) {
@@ -148,7 +151,9 @@ public class Chunk {
 	public void drawMinimapScene(int plane) {
 		if(!updated)
 			return;
-		int raster[] = largeMinimapSprite.getRaster();
+		
+		boolean osrs = client.getCache().getIndexedFileSystem().isOSRS();
+        int[] raster = largeMinimapSprite.getRaster();
 		int pixels = raster.length;
 		for (int i = 0; i < pixels; i++) {
 			raster[i] = 0;
@@ -158,11 +163,11 @@ public class Chunk {
 			int i1 = (63 - y) * 256 * 4;
 			for (int x = 0; x < 64; x++) {
 				if ((mapRegion.tileFlags[plane][offsetX + x][offsetY + y] & 0x18) == 0) {
-					client.sceneGraph.drawMinimapTile(raster, offsetX + x, offsetY + y, plane, i1, 256);
+					scenegraph.drawMinimapTile(raster, offsetX + x, offsetY + y, plane, i1, 256);
 				}
 
 				if (plane < 3 && (mapRegion.tileFlags[plane + 1][offsetX + x][offsetY + y] & 8) != 0) {
-					client.sceneGraph.drawMinimapTile(raster, offsetX + x, offsetY + y, plane + 1, i1, 256);
+					scenegraph.drawMinimapTile(raster, offsetX + x, offsetY + y, plane + 1, i1, 256);
 				}
 				i1 += 4;
 			}
@@ -187,24 +192,41 @@ public class Chunk {
 			mapObjectCount = 0;
 			for (int x = 0; x < 64; x++) {
 				for (int y = 0; y < 64; y++) {
-					ObjectKey key = client.sceneGraph.getFloorDecorationKey(offsetX + x, offsetY +y, plane);
+					ObjectKey key = scenegraph.getFloorDecorationKey(offsetX + x, offsetY +y, plane);
 					
 					if (key != null) {
-						byte selected = (byte) (client.sceneGraph.getTileFloorDecoration(offsetX + x, offsetY + y, plane).isSelected() ? 1 : 0);
+						byte selected = (byte) (scenegraph.getTileFloorDecoration(offsetX + x, offsetY + y, plane).isSelected() ? 1 : 0);
 						int id = key.getId();
 						ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 						if(definition != null) {
-							int function = definition.getMinimapFunction();
-		
-							if (function >= 0 && function < Client.mapFunctions.length) {
-								int viewportX = x;
-								int viewportY = y;
-		
-								mapObjectSprites[mapObjectCount] = Client.mapFunctions[function];
-								mapObjectSelected[mapObjectCount] = selected;
-								mapObjectX[mapObjectCount] = viewportX;
-								mapObjectY[mapObjectCount] = viewportY;
-								mapObjectCount++;
+							if(osrs && definition.getAreaId() != -1) {
+								RSArea area = RSAreaLoader.get(definition.getAreaId());
+								int function = area.getSpriteId();
+								
+								if (function >= 0) {
+									int viewportX = x;
+									int viewportY = y;
+			
+									mapObjectSprites[mapObjectCount] = client.getCache().getSprite(function);
+									mapObjectSelected[mapObjectCount] = selected;
+									mapObjectX[mapObjectCount] = viewportX;
+									mapObjectY[mapObjectCount] = viewportY;
+									mapObjectCount++;
+								}
+							} else {
+
+								int function = definition.getMinimapFunction();
+			
+								if (function >= 0 && function < Client.mapFunctions.length) {
+									int viewportX = x;
+									int viewportY = y;
+			
+									mapObjectSprites[mapObjectCount] = Client.mapFunctions[function];
+									mapObjectSelected[mapObjectCount] = selected;
+									mapObjectX[mapObjectCount] = viewportX;
+									mapObjectY[mapObjectCount] = viewportY;
+									mapObjectCount++;
+								}
 							}
 						}
 					}
@@ -255,9 +277,9 @@ public class Chunk {
 	public void loadChunk() {
 	
 
-			client.sceneGraph.setChunk(this);
+			scenegraph.setChunk(this);
 			incompleteAnimables.clear();
-			//client.sceneGraph.reset();
+			//scenegraph.reset();
 			
 		/*	for (int z = 0; z < 4; z++) {
 				for (int x = 0; x < 64; x++) {
@@ -270,14 +292,14 @@ public class Chunk {
 			// XXX
 			if (tileMapData != null) {
 				System.out.println("tilemap data not null");
-				mapRegion.decodeRegionMapData(tileMapData, offsetX, offsetY, regionX, regionY);
+				mapRegion.unpackTiles(tileMapData, offsetX, offsetY, regionX, regionY);
 
 			} /*else if (regionY < 700) {//XXX Figure out why this exists
 				mapRegion.method174(0, 0, 64, 64);
 			}*/
 			if (objectMapData != null) {
 				System.out.println("object data not null");
-				mapRegion.decodeLandscapes(client.sceneGraph, objectMapData, offsetX, offsetY);
+				mapRegion.unpackObjects(scenegraph, objectMapData, offsetX, offsetY);
 
 			}
 
@@ -290,7 +312,7 @@ public class Chunk {
 	}
 
 	public final void method50(int x, int y, int z, int nullColour, int defaultColour) {
-		ObjectKey key = client.sceneGraph.getWallKey(offsetX + x, offsetY + y, z);
+		ObjectKey key = scenegraph.getWallKey(offsetX + x, offsetY + y, z);
 
 		if (key != null) {
 			int id = key.getId();
@@ -307,11 +329,11 @@ public class Chunk {
 			ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 
 			if (definition != null && definition.getMapscene() != -1 && definition.getMapscene() < Client.mapScenes.length) {
-				IndexedImage image = Client.mapScenes[definition.getMapscene()];
+				Sprite image = Client.mapScenes[definition.getMapscene()];
 				if (image != null) {
 					int dx = (definition.getWidth() * 4 - image.getWidth()) / 2;
 					int dy = (definition.getLength() * 4 - image.getHeight()) / 2;
-					image.draw(rasterizer, 48 + x * 4 + dx, 48 + (63 - y - definition.getLength()) * 4 + dy);
+					image.drawSprite(rasterizer, 48 + x * 4 + dx, 48 + (63 - y - definition.getLength()) * 4 + dy);
 				}
 			} else {
 				if (type == 0 || type == 2) {
@@ -374,7 +396,7 @@ public class Chunk {
 			}
 		}
 
-		key = client.sceneGraph.getInteractableObjectKey(offsetX +x, offsetY + y, z);
+		key = scenegraph.getInteractableObjectKey(offsetX +x, offsetY + y, z);
 		if (key != null) {
 			int id = key.getId();
 			int type = key.getType();
@@ -382,11 +404,11 @@ public class Chunk {
 			ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 
 			if (definition != null && definition.getMapscene() != -1 && definition.getMapscene() < Client.mapScenes.length) {
-				IndexedImage image = Client.mapScenes[definition.getMapscene()];
+				Sprite image = Client.mapScenes[definition.getMapscene()];
 				if (image != null) {
 					int j5 = (definition.getWidth() * 4 - image.getWidth()) / 2;
 					int k5 = (definition.getLength() * 4 - image.getHeight()) / 2;
-					image.draw(rasterizer, x * 4 + j5, (63 - y - definition.getLength()) * 4 + k5);
+					image.drawSprite(rasterizer, x * 4 + j5, (63 - y - definition.getLength()) * 4 + k5);
 				}
 			} else if (type == 9) {
 				int colour = 0xeeeeee;
@@ -394,7 +416,7 @@ public class Chunk {
 					colour = 0xee0000;
 				}
 
-				int raster[] = largeMinimapSprite.getRaster();
+                int[] raster = largeMinimapSprite.getRaster();
 				int index = x * 4 + (63 - y) * 256 * 4;
 				if (orientation == 0 || orientation == 2) {
 					raster[index + 256 * 3] = colour;
@@ -410,16 +432,16 @@ public class Chunk {
 			}
 		}
 
-		key = client.sceneGraph.getFloorDecorationKey(offsetX +x, offsetY + y, z);
+		key = scenegraph.getFloorDecorationKey(offsetX +x, offsetY + y, z);
 		if (key != null) {
 			int id = key.getId();
 			ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 			if (definition != null && definition.getMapscene() != -1 && definition.getMapscene() < Client.mapScenes.length) {
-				IndexedImage image = Client.mapScenes[definition.getMapscene()];
+				Sprite image = Client.mapScenes[definition.getMapscene()];
 				if (image != null) {
 					int i4 = (definition.getWidth() * 4 - image.getWidth()) / 2;
 					int j4 = (definition.getLength() * 4 - image.getHeight()) / 2;
-					image.draw(rasterizer, x * 4 + i4, (63 - y - definition.getLength()) * 4 + j4);
+					image.drawSprite(rasterizer, x * 4 + i4, (63 - y - definition.getLength()) * 4 + j4);
 				}
 			}
 		}
@@ -440,43 +462,24 @@ public class Chunk {
 	public final void processAnimableObjects() {
 		List<AnimableObject> completed = Lists.newArrayList();
 		incompleteAnimables.stream()
-		.filter(object -> object.getZ() != Options.currentHeight.get() || object.isTransformationCompleted())
-		.forEach(object -> completed.add(object));
-		
+				.filter(object -> object.getZ() != Options.currentHeight.get() || object.isTransformationCompleted())
+				.forEach(object -> completed.add(object));
+
 		incompleteAnimables.removeAll(completed);
 		completed.clear();
-		
+
 		incompleteAnimables.forEach(object -> {
 			if (Client.pulseTick >= object.getTick()) {
 				object.nextAnimationStep(Client.tickDelta);
 				if (!object.isTransformationCompleted()) {
-					client.sceneGraph.addEntity(object.getX(), object.getY(), object.getZ(), object, 0, null,
+					scenegraph.addEntity(object.getX(), object.getY(), object.getZ(), object, 0, null,
 							object.getRenderHeight(), 60, false, false);
 				}
 			}
 		});
-	
+
 	}
-	
-	public BitFlag getSelectedFlag() {
-		return client.sceneGraph.getSelectedFlag();
-	}
-	
-	public int getSelectedHeight() {
-		return client.sceneGraph.getSelectedHeight();
-	}
-	
-	public byte getSelectedOverlay() {
-		return client.sceneGraph.getSelectedOverlay();
-	}
-	
-	public byte getSelectedUnderlay() {
-		return client.sceneGraph.getSelectedUnderlay();
-	}
-	
-	public int getSelectedOverlayShape() {
-		return client.sceneGraph.getOverlayShape();
-	}
+
 
 	public boolean ready() {
 		if (ready)
@@ -506,13 +509,13 @@ public class Chunk {
 
 			ObjectKey key = null;
 			if (group == 0) {
-				key = client.sceneGraph.getWallKey(x, y, z);
+				key = scenegraph.getWallKey(x, y, z);
 			} else if (group == 1) {
-				key = client.sceneGraph.getWallDecorationKey(x, y, z);
+				key = scenegraph.getWallDecorationKey(x, y, z);
 			} else if (group == 2) {
-				key = client.sceneGraph.getInteractableObjectKey(x, y, z);
+				key = scenegraph.getInteractableObjectKey(x, y, z);
 			} else if (group == 3) {
-				key = client.sceneGraph.getFloorDecorationKey(x, y, z);
+				key = scenegraph.getFloorDecorationKey(x, y, z);
 			}
 
 			if (key != null) {
@@ -521,21 +524,19 @@ public class Chunk {
 				int orientation = key.getOrientation();
 
 				if (group == 0) {
-					client.sceneGraph.removeWall(x, y, z);
-					ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
+					scenegraph.removeWall(x, y, z);
 
 				} else if (group == 1) {
-					client.sceneGraph.removeWallDecoration(x, y, z);
+					scenegraph.removeWallDecoration(x, y, z);
 				} else if (group == 2) {
-					client.sceneGraph.removeObject(x, y, z);
+					scenegraph.removeObject(x, y, z);
 					ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 					if (x + definition.getWidth() > 63 || y + definition.getWidth() > 63
 							|| x + definition.getLength() > 63 || y + definition.getLength() > 63)
 						return;
 					
 				} else if (group == 3) {
-					client.sceneGraph.removeFloorDecoration(x, y, z);
-					ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
+					scenegraph.removeFloorDecoration(x, y, z);
 					
 				}
 			}
@@ -546,7 +547,7 @@ public class Chunk {
 					plane++;
 				}*/
 
-				mapRegion.spawnObjectToWorld(client.sceneGraph, previousId, x, y, plane, previousType, previousOrientation, false);
+				mapRegion.spawnObjectToWorld(scenegraph, previousId, x, y, plane, previousType, previousOrientation, false);
 			}
 		}
 	}
@@ -558,13 +559,13 @@ public class Chunk {
 		int orientation = 0;
 
 		if (spawn.getGroup() == 0) {
-			key = client.sceneGraph.getWallKey(spawn.getX(), spawn.getY(), spawn.getZ());
+			key = scenegraph.getWallKey(spawn.getX(), spawn.getY(), spawn.getZ());
 		} else if (spawn.getGroup() == 1) {
-			key = client.sceneGraph.getWallDecorationKey(spawn.getX(), spawn.getY(), spawn.getZ());
+			key = scenegraph.getWallDecorationKey(spawn.getX(), spawn.getY(), spawn.getZ());
 		} else if (spawn.getGroup() == 2) {
-			key = client.sceneGraph.getInteractableObjectKey(spawn.getX(), spawn.getY(), spawn.getZ());
+			key = scenegraph.getInteractableObjectKey(spawn.getX(), spawn.getY(), spawn.getZ());
 		} else if (spawn.getGroup() == 3) {
-			key = client.sceneGraph.getFloorDecorationKey(spawn.getX(), spawn.getY(), spawn.getZ());
+			key = scenegraph.getFloorDecorationKey(spawn.getX(), spawn.getY(), spawn.getZ());
 		}
 
 		if (key != null) {// TODO update this
@@ -588,7 +589,9 @@ public class Chunk {
 		newMap = b;
 	}
 	
+	@Setter
 	protected boolean loaded;
+	public SceneGraph scenegraph;
 
 	public boolean hasLoaded() {
 		return loaded;
@@ -604,11 +607,28 @@ public class Chunk {
 		
 		for(int x = offsetX;x<offsetX + 64;x++) {
 			for(int y = offsetY;y<offsetY + 64;y++) {
-				if(client.sceneGraph.getTile(Options.currentHeight.get(), x, y).hasUpdated) {
+				if(scenegraph.getTile(Options.currentHeight.get(), x, y).hasUpdated) {
 					this.updated = true;
 					break;
 				}
 			}
+		}
+	}
+
+	public void clearUpdates() {
+		for(int x = offsetX;x<offsetX + 64;x++) {
+			for(int y = offsetY;y<offsetY + 64;y++) {
+				scenegraph.getTile(Options.currentHeight.get(), x, y).hasUpdated = false;
+			}
+		}
+	}
+
+	public void fillNamesFromIds() {
+		if(tileMapName == null || tileMapName.isEmpty()) {
+			tileMapName = Integer.toString(tileMapId);
+		}
+		if(objectMapName == null || objectMapName.isEmpty()) {
+			objectMapName = Integer.toString(objectMapId);
 		}
 	}
 

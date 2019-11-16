@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,7 +39,7 @@ public class MeshLoader {
 	
 	@Subscribe(threadMode = ThreadMode.ASYNC)
 	public void onResourceResponse(ResourceResponse response) {
-		if(response.getRequest().getType() == 0) {
+		if(response.getRequest().getType() == CacheFileType.MODEL) {
 			load(response.decompress(), response.getRequest().getFile());
 		}
 	}
@@ -61,19 +62,23 @@ public class MeshLoader {
 		MeshRevision revision = MeshUtils.getRevision(data);
 		//System.out.println("Attempting to load model " + id + " revision " + revision.name());
 		Mesh mesh = null;
-		switch(revision) {
-		case REVISION_525:
-			mesh = new Mesh525(data);
-			break;
-		case REVISION_622:
-			mesh = new Mesh622(data);
-			break;
-			
-		default:
-		case REVISION_317:
-			mesh = new Mesh317(data);
-			break;
-		
+		try {
+			switch (revision) {
+				case REVISION_525:
+					mesh = new Mesh525(data);
+					break;
+				case REVISION_622:
+					mesh = new Mesh622(data);
+					break;
+
+				default:
+				case REVISION_317:
+					mesh = new Mesh317(data);
+					break;
+
+			}
+		} catch(Exception ex){
+			ex.printStackTrace();
 		}
 		
 		loadedMeshes.put(id, mesh);
@@ -90,7 +95,7 @@ public class MeshLoader {
 		if (!alreadyLoading) {
 			awaitingLoad.add(id);
 			System.out.println("Requested model " + id);
-			provider.requestFile(0, id);
+			provider.requestFile(CacheFileType.MODEL, id);
 			return false;
 		}
 		return false;
@@ -98,13 +103,13 @@ public class MeshLoader {
 
 	public Mesh lookup(int id) {
 		if(loaded(id)) {
-			return loadedMeshes.get(id).clone();
+			return loadedMeshes.get(id);
 		} 
 		return null;
 	}
 	
 	public void requestMesh(int id) {
-		provider.requestFile(0, id);
+		provider.requestFile(CacheFileType.MODEL, id);
 	}
 
 
