@@ -7,15 +7,16 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.jagex.Client;
 import com.jagex.chunk.Chunk;
+import com.rspsi.misc.Vector2;
 
 public class MultiMapEncoder {
 	
 	public static byte[] encode(List<Chunk> chunks) {
-		ByteBuffer buffer = ByteBuffer.allocate(1024 * 1000);//1mb
+		ByteBuffer buffer = ByteBuffer.allocate(5000000);//5mb
 		buffer.putInt(chunks.size());
-		for(Chunk chunk : chunks) {//TODO Make this work for multiple regions
+		for(Chunk chunk : chunks) {
 			if(chunk.hasLoaded()) {
-				byte[] objectMap = Client.getSingleton().sceneGraph.saveObjects(chunk);
+				byte[] objectMap = chunk.scenegraph.saveObjects(chunk);
 				byte[] tileMap = chunk.mapRegion.save_terrain_block(chunk);
 				
 				
@@ -32,12 +33,63 @@ public class MultiMapEncoder {
 				buffer.put(tileMap);
 				
 			}
-			//TODO Write to file
 		}
 		
 		return Arrays.copyOf(buffer.array(), buffer.position());
 	}
 	
+	public static byte[] encodeShallow(List<Chunk> chunks) {
+		ByteBuffer buffer = ByteBuffer.allocate(5_000_000);//5mb
+		buffer.putInt(chunks.size());
+		for(Chunk chunk : chunks) {
+			if(chunk.hasLoaded()) {
+				byte[] objectMap = chunk.objectMapData;
+				byte[] tileMap = chunk.tileMapData;
+				
+				
+				buffer.putInt(chunk.objectMapId);
+				buffer.putInt(chunk.tileMapId);
+				
+				buffer.putInt(chunk.offsetX / 64);
+				buffer.putInt(chunk.offsetY / 64);
+				
+				buffer.putInt(objectMap.length);
+				buffer.put(objectMap);
+				
+				buffer.putInt(tileMap.length);
+				buffer.put(tileMap);
+				
+			}
+		}
+		
+		return Arrays.copyOf(buffer.array(), buffer.position());
+	}
+
+	public static Vector2 getSize(byte[] encoded) {
+		ByteBuffer buffer = ByteBuffer.wrap(encoded);
+		int size = buffer.getInt();
+
+		int maximumX = 0;
+		int maximumY = 0;
+		for(int i = 0;i<size;i++) {
+			buffer.getInt();
+			buffer.getInt();
+
+			int positionX = buffer.getInt();
+			int positionY = buffer.getInt();
+
+			if(positionX > maximumX)
+				maximumX = positionX;
+			if(positionY > maximumY)
+				maximumY = positionY;
+
+			buffer.get(new byte[buffer.getInt()]);
+			buffer.get(new byte[buffer.getInt()]);
+
+		}
+
+		return new Vector2(maximumX, maximumY);
+	}
 	public static List<Chunk> decode(byte[] encoded){
 		List<Chunk> chunks = Lists.newArrayList();
 		ByteBuffer buffer = ByteBuffer.wrap(encoded);
