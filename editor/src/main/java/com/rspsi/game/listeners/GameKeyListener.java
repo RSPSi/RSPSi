@@ -4,6 +4,7 @@ import com.jagex.Client;
 import com.jagex.map.SceneGraph;
 import com.rspsi.dialogs.TileDeleteDialog;
 import com.rspsi.misc.ToolType;
+import com.rspsi.options.KeyboardState;
 import com.rspsi.options.Options;
 
 import javafx.event.EventHandler;
@@ -24,6 +25,12 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 		// System.out.println(event.getEventType().getName());
 		if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED) {
 			KeyEvent keyEvent = (KeyEvent) event;
+			
+			if(keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+				KeyboardState.onKeyDown(keyEvent.getCode());
+			} else {
+				KeyboardState.onKeyUp(keyEvent.getCode());
+			}
 			
 			if (keyEvent.getCode() == KeyCode.W) {
 				client.keyStatuses['w'] = event.getEventType() == KeyEvent.KEY_RELEASED ? 0 : 1;
@@ -101,15 +108,15 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 				// SceneGraph.hoveredTileY, SceneGraph.activePlane);
 			} 
 			
-			if (keyEvent.isShiftDown() || keyEvent.getCode() == KeyCode.SHIFT) {
+			if (keyEvent.getCode() == KeyCode.SHIFT) {
 				SceneGraph.shiftDown = event.getEventType() == KeyEvent.KEY_PRESSED;
 			} 
 
-			if (keyEvent.isControlDown() || keyEvent.getCode() == KeyCode.CONTROL) {
+			if (keyEvent.getCode() == KeyCode.CONTROL) {
 				SceneGraph.ctrlDown = event.getEventType() == KeyEvent.KEY_PRESSED;
 			} 
 
-			if (keyEvent.isAltDown() || keyEvent.getCode() == KeyCode.ALT) {
+			if (keyEvent.getCode() == KeyCode.ALT) {
 				SceneGraph.altDown = event.getEventType() == KeyEvent.KEY_PRESSED;
 			} 
 

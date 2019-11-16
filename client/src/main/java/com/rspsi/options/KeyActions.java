@@ -1,0 +1,12 @@
+package com.rspsi.options;
+
+public enum KeyActions {
+
+	ADD_TO_SELECTION_TILE,
+	ADD_TO_SELECTION_TILE_SINGLE,
+	ADD_TO_SELECTION_OBJECT,
+	
+	INVERSE_FLAG_SET, OVERLAY_REMOVE, OVERLAY_ONLY_PAINT,
+	
+	
+}
