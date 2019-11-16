@@ -205,6 +205,29 @@ public final class Buffer {
 
 		return readInt() & Integer.MAX_VALUE;
 	}
+	
+	private static char CHARACTERS[] = { '\u20AC', '\0', '\u201A', '\u0192', '\u201E', '\u2026', '\u2020', '\u2021',
+			'\u02C6', '\u2030', '\u0160', '\u2039', '\u0152', '\0', '\u017D', '\0', '\0', '\u2018', '\u2019', '\u201C',
+			'\u201D', '\u2022', '\u2013', '\u2014', '\u02DC', '\u2122', '\u0161', '\u203A', '\u0153', '\0', '\u017E',
+			'\u0178' };
+	
+	public String readOSRSString() {
+		StringBuilder bldr = new StringBuilder();
+		int b;
+		while ((b = payload[position++]) != 0) {
+			if (b >= 127 && b < 160) {
+				char curChar = CHARACTERS[b - 128];
+				if (curChar == 0) {
+					curChar = 63;
+				}
+				
+				bldr.append(curChar);
+			} else {
+				bldr.append((char) b);
+			}
+		}
+		return bldr.toString();
+	}
 
 	public String readString() {
 		int start = position;
