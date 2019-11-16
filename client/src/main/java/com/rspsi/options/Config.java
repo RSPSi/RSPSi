@@ -13,12 +13,11 @@ public class Config {
 	public static final boolean ALL_HEIGHTS_MANUAL = true;
 	
 	
-	public static final int MINIMAP_SIZE = 192;
+	public static final int MINIMAP_SIZE = 256;
 	
 
 	public static StringProperty cacheLocation = new SimpleStringProperty("cache" + File.separator);
 
 	public static final boolean LOAD_ANIMS = true;
-	public static DataRevision dataRevision = DataRevision.MODE_OSRS; 
 
 }

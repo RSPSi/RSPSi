@@ -1,12 +1,15 @@
 package com.rspsi.controllers;
 
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 import org.major.map.RenderFlags;
 
+import com.google.common.primitives.Doubles;
 import com.jagex.Client;
 import com.jagex.map.SceneGraph;
 import com.jagex.util.BitFlag;
+import com.jfoenix.controls.JFXCheckBox;
 import com.rspsi.MainWindow;
 import com.rspsi.Testing;
 import com.rspsi.controls.SwatchControl;
@@ -15,10 +18,12 @@ import com.rspsi.misc.BrushType;
 import com.rspsi.misc.ToolType;
 import com.rspsi.options.Options;
 import com.rspsi.swatches.SwatchType;
+import com.rspsi.tools.BridgeBuilder;
+import com.rspsi.util.AlwaysSelectToggleGroup;
 import com.rspsi.util.ChangeListenerUtil;
 import com.rspsi.util.FXDialogs;
 
-import javafx.beans.value.ChangeListener;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -26,7 +31,6 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -39,33 +43,39 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Toggle;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
+import javafx.util.converter.IntegerStringConverter;
+import lombok.Getter;
 
+@Getter
 public class MainController {
-	
-    @FXML
-    private MenuItem openAsPackBtn;
 
-    @FXML
-    private MenuItem saveToCacheBtn;
+	@FXML
+	private MenuItem openAsPackBtn;
 
-    @FXML
-    private MenuItem saveAsPackFile;
+	@FXML
+	private MenuItem saveToCacheBtn;
 
-	
+	@FXML
+	private MenuItem saveAsPackFile;
+
 	@FXML
 	private MenuItem showMapIndexEditor;
 
 	@FXML
-	private HBox headerBar;
+	private HBox grabBar;
 
 	@FXML
 	private ImageView iconView;
@@ -75,7 +85,7 @@ public class MainController {
 
 	@FXML
 	private Label titleLabel;
-	
+
 	@FXML
 	private Label statusLabel;
 
@@ -138,7 +148,7 @@ public class MainController {
 
 	@FXML
 	private MenuItem forceMapUpdateBtn;
-	
+
 	@FXML
 	private MenuItem importTilesBtn;
 
@@ -225,368 +235,148 @@ public class MainController {
 
 	@FXML
 	private Button increaseBrushSizeBtn;
-	
+
 	@FXML
 	private TabPane toolsTabPane;
-	
+
 	@FXML
 	private MenuItem undoMenuItem;
 
 	@FXML
 	private MenuItem redoMenuItem;
 
+	@FXML
+	private CheckMenuItem showBlockedFlag;
+
+	@FXML
+	private CheckMenuItem showBridgeFlag;
+
+	@FXML
+	private CheckMenuItem showLowestFlag;
+
+	@FXML
+	private CheckMenuItem showDisableFlag;
+
+	@FXML
+	private JFXCheckBox unwalkableCheck;
+
+	@FXML
+	private JFXCheckBox bridgeCheck;
+
+	@FXML
+	private JFXCheckBox forceLowestCheck;
+	
+	@FXML
+	private JFXCheckBox disableRenderCheck;
+
+	@FXML
+	private JFXCheckBox drawOnLowerZCheck;
+	
+
+	@FXML
+	private JFXCheckBox absoluteHeightCheck;
+
+	@FXML
+	private ToggleButton setFlagBtn;
+	
     @FXML
-    private CheckMenuItem showBlockedFlag;
+    private ToggleButton paintOverlayBtn;
 
     @FXML
-    private CheckMenuItem showBridgeFlag;
-
-    @FXML
-    private CheckMenuItem showLowestFlag;
-
-    @FXML
-    private CheckMenuItem showDisableFlag;
-    
-    @FXML
-    private CheckBox unwalkableCheck;
-
-    @FXML
-    private CheckBox bridgeCheck;
-
-    @FXML
-    private CheckBox forceLowestCheck;
-    
-    @FXML
-    private ToggleButton setFlagBtn;
+    private ToggleButton paintUnderlayBtn;
 
 	@FXML
 	private MenuItem copyTileFlags;
 
-    @FXML
-    private CheckBox disableRenderCheck;
-    
+
 	@FXML
 	private CheckMenuItem showLowerZFlag;
 
-    @FXML
-    private CheckBox drawOnLowerZCheck;
-    
-    @FXML
-    private MenuItem copyTileHeights;
-    
-    @FXML
-    private MenuItem setTileHeightMenuItem;
 
-    @FXML
-    private MenuItem setFlagsToTiles;
+	@FXML
+	private MenuItem copyTileHeights;
 
-    @FXML
-    private MenuItem setHeightsToTiles;
-    
-    @FXML
-    private MenuItem showFullMap;
-    
-    @FXML
-    private MenuItem fixHeightsBtn;
-    
-    @FXML
-    private MenuItem getOverlayFromTile;
+	@FXML
+	private TextField tileHeightTextBox;
 
-    @FXML
-    private MenuItem getUnderlayFromTile;
-    
-    @FXML
-    private CheckMenuItem showMapIconObjs;
-    
-    @FXML
-    private CheckMenuItem showAnimsMenuItem;
-    
-    @FXML
-    private TabPane mainTabPane;
+	@FXML
+	private Button tileHeightTextButton;
 
-	public MenuItem getCopyTileHeights() {
-		return copyTileHeights;
-	}
+	@FXML
+	private MenuItem setFlagsToTiles;
 
-	public ToggleButton getSetFlagBtn() {
-		return setFlagBtn;
-	}
+	@FXML
+	private MenuItem setHeightsToTiles;
 
-	public MenuItem getCopyTileFlags() {
-		return copyTileFlags;
-	}
+	@FXML
+	private MenuItem showFullMap;
 
-	public CheckMenuItem getShowBlockedFlag() {
-		return showBlockedFlag;
-	}
+	@FXML
+	private MenuItem reloadSwatchesBtn;
 
-	public CheckMenuItem getShowBridgeFlag() {
-		return showBridgeFlag;
-	}
+	@FXML
+	private MenuItem fixHeightsBtn;
 
-	public CheckMenuItem getShowLowestFlag() {
-		return showLowestFlag;
-	}
+	@FXML
+	private MenuItem getOverlayFromTile;
 
-	public CheckMenuItem getShowDisableFlag() {
-		return showDisableFlag;
-	}
+	@FXML
+	private MenuItem getUnderlayFromTile;
 
-	public CheckBox getUnwalkableCheck() {
-		return unwalkableCheck;
-	}
+	@FXML
+	private CheckMenuItem displayOverlayIds;
 
-	public CheckBox getBridgeCheck() {
-		return bridgeCheck;
-	}
+	@FXML
+	private CheckMenuItem displayUnderlayIds;
 
-	public CheckBox getForceLowestCheck() {
-		return forceLowestCheck;
-	}
+	@FXML
+	private CheckMenuItem displayTileHeights;
 
-	public CheckBox getDisableRenderCheck() {
-		return disableRenderCheck;
-	}
+	@FXML
+	private CheckMenuItem showMapIconObjs;
 
-	public MenuItem getAddObjectToSwatchBtn() {
-		return addObjectToSwatchBtn;
-	}
+	@FXML
+	private CheckMenuItem showAnimsMenuItem;
 
-	public CheckMenuItem getAllHeightsCheckItem() {
-		return allHeightsCheckItem;
-	}
+	@FXML
+	private TabPane mainTabPane;
+
+	@FXML
+	private MenuItem setOverlays;
+
+	@FXML
+	private MenuItem setUnderlays;
+
+	@FXML
+	private CheckMenuItem simulateBridges;
+
+	@FXML
+	private MenuItem showRemapperBtn;
+
+	@FXML
+	private MenuItem setRelativeHeight;
 	
-	public MenuItem getForceMapUpdateBtn() {
-		return forceMapUpdateBtn;
-	}
-
-	public Slider getBrushSizeSlider() {
-		return brushSizeSlider;
-	}
-
-	public Tooltip getBrushSizeTooltip() {
-		return brushSizeTooltip;
-	}
-
-	public ComboBox<BrushType> getBrushTypeSelection() {
-		return brushTypeSelection;
-	}
+	@FXML
+	private MenuItem generateBridgeBtn;
 	
-	public MenuItem getShowFullMap() {
-		return showFullMap;
-	}
-
-	public MenuItem getContactMeBtn() {
-		return contactMeBtn;
-	}
-
-	public HBox getControlBox() {
-		return controlBox;
-	}
-
-	public MenuItem getCopySelectedTilesBtn() {
-		return copySelectedTilesBtn;
-	}
-
-	public Spinner<?> getCurrentHeightSpinner() {
-		return currentHeightSpinner;
-	}
-
-	public Button getDecreaseBrushSizeBtn() {
-		return decreaseBrushSizeBtn;
-	}
-
-	public ToggleButton getDeleteObjectBtn() {
-		return deleteObjectBtn;
-	}
-
-	public MenuItem getDeleteSelectedTilesBtn() {
-		return deleteSelectedTilesBtn;
-	}
-
-	public CheckMenuItem getDisableBlendingCheckItem() {
-		return disableBlendingCheckItem;
-	}
-
-	public HBox getDockContainer() {
-		return dockContainer;
-	}
-
-	public MenuItem getExportTilesBtn() {
-		return exportTilesBtn;
-	}
-
-	public AnchorPane getGamePane() {
-		return gamePane;
-	}
-
-	public HBox getHeaderBar() {
-		return headerBar;
-	}
-
-	public ToggleButton getHeightFillBtn() {
-		return heightFillBtn;
-	}
-
-	public Slider getHeightLevelSlider() {
-		return heightLevelSlider;
-	}
-
-	public Tooltip getHeightLevelTooltip() {
-		return heightLevelTooltip;
-	}
-
-	public ToggleButton getHeightModifyBtn() {
-		return heightModifyBtn;
-	}
-
-	public CheckMenuItem getHiddenTilesCheckItem() {
-		return hiddenTilesCheckItem;
-	}
-
-	public ImageView getIconView() {
-		return iconView;
-	}
-
-	public MenuItem getImportTilesBtn() {
-		return importTilesBtn;
-	}
-
-	public Button getIncreaseBrushSizeBtn() {
-		return increaseBrushSizeBtn;
-	}
-
-	public AnchorPane getLeftBar() {
-		return leftBar;
-	}
-
-	public AnchorPane getMapPane() {
-		return mapPane;
-	}
-
-	public ToggleButton getMoveObjectBtn() {
-		return moveObjectBtn;
-	}
-
-	public MenuItem getNewMapButton() {
-		return newMapButton;
-	}
-
-	public ComboBox<String> getObjectSelectionType() {
-		return objectSelectionType;
-	}
-
-	public MenuItem getOpenCoordinateButton() {
-		return openCoordinateButton;
-	}
-
-	public MenuItem getOpenFileButton() {
-		return openFileButton;
-	}
-
-	public MenuItem getOpenHashButton() {
-		return openHashButton;
-	}
-
-	public Menu getOpenRecentMenu() {
-		return openRecentMenu;
-	}
-
-	public MenuItem getOpenTutorialBtn() {
-		return openTutorialBtn;
-	}
-
-	public ToggleButton getPaintFillBtn() {
-		return paintFillBtn;
-	}
-
-	public ToggleButton getPaintTileBtn() {
-		return paintTileBtn;
-	}
-
-	public MenuItem getPasteTilesBtn() {
-		return pasteTilesBtn;
-	}
-
-	public MenuItem getPreferencesMenuItem() {
-		return preferencesMenuItem;
-	}
-
-	public MenuItem getQuitMenuItem() {
-		return quitMenuItem;
-	}
-
-	public AnchorPane getRightBar() {
-		return rightBar;
-	}
-
-	public MenuItem getSaveAsMenuItem() {
-		return saveAsMenuItem;
-	}
-
-	public MenuItem getSaveMenuItem() {
-		return saveMenuItem;
-	}
-
-	public ToggleButton getSelectObjectBtn() {
-		return selectObjectBtn;
-	}
-
-	public ToggleButton getSelectTileBtn() {
-		return selectTileBtn;
-	}
-
-	public CheckMenuItem getShowFPSCheckItem() {
-		return showFPSCheckItem;
-	}
-
-	public CheckMenuItem getShowObjectsCheckItem() {
-		return showObjectsCheckItem;
-	}
-
-	public MenuItem getShowObjectViewBtn() {
-		return showObjectViewBtn;
-	}
-
-	public CheckMenuItem getShowOverlaysCheckItem() {
-		return showOverlaysCheckItem;
-	}
-
-	public Label getTitleLabel() {
-		return titleLabel;
-	}
-
-	public MenuBar getToolbar() {
-		return toolbar;
-	}
-
-	public ToggleGroup getToolGroup() {
-		return toolGroup;
-	}
+	@FXML
+	private VBox root;
 	
-	public TabPane getToolsTabPane() {
-		return toolsTabPane;
-	}
 
-	public MenuItem getUndoMenuItem() {
-		return undoMenuItem;
-	}
-
-	public MenuItem getRedoMenuItem() {
-		return redoMenuItem;
-	}
+    @FXML
+    private Menu fileMenu, editMenu, viewMenu, tilesMenu, toolsMenu, helpMenu, debugMenu;
 
 	public void initializeToolButtons() {
-		this.toolGroup.selectedToggleProperty().addListener((ChangeListener<Toggle>) (observable, oldVal, newVal) -> {
-			if(newVal == null) {
-				if(toolGroup.getProperties().get("deselect") == null) {
+		this.toolGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
+			if (newVal == null) {
+				if (toolGroup.getProperties().get("deselect") == null) {
 					oldVal.setSelected(true);
 				} else {
 					toolGroup.getProperties().remove("deselect");
 				}
 			}
 		});
-		
+		ChangeListenerUtil.addListener(() -> SceneGraph.mouseWasDown = true, Options.currentTool);
 		ChangeListenerUtil.addListener(true, () -> {
 			Options.currentTool.set(ToolType.SELECT_TILE);
 		}, selectTileBtn.selectedProperty());
@@ -601,9 +391,18 @@ public class MainController {
 		ChangeListenerUtil.addListener(true, () -> {
 			Options.currentTool.set(ToolType.DELETE_OBJECT);
 		}, deleteObjectBtn.selectedProperty());
+		
+		ChangeListenerUtil.addListener(true, () -> {
+			Options.currentTool.set(ToolType.PAINT_OVERLAY);
+		}, paintOverlayBtn.selectedProperty());
+		ChangeListenerUtil.addListener(true, () -> {
+			Options.currentTool.set(ToolType.PAINT_UNDERLAY);
+		}, paintUnderlayBtn.selectedProperty());
+		
 		ChangeListenerUtil.addListener(true, () -> {
 			Options.currentTool.set(ToolType.SET_FLAGS);
 		}, setFlagBtn.selectedProperty());
+		
 
 	}
 
@@ -612,12 +411,12 @@ public class MainController {
 		for (int i = 0; i < 3; i++) {
 			SwatchType swatchType = SwatchType.getById(i);
 			SwatchControl swatch = new SwatchControl(swatchType);
-			switch(swatchType) {
+			switch (swatchType) {
 			case OBJECT:
 				application.setObjectSwatch(swatch);
 				break;
 			case OVERLAY:
-			
+
 				FlowPane flowPane = new FlowPane();
 				flowPane.setPadding(new Insets(4, 4, 4, 4));
 				flowPane.setOrientation(Orientation.HORIZONTAL);
@@ -626,6 +425,8 @@ public class MainController {
 				flowPane.setHgap(6);
 				flowPane.setVgap(6);
 				ToggleGroup tg = new ToggleGroup();
+
+				AlwaysSelectToggleGroup.setup(tg);
 				for (int type = 0; type < 13; type++) {
 					Pane g = Testing.generateImage(type);
 					ToggleButton btn = new ToggleButton();
@@ -639,13 +440,14 @@ public class MainController {
 					btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 					final int shapeType = type;
 					btn.setOnAction(evt -> {
-				
+
 						Options.overlayPaintShapeId.set(shapeType);
 					});
 					flowPane.getChildren().add(btn);
-					if (type == 0) {
+					if (type == 1) {
 						btn.setSelected(true);
 					}
+
 				}
 				flowPane.setAlignment(Pos.CENTER);
 				swatch.getController().getVboxContainer().setSpacing(10);
@@ -656,14 +458,14 @@ public class MainController {
 			case UNDERLAY:
 				application.setUnderlaySwatch(swatch);
 				break;
-			
+
 			}
-			
+
 			Tab tab = new Tab(swatchType.toString());
 			tab.setContent(swatch);
 			toolsTabPane.getTabs().add(i, tab);
 		}
-		
+
 		toolsTabPane.getSelectionModel().select(SwatchType.OBJECT.getId());
 
 	}
@@ -671,13 +473,14 @@ public class MainController {
 	public void onLoad(MainWindow application) {
 		initializeToolButtons();
 		loadTabs(application);
-		
-		
-		
-		currentHeightSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 3, 0));
-		windowControls = WindowControls.addWindowControls(application.getStage(), headerBar, controlBox);
 
-		//windowControls.getResizeHelper().setMinWidth(1240);
+		ChangeListenerUtil.addListener(() -> this.tileHeightTextBox.setText(this.heightLevelSlider.getValue() + ""),
+				Options.tileHeightLevel);
+
+		currentHeightSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 3, 0));
+		windowControls = WindowControls.addWindowControls(application.getStage(), grabBar, controlBox);
+
+		// windowControls.getResizeHelper().setMinWidth(1240);
 		objectSelectionType.getItems().add("ALL");
 		objectSelectionType.getSelectionModel().select(0);
 		IntStream.range(0, 23).forEach(act -> objectSelectionType.getItems().add(String.valueOf(act)));
@@ -685,81 +488,121 @@ public class MainController {
 		Options.objectSelectionType.bind(objectSelectionType.getSelectionModel().selectedIndexProperty());
 
 		brushTypeSelection.getItems().addAll(BrushType.values());
-		Options.brushType.bind(brushTypeSelection.valueProperty());
-		//brushTypeSelection.get
-	//brushTypeSelection.
+		Options.brushType.bindBidirectional(brushTypeSelection.valueProperty());
+		// brushTypeSelection.get
+		// brushTypeSelection.
 		brushTypeSelection.getSelectionModel().select(0);
-		
+
 		ChangeListenerUtil.addListener(() -> SceneGraph.minimapUpdate = true, mapPane.widthProperty());
 
-		Options.brushSize.bind(brushSizeSlider.valueProperty());
+		Options.brushSize.bindBidirectional(brushSizeSlider.valueProperty());
 		brushSizeTooltip.textProperty().set(Options.brushSize.get() + 1 + "");
-		ChangeListenerUtil.addListener(() -> brushSizeTooltip.textProperty().set(Options.brushSize.get() + 1 + ""), Options.brushSize);
-		
-		Options.showDebug.bind(showFPSCheckItem.selectedProperty());
+		ChangeListenerUtil.addListener(() -> brushSizeTooltip.textProperty().set(Options.brushSize.get() + 1 + ""),
+				Options.brushSize);
 
-		Options.tileHeightLevel.bind(heightLevelSlider.valueProperty());
-		ChangeListenerUtil.addListener(() -> heightLevelTooltip.setText(Options.tileHeightLevel.get() + ""), Options.tileHeightLevel);
-		
-		Options.disableBlending.bind(this.disableBlendingCheckItem.selectedProperty());
-		Options.showObjects.bind(this.showObjectsCheckItem.selectedProperty());
-		Options.allHeightsVisible.bind(this.allHeightsCheckItem.selectedProperty());
-		Options.showOverlay.bind(this.showOverlaysCheckItem.selectedProperty());
+		Options.showDebug.bindBidirectional(showFPSCheckItem.selectedProperty());
 
-		Options.showBlockedFlag.bind(this.showBlockedFlag.selectedProperty());
-		Options.showBridgeFlag.bind(this.showBridgeFlag.selectedProperty());
-		Options.showForceLowestPlaneFlag.bind(this.showLowestFlag.selectedProperty());
-		Options.showDisableRenderFlag.bind(this.showDisableFlag.selectedProperty());
-		Options.showLowerZFlag.bind(this.showLowerZFlag.selectedProperty());
-		
-		Options.showMinimapFunctionModels.bind(this.showMapIconObjs.selectedProperty());
-		
-		Options.loadAnimations.bind(this.showAnimsMenuItem.selectedProperty());
+		Options.tileHeightLevel.bindBidirectional(heightLevelSlider.valueProperty());
+		// ChangeListenerUtil.addListener(() ->
+		// heightLevelTooltip.setText(Options.tileHeightLevel.get() + ""),
+		// Options.tileHeightLevel);
+
+		Options.absoluteHeightProperty.bindBidirectional(this.absoluteHeightCheck.selectedProperty());
+		Options.disableBlending.bindBidirectional(this.disableBlendingCheckItem.selectedProperty());
+		Options.showObjects.bindBidirectional(this.showObjectsCheckItem.selectedProperty());
+		Options.allHeightsVisible.bindBidirectional(this.allHeightsCheckItem.selectedProperty());
+		Options.showOverlay.bindBidirectional(this.showOverlaysCheckItem.selectedProperty());
+
+		Options.showOverlayNumbers.bindBidirectional(this.displayOverlayIds.selectedProperty());
+		Options.showUnderlayNumbers.bindBidirectional(this.displayUnderlayIds.selectedProperty());
+		Options.showTileHeightNumbers.bindBidirectional(this.displayTileHeights.selectedProperty());
+
+		Options.showBlockedFlag.bindBidirectional(this.showBlockedFlag.selectedProperty());
+		Options.showBridgeFlag.bindBidirectional(this.showBridgeFlag.selectedProperty());
+		Options.showForceLowestPlaneFlag.bindBidirectional(this.showLowestFlag.selectedProperty());
+		Options.showDisableRenderFlag.bindBidirectional(this.showDisableFlag.selectedProperty());
+		Options.showLowerZFlag.bindBidirectional(this.showLowerZFlag.selectedProperty());
+
+		Options.showMinimapFunctionModels.bindBidirectional(this.showMapIconObjs.selectedProperty());
+
+		Options.loadAnimations.bindBidirectional(this.showAnimsMenuItem.selectedProperty());
 
 		decreaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() - 1));
 		increaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() + 1));
-		
+
 		Runnable calculateFlags = () -> {
 			BitFlag flag = new BitFlag();
-			if(this.unwalkableCheck.isSelected())
+			if (this.unwalkableCheck.isSelected())
 				flag.flag(RenderFlags.BLOCKED_TILE);
-			if(this.bridgeCheck.isSelected())
+			if (this.bridgeCheck.isSelected())
 				flag.flag(RenderFlags.BRIDGE_TILE);
-			if(this.forceLowestCheck.isSelected())
+			if (this.forceLowestCheck.isSelected())
 				flag.flag(RenderFlags.FORCE_LOWEST_PLANE);
-			if(this.drawOnLowerZCheck.isSelected())
+			if (this.drawOnLowerZCheck.isSelected())
 				flag.flag(RenderFlags.RENDER_ON_LOWER_Z);
-			if(this.disableRenderCheck.isSelected())
+			if (this.disableRenderCheck.isSelected())
 				flag.flag(RenderFlags.DISABLE_RENDERING);
-			
+
 			Options.tileFlags.set(flag);
 		};
-		
-		
-		this.setTileHeightMenuItem.setOnAction(evt -> {
-			String s = FXDialogs.showTextInput("Enter value", "Please enter a value for the height", "0");
-			if(s != null) {
-				try {
-					int val = Integer.parseInt(s);
-					if(val < heightLevelSlider.getMin() || val > heightLevelSlider.getMax()) {
-						throw new Exception();
-					} else 
-						heightLevelSlider.setValue(val);
-				} catch(Exception ex) {
-					FXDialogs.showError("Error while parsing input", "An error occurred while parsing the input, please enter an integer between " + ((int)heightLevelSlider.getMin()) + " and " + ((int)heightLevelSlider.getMax()));
-				}
-				
+		this.heightLevelSlider.valueProperty()
+				.addListener((observable, oldVal, newVal) -> this.tileHeightTextBox.setText(newVal.intValue() + ""));
+		this.tileHeightTextButton.setOnAction(
+				evt -> { 
+					this.heightLevelSlider.adjustValue(Doubles.tryParse(this.tileHeightTextBox.getText()));
+					System.out.println(this.heightLevelSlider.valueProperty().get() + " : " + this.heightLevelSlider.valueProperty().intValue());
+					this.getTileHeightTextBox().textProperty().set(this.getHeightLevelSlider().valueProperty().intValue() + "");
+					this.tileHeightTextButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("notset"), false);
+				});
+		UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+			String newText = change.getControlNewText();
+			
+			if (newText.matches("-?([0-9]*)?")) {
+				return change;
+			}
+			return null;
+		};
+		this.tileHeightTextBox.textProperty().addListener((observable, oldVal, newVal) -> {
+			int val = Integer.parseInt(newVal);
+			if (val != heightLevelSlider.valueProperty().intValue()) {
+				this.tileHeightTextButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("notset"), true);
+				System.out.println(val + " : " + this.heightLevelSlider.valueProperty().get());
+			} else {
+				this.tileHeightTextButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("notset"), false);
 			}
 		});
-		
-		ChangeListenerUtil.addListener(calculateFlags, unwalkableCheck.selectedProperty(), bridgeCheck.selectedProperty(), forceLowestCheck.selectedProperty(), drawOnLowerZCheck.selectedProperty(),  disableRenderCheck.selectedProperty());
+		tileHeightTextBox.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(),
+				heightLevelSlider.valueProperty().intValue(), integerFilter));
+		tileHeightTextBox.addEventFilter(KeyEvent.ANY, evt -> {
+			if(evt.getCode() == KeyCode.ENTER) {
+				tileHeightTextButton.fire();
+			}
+		});
 
-		Options.showHiddenTiles.bind(hiddenTilesCheckItem.selectedProperty());
+		ChangeListenerUtil.addListener(calculateFlags, unwalkableCheck.selectedProperty(),
+				bridgeCheck.selectedProperty(), forceLowestCheck.selectedProperty(),
+				drawOnLowerZCheck.selectedProperty(), disableRenderCheck.selectedProperty());
+
+		Options.showHiddenTiles.bindBidirectional(hiddenTilesCheckItem.selectedProperty());
 		Options.currentHeight.bind(currentHeightSpinner.valueProperty());
-		Options.currentTool.addListener((ChangeListener<ToolType>) (observable, oldVal, newVal) -> {
-			
+
+		Options.simulateBridgesProperty.bindBidirectional(simulateBridges.selectedProperty());
+		
+		generateBridgeBtn.setOnAction(evt -> {
+			try {
+				BridgeBuilder.buildBridge();
+			} catch (Exception e) {
+				FXDialogs.showError("Error while generating bridge!", "Message: " + e.getMessage());
+			}
+		});
+
+		Options.currentTool.addListener((observable, oldVal, newVal) -> {
+
 			deselectTools();
-			if (oldVal == ToolType.PAINT_OVERLAY) {
+			Client.getSingleton().sceneGraph.resetTiles();
+			Client.getSingleton().sceneGraph.resetLastHighlightedTiles();
+			
+			/*if (oldVal == ToolType.PAINT_OVERLAY) {
 				Options.overlayPaintId.set(-1);
 				application.overlaySwatch.deselect();
 			} else if (oldVal == ToolType.PAINT_UNDERLAY) {
@@ -768,110 +611,43 @@ public class MainController {
 			} else if (oldVal == ToolType.SPAWN_OBJECT) {
 				Options.currentObject.set(null);
 				application.objectSwatch.deselect();
-			}
-			
-			if(newVal == ToolType.SELECT_OBJECT) {
+			}*/
+
+			if (newVal == ToolType.SELECT_OBJECT) {
 				this.selectObjectBtn.setSelected(true);
-			} else if(newVal == ToolType.DELETE_OBJECT) {
+			} else if (newVal == ToolType.DELETE_OBJECT) {
 				this.deleteObjectBtn.setSelected(true);
-			} else if(newVal == ToolType.MODIFY_HEIGHT) {
+			} else if (newVal == ToolType.MODIFY_HEIGHT) {
 				this.heightModifyBtn.setSelected(true);
-			} else if(newVal == ToolType.SET_FLAGS) {
+			} else if (newVal == ToolType.SET_FLAGS) {
 				this.setFlagBtn.setSelected(true);
-			} else if(newVal == ToolType.SELECT_TILE) {
+			} else if (newVal == ToolType.SELECT_TILE) {
 				this.selectTileBtn.setSelected(true);
+			} else if(newVal == ToolType.PAINT_OVERLAY) {
+				this.paintOverlayBtn.setSelected(true);
+			} else if(newVal == ToolType.PAINT_UNDERLAY) {
+				this.paintUnderlayBtn.setSelected(true);
 			}
-			
-			
+
 		});
 
-		this.setFlagsToTiles.setOnAction(evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedFlags()));
-		this.setHeightsToTiles.setOnAction(evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedHeight()));
-	
+		this.setRelativeHeight.setOnAction(evt -> Client.getSingleton().sceneGraph.setAbsoluteHeight());
+		this.setFlagsToTiles.setOnAction(
+				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedFlags()));
+		this.setHeightsToTiles.setOnAction(
+				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedHeight()));
+		this.setOverlays.setOnAction(
+				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedOverlays()));
+		this.setUnderlays.setOnAction(
+				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedUnderlays()));
 
-	}
-	
-	
-	public MenuItem getOpenAsPackBtn() {
-		return openAsPackBtn;
-	}
-
-	public MenuItem getSaveToCacheBtn() {
-		return saveToCacheBtn;
-	}
-
-	public MenuItem getSaveAsPackFile() {
-		return saveAsPackFile;
-	}
-
-	public CheckMenuItem getShowLowerZFlag() {
-		return showLowerZFlag;
-	}
-
-	public CheckBox getDrawOnLowerZCheck() {
-		return drawOnLowerZCheck;
 	}
 
 	private void deselectTools() {
 		toolGroup.getProperties().put("deselect", true);
 		toolGroup.selectToggle(null);
 	}
-	
-	
-	
-	
+
 	private WindowControls windowControls;
-	
-	public WindowControls getWindowControls() {
-		return windowControls;
-	}
-
-	public MenuItem getGetOverlayFromTile() {
-		return getOverlayFromTile;
-	}
-
-	public MenuItem getGetUnderlayFromTile() {
-		return getUnderlayFromTile;
-	}
-
-	public TabPane getMainTabPane() {
-		return mainTabPane;
-	}
-
-	public Label getStatusLabel() {
-		return statusLabel;
-	}
-
-	public MenuItem getSetTileHeightMenuItem() {
-		return setTileHeightMenuItem;
-	}
-
-	public MenuItem getSetFlagsToTiles() {
-		return setFlagsToTiles;
-	}
-
-	public MenuItem getSetHeightsToTiles() {
-		return setHeightsToTiles;
-	}
-
-	public MenuItem getFixHeightsBtn() {
-		return fixHeightsBtn;
-	}
-
-	public CheckMenuItem getShowMapIconObjs() {
-		return showMapIconObjs;
-	}
-
-	public CheckMenuItem getShowAnimsMenuItem() {
-		return showAnimsMenuItem;
-	}
-
-	public MenuItem getShowMapIndexEditor() {
-		return showMapIndexEditor;
-	}
-	
-	
-	
-	
 
 }

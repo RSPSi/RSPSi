@@ -6,3 +6,11 @@ build/
 out/
 /gradlew.bat
 /gradlew
+
+.settings/
+
+.classpath
+
+.project
+
+hs_err_*

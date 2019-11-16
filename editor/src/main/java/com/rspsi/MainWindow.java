@@ -1,5 +1,7 @@
 package com.rspsi;
 
+import org.displee.utilities.GZIPUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -7,7 +9,11 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -17,6 +23,7 @@ import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
@@ -24,12 +31,9 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
-import com.google.common.primitives.Ints;
 import com.jagex.Client;
-import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.def.Floor;
 import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.floor.FloorDefinitionLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.cache.loader.textures.TextureLoader;
@@ -41,10 +45,10 @@ import com.jagex.map.SceneGraph;
 import com.jagex.map.object.DefaultWorldObject;
 import com.jagex.util.BitFlag;
 import com.jagex.util.ColourUtils;
-import com.jagex.util.GZIPUtils;
 import com.jagex.util.MultiMapEncoder;
 import com.jagex.util.ObjectKey;
 import com.rspsi.controllers.MainController;
+import com.rspsi.controls.RemappingTool;
 import com.rspsi.controls.SwatchControl;
 import com.rspsi.datasets.ObjectDataset;
 import com.rspsi.dialogs.TileCopyDialog;
@@ -55,10 +59,10 @@ import com.rspsi.game.listeners.GameKeyListener;
 import com.rspsi.game.listeners.GameMouseListener;
 import com.rspsi.game.map.MapView;
 import com.rspsi.game.save.AutoSaveJob;
-import com.rspsi.game.save.SaveAction;
 import com.rspsi.game.save.TileChange;
 import com.rspsi.misc.StatusUpdate;
 import com.rspsi.misc.ToolType;
+import com.rspsi.misc.XTEAManager;
 import com.rspsi.options.Config;
 import com.rspsi.options.Options;
 import com.rspsi.plugins.ApplicationPluginLoader;
@@ -91,7 +95,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
 public class MainWindow extends Application {
 
 	private static MainWindow singleton;
@@ -105,7 +114,7 @@ public class MainWindow extends Application {
 			Constructor<?> constructor = clazz.getDeclaredConstructor(Duration.class, Duration.class, Duration.class,
 					boolean.class);
 			constructor.setAccessible(true);
-			Object tooltipBehavior = constructor.newInstance(new Duration(250), // open
+			Object tooltipBehavior = constructor.newInstance(new Duration(50), // open
 					new Duration(5000), // visible
 					new Duration(200), // close
 					false);
@@ -120,17 +129,13 @@ public class MainWindow extends Application {
 
 	private static Client clientInstance;
 
-	public static MainWindow getSingleton() {
-		return singleton;
-	}
-
-
 	private Scene scene;
 
 	private Stage stage;
 
 	private MainController controller;
 
+	@Setter
 	public SwatchControl objectSwatch, overlaySwatch, underlaySwatch;
 
 	private ObjectPreviewWindow objectPreviewWindow;
@@ -139,6 +144,8 @@ public class MainWindow extends Application {
 	private MultiRegionMapWindow fullMapView;
 	private SelectFilesWindow selectFiles;
 	private SelectPackWindow selectPack;
+	private SelectXTEAWindow selectXTEA;
+	private RemappingTool remappingTool;
 
 	private Mesh errorMesh;
 
@@ -146,10 +153,11 @@ public class MainWindow extends Application {
 
 		for (int idx = 0; idx < FloorDefinitionLoader.getUnderlayCount(); idx++) {
 			Floor floor = FloorDefinitionLoader.getUnderlay(idx);
-
+			if(floor == null)
+				continue;
 			Group g = new Group();
 			String label = "";
-			label = "rgb(" + ColourUtils.getRed(floor.getRgb()) + "," + ColourUtils.getGreen(floor.getRgb()) + ","
+			label = "[" + idx + "] rgb(" + ColourUtils.getRed(floor.getRgb()) + "," + ColourUtils.getGreen(floor.getRgb()) + ","
 					+ ColourUtils.getBlue(floor.getRgb()) + ")";
 			Rectangle rect = new Rectangle();
 			rect.setWidth(32);
@@ -158,6 +166,8 @@ public class MainWindow extends Application {
 			// c = c.deriveColor(floor.getWeightedHue(), floor.getSaturation() / 256.0,
 			// floor.getLuminance() / 256.0, 1.0);
 			rect.setFill(c);
+			rect.setStroke(Color.BLACK);
+			rect.setStrokeWidth(1);
 			g.getChildren().add(rect);
 
 			BaseSwatch data = new UnderlaySwatch(g, label, idx);
@@ -170,10 +180,10 @@ public class MainWindow extends Application {
 				continue;
 			Group g = new Group();
 			String label = "";
-			if (floor.getTexture() == -1) {
+			if (floor.getTexture() == -1 || floor.getTexture() > TextureLoader.instance.count()) {
 				continue;
 			} else {
-				label = "texture(" + floor.getTexture() + ")";
+				label = "[" + idx + "] texture(" + floor.getTexture() + ")";
 				Texture texture = TextureLoader.getTexture(floor.getTexture());
 				if(texture == null)
 					continue;
@@ -195,16 +205,15 @@ public class MainWindow extends Application {
 				continue;
 			Group g = new Group();
 			String label = "";
-			if (floor.getTexture() == -1 || floor.getTexture() > 50 && !Options.hdTextures.get()) {
-				label = "rgb(" + ColourUtils.getRed(floor.getRgb()) + "," + ColourUtils.getGreen(floor.getRgb()) + ","
-						+ ColourUtils.getBlue(floor.getRgb()) + ")";
+			if (floor.getTexture() == -1 || floor.getTexture() >= TextureLoader.instance.count()) {
+				label = "[" + idx + "] rgb(" + ColourUtils.getRed(floor.getRgb()) + "," + ColourUtils.getGreen(floor.getRgb()) + "," + ColourUtils.getBlue(floor.getRgb()) + ")";
 				Rectangle rect = new Rectangle();
 				rect.setWidth(32);
 				rect.setHeight(32);
 				Color c = ColourUtils.getColor(floor.getRgb());
-				// c = c.deriveColor(floor.getWeightedHue(), floor.getSaturation() / 256.0,
-				// floor.getLuminance() / 256.0, 1.0);
 				rect.setFill(c);
+				rect.setStroke(Color.BLACK);
+				rect.setStrokeWidth(1);
 				g.getChildren().add(rect);
 			} else {
 				continue;
@@ -213,44 +222,6 @@ public class MainWindow extends Application {
 			overlaySwatch.addSwatch(data);
 		}
 
-	}
-
-	public ObjectPreviewWindow getObjectPreviewWindow() {
-		return objectPreviewWindow;
-	}
-
-	public SwatchControl getObjectSwatch() {
-		return objectSwatch;
-	}
-
-	public SwatchControl getOverlaySwatch() {
-		return overlaySwatch;
-	}
-
-	public Stage getStage() {
-		return stage;
-	}
-
-	public SwatchControl getUnderlaySwatch() {
-		return underlaySwatch;
-	}
-
-	public MainController getController() {
-		return controller;
-	}
-
-
-
-	public void setObjectSwatch(SwatchControl objectSwatch) {
-		this.objectSwatch = objectSwatch;
-	}
-
-	public void setOverlaySwatch(SwatchControl overlaySwatch) {
-		this.overlaySwatch = overlaySwatch;
-	}
-
-	public void setUnderlaySwatch(SwatchControl underlaySwatch) {
-		this.underlaySwatch = underlaySwatch;
 	}
 
 	@Override
@@ -262,13 +233,12 @@ public class MainWindow extends Application {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_test4.fxml"));
 			controller = new MainController();
 			loader.setController(controller);
-			Parent content = (Parent) loader.load();
+			Parent content = loader.load();
 			scene = new Scene(content, 1240, 800);
 
 			scene.setFill(Color.TRANSPARENT);
 
-			//controller.getTitleLabel().textProperty().bind(primaryStage.titleProperty());
-			primaryStage.setTitle("RSPSi Map Editor 1.15.2");
+			primaryStage.setTitle("RSPSi Map Editor 1.16.0");
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setScene(scene);
 			primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
@@ -282,27 +252,22 @@ public class MainWindow extends Application {
 			boolean loadAutosave = false;
 			File autosavePath = Paths.get(System.getProperty("user.home"), ".rspsi", "autosave").toFile();
 
+			String lastCacheLoc = Settings.getSetting("lastCacheLocation", "");
 			if(!shutdownCorrectly) {
-				//TODO Offer to load autosaved data
 				System.out.println("CRASH DETECTED!");
 
 				if(autosavePath.exists() && autosavePath.list().length > 0) {
 
 					//Just incase there was a crash mid autosave
-					File objectFile = new File(autosavePath, "objects.autosave");
-					File landscapeFile = new File(autosavePath, "landscape.autosave");
+					File packFile = new File(autosavePath, "autosave.pack");
 
-					File objectFileBackup =  new File(autosavePath, "objects.bk");
-					File landscapeFileBackup = new File(autosavePath, "landscape.bk");
+					File objectFileBackup =  new File(autosavePath, "autosave.pack.bk");
 
 					//restore backups
 					if(objectFileBackup.exists()) {
-						Files.copy(objectFileBackup.toPath(), objectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+						Files.copy(objectFileBackup.toPath(), packFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 					}
 
-					if(landscapeFileBackup.exists()) {
-						Files.copy(landscapeFileBackup.toPath(), landscapeFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-					}
 
 					String response = FXDialogs.showConfirm("Application did not shut down correctly!", 
 							"We have detected that your last shutdown did not complete correctly.\nWould you like to load the last autosave?",
@@ -314,6 +279,9 @@ public class MainWindow extends Application {
 			}
 
 			MapView mapView = new MapView();
+			
+			selectXTEA = new SelectXTEAWindow();
+			selectXTEA.start(new Stage());
 
 			TileExportDialog export = new TileExportDialog();
 			export.start(new Stage());
@@ -356,6 +324,11 @@ public class MainWindow extends Application {
 				SceneGraph.minimapUpdate = true;
 			}, Options.disableBlending, Options.showOverlay, Options.showObjects);
 
+			controller.getReloadSwatchesBtn().setOnAction(evt -> {
+				overlaySwatch.clear();
+				underlaySwatch.clear();
+				fillSwatches();
+			});
 			controller.getCopySelectedTilesBtn().setOnAction(evt -> {
 				if(Options.currentTool.get() == ToolType.SELECT_OBJECT) {
 					SceneGraph.onCycleEnd.add(() -> {
@@ -407,13 +380,28 @@ public class MainWindow extends Application {
 			objectPreviewWindow = new ObjectPreviewWindow(objectSwatch);
 			objectPreviewWindow.start(new Stage());
 			
-		/*	ModelPreviewWindow modelPrev = new ModelPreviewWindow();
-			modelPrev.start(new Stage());*/
+			//ModelPreviewWindow modelPrev = new ModelPreviewWindow();
+			//modelPrev.start(new Stage());
 
 			fullMapView = new MultiRegionMapWindow();
 			fullMapView.start(new Stage());
+			
+			
+			remappingTool = new RemappingTool();
+			remappingTool.start(new Stage());
+			
+			controller.getShowRemapperBtn().setOnAction(evt -> {
+				remappingTool.show();
+				if(remappingTool.valid()) {
+					remappingTool.doRemap();
+				}
+			});
 
-			controller.getShowFullMap().setOnAction(evt -> fullMapView.show());
+			controller.getShowFullMap().setOnAction(evt -> { 
+				fullMapView.show();
+				
+				SceneGraph.minimapUpdate = true;
+			});
 
 			controller.getExportTilesBtn().setOnAction(evt -> export.show());
 
@@ -431,8 +419,40 @@ public class MainWindow extends Application {
 			clientInstance.getGameCanvas().addEventHandler(ScrollEvent.ANY, new GameMouseListener(clientInstance));
 			clientInstance.getGameCanvas().addEventHandler(KeyEvent.ANY, new GameKeyListener(clientInstance));
 
+			clientInstance.fullMapVisible.bind(fullMapView.visibleProperty());
+		
+			
+			if(clientInstance.getCache() != null) {
+				if(!clientInstance.getCache().getIndexedFileSystem().is317()) {
+					String xteaLocation = Settings.getSetting("xteaLoc", "");
+					Consumer<Boolean> pickXTEA = (showError) -> {
+						String currentXTEALoc = Settings.getSetting("xteaLoc", "");
+						selectXTEA.setLocation(currentXTEALoc);
+						selectXTEA.show();
+						if(selectXTEA.valid()) {
+							XTEAManager.loadFromJSON(new File(selectXTEA.getJsonLocation()));
+							Settings.putSetting("xteaLoc", selectXTEA.getJsonLocation());
+						} else if(showError) {
+							FXDialogs.showError("Error loading XTEAS", "You need to select an XTEA json file otherwise maps may fail to load!");
+						}
+					};
+	
+					if(xteaLocation.isEmpty() || !lastCacheLoc.equals(Config.cacheLocation.get())) {
+						pickXTEA.accept(true);
+					} else {
+						XTEAManager.loadFromJSON(new File(xteaLocation));
+					}
+					
+					MenuItem changeXTEALoc = new MenuItem("Change XTEAs");
+					changeXTEALoc.setOnAction(evt -> pickXTEA.accept(false));
+					controller.getFileMenu().getItems().add(controller.getFileMenu().getItems().size() - 2, changeXTEALoc);
+				}
+			}
+			primaryStage.addEventHandler(KeyEvent.ANY, new GameKeyListener(clientInstance));
+
 			SceneGraph.setMouseIsDown(true);
 			SceneGraph.setMouseIsDown(false);
+
 
 			controller.getGamePane().getChildren().add(gamePane);
 			controller.getMapPane().getChildren().add(new CanvasPane(clientInstance.mapCanvas));
@@ -506,7 +526,7 @@ public class MainWindow extends Application {
 			}, Options.rotation);
 
 			controller.getCopyTileFlags().setOnAction(evt -> {
-				BitFlag flag = clientInstance.getCurrentChunk().getSelectedFlag();
+				BitFlag flag = clientInstance.sceneGraph.getSelectedFlag();
 
 				controller.getUnwalkableCheck().setSelected(flag.flagged(RenderFlags.BLOCKED_TILE));
 				controller.getBridgeCheck().setSelected(flag.flagged(RenderFlags.BRIDGE_TILE));
@@ -517,7 +537,7 @@ public class MainWindow extends Application {
 			});
 
 			controller.getCopyTileHeights().setOnAction(evt -> {
-				int height = clientInstance.getCurrentChunk().getSelectedHeight();
+				int height = clientInstance.sceneGraph.getSelectedHeight();
 				System.out.println(height);
 				if(height <= 0) {
 					controller.getHeightLevelSlider().setValue(-height);
@@ -526,60 +546,13 @@ public class MainWindow extends Application {
 				}
 			});
 
-			//XXX Remove this
-			Runnable r = () -> {
-				Scanner scanner = new Scanner(System.in);
-				String lastCommand = "";
-				System.out.println("Starting scanner");
-				while(true) {
-					try {
-						if(scanner.hasNextLine()) {
-							String s = scanner.nextLine();
-							System.out.println(s);
-							if(s.startsWith("stc")) {
-								SaveAction saveAction = new SaveAction(clientInstance.getCurrentChunk());
-								saveAction.saveToCache(clientInstance.getCache());
-							} else if(s.startsWith("chunks")) {
-								Client.skipOrdering = !Client.skipOrdering;
-								System.out.println("ordering turned " + (Client.skipOrdering ? "off" : "on"));
-							} else if(s.startsWith("config")) {
-								s = s.replaceAll("config", "").trim();
-								String parts[] = s.split(" ");
-								int i = Ints.tryParse(parts[0]);
-								int i2 = Ints.tryParse(parts[1]);
-								clientInstance.settings[i] = i2;
-							} else if(s.startsWith("bitmask")) {
-								System.out.println();
-								for(int bitmask : Client.BIT_MASKS) {
-									System.out.print(bitmask +", ");
-								}
-								System.out.println();
-							} else if(s.startsWith("varbit")) {
-								s = s.replaceAll("varbit", "").trim();
-								int i = Ints.tryParse(s);
-								VariableBits bit = VariableBitLoader.lookup(i);
-								System.out.println("IDX: " + i + " setting: " + bit.getSetting() + " low: " + bit.getLow() + " high: " + bit.getHigh());
-								System.out.println("Bitmask: " + Client.BIT_MASKS[bit.getHigh() - bit.getLow()]);
-							}
-						} else {
-							Thread.sleep(100);
-
-						}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			};
-			Thread t = new Thread(r);
-			t.start();
-
 			controller.getGetOverlayFromTile().setOnAction(evt -> {
-				Chunk chunk = clientInstance.getCurrentChunk();
-				if(chunk != null) {
-					int overlayId = chunk.getSelectedOverlay();
-					int overlayShape = chunk.getSelectedOverlayShape();
-					if(overlayId > 0 && overlayShape > 0) {
+				if(clientInstance.sceneGraph != null) {
+					int overlayId = clientInstance.sceneGraph.getSelectedOverlay();
+					int overlayShape = clientInstance.sceneGraph.getSelectedOverlayShape();
+					log.info("id {} shape {}", overlayId, overlayShape);
+					if(overlayId > 0) {
+
 						overlaySwatch.setOverlayShape(overlayShape + 1);
 						overlaySwatch.selectByOverlay(overlayId - 1);
 					}
@@ -587,9 +560,8 @@ public class MainWindow extends Application {
 			});
 
 			controller.getGetUnderlayFromTile().setOnAction(evt -> {
-				Chunk chunk = clientInstance.getCurrentChunk();
-				if(chunk != null) {
-					int underlayId = chunk.getSelectedUnderlay();
+				if(clientInstance.sceneGraph != null) {
+					int underlayId = clientInstance.sceneGraph.getSelectedUnderlay();
 					if(underlayId > 0) {
 						underlaySwatch.selectByUnderlay(underlayId - 1);
 					}
@@ -619,7 +591,6 @@ public class MainWindow extends Application {
 
 			ChangeListenerUtil.addListener(() -> {
 				Client.updateChunkTiles();
-				System.out.println("updating tiles");
 				SceneGraph.minimapUpdate = true;
 			}, Options.showHiddenTiles);
 
@@ -629,7 +600,6 @@ public class MainWindow extends Application {
 					Client.getSingleton().sceneGraph.resetTiles();
 				});
 				SceneGraph.minimapUpdate = true;
-				System.out.println("updating tiles");
 			}, Options.currentHeight);
 
 
@@ -663,7 +633,7 @@ public class MainWindow extends Application {
 				
 
 				if(reloadSaved) {
-					File landscapeFile = new File(autosavePath, "map.autosave");
+					File landscapeFile = new File(autosavePath, "autosave.pack");
 					if(landscapeFile.exists()) {
 						try {
 							byte[] landscapeData = Files.readAllBytes(landscapeFile.toPath());
@@ -676,66 +646,33 @@ public class MainWindow extends Application {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							FXDialogs.showError("Error while loading map!",
-									"There was an error while loading or parsing the autosave data.");
+							FXDialogs.showError("Error while loading map!", "There was an error while loading or parsing the autosave data.");
 						}
 					}
 				}
 				Platform.runLater(() -> {
 					objectPreviewWindow.fillList();
-					//modelPrev.fillList();
-					/*Client.deliveredResource.addListener((ChangeListener<Resource>) (observable, oldVal, newVal) -> {
-						if(newVal != null && newVal.getType() == 3) {
-							for(MapTile tile : Lists.newArrayList(MapTile.tiles)) {
-								tile.deliverMap(newVal);
-							}
-						}
-					});
-					RSMapView view = new RSMapView();
-					try {
-						view.start(new Stage());
-					} catch(Exception ex) {
-						ex.printStackTrace();
-					}*/
-					/*MapView mapView = new MapView();
-					try {
-						mapView.start(new Stage());
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					mapView.initTiles();*/
 				});
-
+				try {
+					setupAutoSave();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}, Client.gameLoaded);
 
-			int autosaveSeconds = Settings.getSetting("autosaveSeconds", 60);
-			Settings.putSetting("autosaveSeconds", autosaveSeconds);
-
-			StdSchedulerFactory fact = new StdSchedulerFactory();
-			fact.initialize(this.getClass().getResourceAsStream("/config/quartz.properties"));
-			Scheduler scheduler = fact.getScheduler();
-
-			scheduler.startDelayed(10);
-			JobDataMap jdm = new JobDataMap();
-			jdm.put("client", clientInstance);
-			JobDetail job = JobBuilder.newJob().
-					ofType(AutoSaveJob.class)
-					.withIdentity("saveJob")
-					.setJobData(jdm)
-					.build();
-
-			Trigger trigger = TriggerBuilder.newTrigger()
-					.withIdentity("timedAutosave")
-					.startNow()
-					.withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(autosaveSeconds))
-					.build();
-			// scheduler.
-			scheduler.scheduleJob(job, trigger);
 			EventBus.getDefault().register(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static ScheduledExecutorService service = Executors.newScheduledThreadPool(4);
+	private void setupAutoSave(){
+
+		int autosaveSeconds = Settings.getSetting("autosaveSeconds", 60);
+		Settings.putSetting("autosaveSeconds", autosaveSeconds);
+
+		service.scheduleAtFixedRate(() -> AutoSaveJob.execute(clientInstance), 5, 5, TimeUnit.MINUTES);
 	}
 
 	@Subscribe(threadMode = ThreadMode.ASYNC)
@@ -790,6 +727,8 @@ public class MainWindow extends Application {
 				if (landscapeFile.getName().endsWith(".gz")) {
 					try {
 						tileMap = GZIPUtils.gzipBytes(tileMap);
+						if(tileMap == null)
+							throw new IOException("GZIP error");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -801,6 +740,8 @@ public class MainWindow extends Application {
 				if (objectFile.getName().endsWith(".gz")) {
 					try {
 						objectMap = GZIPUtils.gzipBytes(objectMap);
+						if(objectMap == null)
+							throw new IOException("GZIP error");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -943,7 +884,7 @@ public class MainWindow extends Application {
 			int y = pickCoords.getYCoordinate();	
 			x /= 64;
 			y /= 64;
-			int hash = (x << 0x39b8d2e8) + y;
+			int hash = (x << 8) + y;
 			int width = pickCoords.getWidth();
 			int length = pickCoords.getLength();
 			Client.runLater.add(() -> { 
@@ -952,6 +893,10 @@ public class MainWindow extends Application {
 			});
 
 		});
+	}
+
+	public static MainWindow getSingleton() {
+		return singleton;
 	}
 
 }

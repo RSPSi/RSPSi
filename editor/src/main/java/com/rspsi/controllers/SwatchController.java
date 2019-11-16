@@ -2,14 +2,20 @@ package com.rspsi.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
+@Getter
 public class SwatchController {
 
 	@FXML
 	private FlowPane swatchFlowPane;
+
+	@FXML
+	private ScrollPane swatchScrollPane;
 
 	@FXML
 	private VBox vboxContainer;
@@ -29,32 +35,5 @@ public class SwatchController {
 	@FXML
 	private Button objectViewBtn;
 
-	public Button getLoadBtn() {
-		return loadBtn;
-	}
-
-	public BorderPane getMainBorder() {
-		return mainBorder;
-	}
-
-	public Button getObjectViewBtn() {
-		return objectViewBtn;
-	}
-
-	public Button getSaveBtn() {
-		return saveBtn;
-	}
-
-	public FlowPane getSwatchFlowPane() {
-		return swatchFlowPane;
-	}
-
-	public BorderPane getTitleContainer() {
-		return titleContainer;
-	}
-
-	public VBox getVboxContainer() {
-		return vboxContainer;
-	}
 
 }

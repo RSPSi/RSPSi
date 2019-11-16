@@ -1,3 +1,4 @@
+group = 'Editor UI'
 buildscript {
     repositories {
         mavenLocal()
@@ -8,38 +9,26 @@ buildscript {
         // provides javafx-gradle-plugin
        // classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: "8.8.2"
         // provides proguard.gradle.ProGuardTask (including all requirements)
-        classpath 'net.sf.proguard:proguard-gradle:6.0.2'
+        classpath 'net.sf.proguard:proguard-gradle:6.1.1'
     }
 }
 
 apply plugin: 'application'
+//apply plugin: 'org.beryx.runtime'
 
 run {
-	applicationDefaultJvmArgs = [""]
 	standardInput = System.in
 
 }
 // In this section you declare the dependencies for your production and test code
 dependencies  {
-    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-	compile group: 'org.tukaani', name: 'xz', version: '1.6'
-	compile group: 'org.brotli', name: 'dec', version: '0.1.2'
-	
-    compile group: 'com.google.guava', name: 'guava', version: '23.1-jre'
-	
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.1'
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
-	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
-	
-	compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
-	//compile group: 'org.drombler.commons', name: 'drombler-commons-docking-fx', version: '0.10'
 
-	compile group: 'org.jfree', name: 'fxgraphics2d', version: '1.5'
-	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
-	compile 'org.greenrobot:eventbus:3.1.1'
-	
-	compile 'org.controlsfx:controlsfx:8.40.14'
-	compile project(':Client')
+ 	compile project(':Client')
+	// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
+	compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.15'
+	compile 'com.jfoenix:jfoenix:8.0.9'
+
+
 }
 
 mainClassName = 'com.rspsi.LauncherWindow'
@@ -60,15 +49,53 @@ jar {
 task myProguardTask(type: proguard.gradle.ProGuardTask) {
     configuration 'proguard.conf'
     
-    configurations.runtime.resolve().each {
-        libraryjars file(it.getAbsolutePath())
-    }
+    
+    libraryjars project.sourceSets.main.compileClasspath
+    
 
+	if (JavaVersion.current().java9Compatible) {
+	    libraryjars(System.getProperty("java.home") + "/jmods")
+	} else {
+	    libraryjars(System.getProperty("java.home") + "/lib/rt.jar")
+	    libraryjars(System.getProperty("java.home") + "/lib/ext/jfxrt.jar")
+	}
+	
+	
     injars 'build/libs/Editor.jar'
     outjars 'build/libs/deploy/Editor.jar'
 }
 
+application {
+    mainClassName = "com.rspsi.LauncherWindow"
+    applicationName = 'RSPSi'
+}
 //defaultTask 'jar'
 
+
+
+/*runtime {
+	javaHome = 'F:/jdks/windows/jdk-11.0.3.7-hotspot'
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    modules = ['java.sql',
+				'java.naming',
+				'java.logging',
+				'java.management',
+				'java.xml',
+				'jdk.unsupported',
+				'java.desktop',
+				'java.scripting',
+				'jdk.unsupported.desktop',
+				'java.datatransfer']
+				 targetPlatform('linux', 'F:/jdks/linux/jdk-11.0.3+7-jre')
+				 targetPlatform('win', 'F:/jdks/windows/jdk-11.0.3.7-hotspot')
+				 targetPlatform('mac', 'F:/jdks/mac/jdk-11.0.3+7')
+				 
+				 jpackage {
+					jpackageHome = "F:/jdks/windows/jdk-11.0.3.7-hotspot"
+					imageOutputDir = file("$buildDir/my-packaging-image")
+					installerOutputDir = file("$buildDir/my-packaging-installer")
+					targetPlatformName = "win"
+				}
+}*/
 
 jar.finalizedBy(myProguardTask)
