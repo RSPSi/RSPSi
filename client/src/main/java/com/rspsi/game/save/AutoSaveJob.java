@@ -2,19 +2,16 @@ package com.rspsi.game.save;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.greenrobot.eventbus.EventBus;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.PersistJobDataAfterExecution;
 
 import com.google.common.collect.Lists;
 import com.jagex.Client;
@@ -22,21 +19,21 @@ import com.jagex.chunk.Chunk;
 import com.jagex.util.MultiMapEncoder;
 import com.rspsi.misc.StatusUpdate;
 
-import javafx.application.Platform;
-import javafx.scene.control.Label;
+public class AutoSaveJob {
 
-public class AutoSaveJob implements Job {
-
-	@Override
-	public void execute(JobExecutionContext context) {
+	public static void execute(Client client) {
 		try {
 			//System.out.println("Autosave job called");
 			EventBus.getDefault().post(new StatusUpdate("Autosaving..."));
 			
-			Client client = (Client) context.getJobDetail().getJobDataMap().get("client");
 
 			if(client.chunks.isEmpty())
 				return;
+			boolean chunksNotLoaded = client.chunks.stream().filter(Objects::nonNull).anyMatch(chunk -> !chunk.hasLoaded());
+			
+			if(chunksNotLoaded)
+				return;
+			
 			File autosavePath = Paths.get(System.getProperty("user.home"), ".rspsi", "autosave").toFile();
 			if(!autosavePath.exists())
 				autosavePath.mkdirs();
@@ -45,9 +42,9 @@ public class AutoSaveJob implements Job {
 		
 			byte[] saveData = MultiMapEncoder.encode(currentChunks);
 			
-			File objectFile = new File(autosavePath, "map.autosave");
+			File objectFile = new File(autosavePath, "autosave.pack");
 			
-			File objectFileBackup =  new File(autosavePath, "map.bk");
+			File objectFileBackup =  new File(autosavePath, "autosave.pack.bk");
 			
 			
 			if(objectFile.exists()) {
@@ -67,7 +64,6 @@ public class AutoSaveJob implements Job {
 
 				Files.copy(objectFileBackup.toPath(), objectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
-	
 			EventBus.getDefault().post(new StatusUpdate("Autosaving complete"));
 		} catch(Exception ex) {
 			ex.printStackTrace();
