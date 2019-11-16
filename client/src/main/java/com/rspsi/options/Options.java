@@ -18,11 +18,19 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class Options {
 
+	public static BooleanProperty showOverlayNumbers = new SimpleBooleanProperty(false);
+	public static BooleanProperty showUnderlayNumbers = new SimpleBooleanProperty(false);
+	public static BooleanProperty showTileHeightNumbers = new SimpleBooleanProperty(false);
+
 	public static BooleanProperty showHiddenTiles = new SimpleBooleanProperty(false);
 	public static BooleanProperty showObjects = new SimpleBooleanProperty(true);
 	public static BooleanProperty disableBlending = new SimpleBooleanProperty(false);
 	public static BooleanProperty showOverlay = new SimpleBooleanProperty(false);
 	public static BooleanProperty allHeightsVisible = new SimpleBooleanProperty(false);
+
+	public static BooleanProperty simulateBridgesProperty = new SimpleBooleanProperty(false);
+	
+	public static BooleanProperty absoluteHeightProperty = new SimpleBooleanProperty(false);
 
 	public static BooleanProperty showBlockedFlag = new SimpleBooleanProperty(false);
 	public static BooleanProperty showBridgeFlag = new SimpleBooleanProperty(false);
@@ -30,7 +38,7 @@ public class Options {
 	public static BooleanProperty showDisableRenderFlag = new SimpleBooleanProperty(false);
 	public static BooleanProperty showLowerZFlag = new SimpleBooleanProperty(false);
 	
-	public static BooleanProperty showMinimapFunctionModels = new SimpleBooleanProperty(true);
+	public static BooleanProperty showMinimapFunctionModels = new SimpleBooleanProperty(false);
 
 	public static BooleanProperty showDebug = new SimpleBooleanProperty(false);
 
@@ -47,9 +55,9 @@ public class Options {
 
 	public static ObjectProperty<ObjectDataset> currentObject = new SimpleObjectProperty<ObjectDataset>();
 
-	public static IntegerProperty overlayPaintId = new SimpleIntegerProperty(-1);
-	public static IntegerProperty overlayPaintShapeId = new SimpleIntegerProperty(0);
-	public static IntegerProperty underlayPaintId = new SimpleIntegerProperty(-1);
+	public static IntegerProperty overlayPaintId = new SimpleIntegerProperty(0);
+	public static IntegerProperty overlayPaintShapeId = new SimpleIntegerProperty(1);
+	public static IntegerProperty underlayPaintId = new SimpleIntegerProperty(0);
 	public static ObjectProperty<BrushType> brushType = new SimpleObjectProperty<BrushType>(BrushType.RECTANGLE);
 	
 	public static BooleanProperty hdTextures = new SimpleBooleanProperty(false);
@@ -62,11 +70,12 @@ public class Options {
 
 	public static BooleanProperty unsavedChanges = new SimpleBooleanProperty(false);
 	
-	public static IntegerProperty renderDistance = new SimpleIntegerProperty(50);
+	public static IntegerProperty renderDistance = new SimpleIntegerProperty(30);
 	public static IntegerProperty mapRegionSize = new SimpleIntegerProperty(256);
 	
 
 	public static BooleanProperty showCamera = new SimpleBooleanProperty(false);
 	public static BooleanProperty showBorders = new SimpleBooleanProperty(false);
+	public static BooleanProperty showMapFileNames = new SimpleBooleanProperty(false);
 
 }
