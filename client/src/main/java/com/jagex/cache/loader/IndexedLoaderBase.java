@@ -1,14 +1,13 @@
 package com.jagex.cache.loader;
 
 import com.jagex.io.Buffer;
-
-import io.nshusa.rsam.binary.Archive;
+import org.displee.cache.index.archive.Archive;
 
 public interface IndexedLoaderBase<T> {
 
-	public T forId(int id);
-	public int count();
+	T forId(int id);
+	int count();
 	
-	public void init(Archive archive);
-	public void init(Buffer data, Buffer indexBuffer);
+	void init(Archive archive);
+	void init(Buffer data, Buffer indexBuffer);
 }

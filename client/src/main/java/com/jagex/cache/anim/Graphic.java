@@ -63,14 +63,14 @@ public class Graphic {
 	}
 
 	public Mesh getModel() {
-		Mesh model = (Mesh) modelCache.get(id);
+		Mesh model = modelCache.get(id);
 		if (model != null)
 			return model;
 
 		model = MeshLoader.getSingleton().lookup(this.model);
 		if (model == null)
 			return null;
-		model = model.clone();
+		model = model.copy();
 
 		for (int part = 0; part < 6; part++) {
 			if (originalColours[0] != 0) {
@@ -123,7 +123,7 @@ public class Graphic {
 	}
 
 	public void setModelCache(FixedHashMap<Integer, Mesh> modelCache) {
-		this.modelCache = modelCache;
+		Graphic.modelCache = modelCache;
 	}
 
 	public int getAnimationId() {

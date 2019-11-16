@@ -1,13 +1,24 @@
 package com.jagex.cache.def;
 
+import org.displee.cache.index.Index;
+
+import java.util.Arrays;
+
 import com.jagex.Client;
+import com.jagex.cache.graphics.Sprite;
 import com.jagex.cache.loader.anim.FrameLoader;
 import com.jagex.entity.model.Mesh;
 import com.jagex.entity.model.MeshLoader;
 import com.jagex.net.ResourceProvider;
+import com.rspsi.cache.CacheFileType;
 import com.rspsi.misc.FixedIntegerKeyMap;
 import com.rspsi.misc.FixedLongKeyMap;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public final class ObjectDefinition {
 
 	// Thanks Super_
@@ -15,13 +26,19 @@ public final class ObjectDefinition {
 	public static FixedIntegerKeyMap<Mesh> baseModels = new FixedIntegerKeyMap<Mesh>(500);
 	public static Client client;
 	public static boolean lowMemory;
-	public static FixedLongKeyMap<Mesh> models = new FixedLongKeyMap<Mesh>(30);
+	public static FixedLongKeyMap<Mesh> models = new FixedLongKeyMap<Mesh>(500);
 	private static Mesh[] parts = new Mesh[4];
 	
 
 	public static void dispose() {
 		baseModels = null;
 		models = null;
+	}
+	
+	private Sprite mapFunctionSprite, mapSceneSprite;
+	
+	public void generateSprites(Index spriteIndex) {
+		
 	}
 
 	private byte ambientLighting;
@@ -63,102 +80,24 @@ public final class ObjectDefinition {
 	private int translateY;
 	private int translateZ;
 	private int width;
-
-	public boolean castsShadow() {
-		return castsShadow;
-	}
 	
-
-	public boolean contoursGround() {
-		return contouredGround;
-	}
-
-	public int getAnimation() {
-		return animation;
-	}
-
-	public int getDecorDisplacement() {
-		return decorDisplacement;
-	}
-
-	public byte[] getDescription() {
-		return description;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getInteraction(int index) {
-		return interactions[index];
-	}
-
-	public String[] getInteractions() {
-		return interactions;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public int getMapscene() {
-		return mapscene;
-	}
-
-	public int getMinimapFunction() {
-		return minimapFunction;
-	}
+	private int areaId = -1;
 
 	public int[] getModelIds() {
-		if(modelIds != null && modelTypes != null && modelTypes[0] == 22 && modelIds[0] == 1105 && getMinimapFunction() != -1)
+		if(modelIds != null && modelTypes != null && modelTypes[0] == 22 && modelIds[0] == 1105 && minimapFunction != -1)
 			return new int[] {111};
 		return modelIds;
 	}
 
-	public int[] getModelTypes() {
-		return modelTypes;
-	}
-
-	public int[] getMorphisms() {
-		return morphisms;
-	}
-
-	public int getMorphVarbitIndex() {
-		return varbit;
-	}
-
-	public int getMorphVariableIndex() {
-		return varp;
-	}
-
 	public String getName() {
-		return (name == null || name.equals("") ? getMinimapFunction() != -1 ? "minimap-function:" + minimapFunction : "null" : name + (getMinimapFunction() != -1 ? " minimap-function:" + minimapFunction : "")) ;
+		return (name == null || name.equals("") ? minimapFunction != -1 ? "minimap-function:" + minimapFunction : "null" : name + ( minimapFunction != -1 ? " minimap-function:" + minimapFunction : "")) ;
 	}
 
-	public int getSurroundings() {
-		return surroundings;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public boolean isImpenetrable() {
-		return impenetrable;
-	}
-
-	public boolean isInteractive() {
-		return interactive;
-	}
-
-	public boolean isSolid() {
-		return solid;
-	}
 
 	public final void loadModels(ResourceProvider provider) {
 		if (getModelIds() != null) {
 			for (int id : getModelIds()) {
-				provider.requestFile(0, id);
+				provider.requestFile(CacheFileType.MODEL, id);
 			}
 		}
 	}
@@ -170,8 +109,8 @@ public final class ObjectDefinition {
 			if (type != 10)
 				return null;
 
-			key = frame + 1L << 32 | id << 6 | orientation;
-			Mesh model = (Mesh) models.get(key);
+			key = frame + 1L << 32 | ((inverted ? 1 : 0) << 16)| id << 6 | orientation;
+			Mesh model = models.get(key);
 			if (model != null)
 				return model;
 
@@ -186,13 +125,14 @@ public final class ObjectDefinition {
 					id |= 0x10000;
 				}
 
-				base = (Mesh) baseModels.get(id);
+				base = baseModels.get(id);
 				if (base == null) {
 					base = MeshLoader.getSingleton().lookup(id & 0xffff);
 					if (base == null) {
 						System.out.println("failed lookup id " + id);
 						return null;
 					}
+					base = base.copy();
 
 					if (invert) {
 						base.invert();
@@ -224,8 +164,8 @@ public final class ObjectDefinition {
 			if (index == -1)
 				return null;
 
-			key = frame + 1L << 32 | id << 6 | index << 3 | orientation;
-			Mesh model = (Mesh) models.get(key);
+			key = frame + 1L << 32 | ((inverted ? 1 : 0) << 16) | id << 6 | index << 3 | orientation;
+			Mesh model = models.get(key);
 			if (model != null)
 				return model;
 
@@ -235,7 +175,7 @@ public final class ObjectDefinition {
 				id |= 0x10000;
 			}
 
-			base = (Mesh) baseModels.get(id);
+			base = baseModels.get(id);
 			if (base == null) {
 				base = MeshLoader.getSingleton().lookup(id & 0xffff);
 
@@ -243,6 +183,8 @@ public final class ObjectDefinition {
 					System.out.println("BASE NULL FOR ID " + id);
 					return null;
 				}
+
+				base = base.copy();
 
 				if (invert) {
 					base.invert();
@@ -281,6 +223,11 @@ public final class ObjectDefinition {
 				model.recolour(originalColours[colour], replacementColours[colour]);
 			}
 
+		}
+
+		if(retextureToFind != null){
+			for(int index = 0;index < retextureToFind.length;index++)
+				model.retexture(retextureToFind[index], textureToReplace[index]);
 		}
 		if (scale) {
 			model.scale(scaleX, scaleZ, scaleY);
@@ -346,6 +293,42 @@ public final class ObjectDefinition {
 	}
 
 	protected int modelTries = 0;
+	
+	public final boolean readyOrThrow(int type) throws Exception {
+		if (modelTypes == null) {
+			if (getModelIds() == null || type != 10)
+				return true;
+
+			boolean ready = true;
+			for (int id : getModelIds()) {
+				ready &= MeshLoader.getSingleton().loaded(id);
+			}
+			if(ready)
+				modelTries = 0;
+			else
+				modelTries++;
+			if(modelTries > 500)
+				throw new Exception("Model missing");
+			return ready;
+		}
+
+		for (int index = 0; index < modelTypes.length; index++) {
+			if (modelTypes[index] == type) {
+				boolean ready = MeshLoader.getSingleton().loaded(getModelIds()[index]);
+
+				if(ready)
+					modelTries = 0;
+				else
+					modelTries++;
+
+				if(modelTries > 500)
+					throw new Exception("Model missing");
+				return ready;
+			}
+		}
+		modelTries = 0;
+		return true;
+	}
 	
 	public final boolean ready(int type) {
 		if (modelTypes == null) {
@@ -417,290 +400,47 @@ public final class ObjectDefinition {
 		morphisms = null;
 	}
 
-
-	public byte getAmbientLighting() {
-		return ambientLighting;
+	public int getHash() {
+		final int prime = 337;
+		int result = 1;
+		result = prime * result + ambientLighting;
+		result = prime * result + animation;
+		result = prime * result + (castsShadow ? 1231 : 1237);
+		result = prime * result + (contouredGround ? 1231 : 1237);
+		result = prime * result + decorDisplacement;
+		result = prime * result + (delayShading ? 1231 : 1237);
+		result = prime * result + (hollow ? 1231 : 1237);
+		result = prime * result + (impenetrable ? 1231 : 1237);
+		result = prime * result + Arrays.hashCode(interactions);
+		result = prime * result + (interactive ? 1231 : 1237);
+		result = prime * result + (inverted ? 1231 : 1237);
+		result = prime * result + length;
+		result = prime * result + lightDiffusion;
+		result = prime * result + mapscene;
+		result = prime * result + minimapFunction;
+		result = prime * result + Arrays.hashCode(modelIds);
+		result = prime * result + Arrays.hashCode(modelTypes);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (obstructsGround ? 1231 : 1237);
+		result = prime * result + (occludes ? 1231 : 1237);
+		result = prime * result + Arrays.hashCode(originalColours);
+		result = prime * result + Arrays.hashCode(replacementColours);
+		result = prime * result + Arrays.hashCode(retextureToFind);
+		result = prime * result + scaleX;
+		result = prime * result + scaleY;
+		result = prime * result + scaleZ;
+		result = prime * result + (solid ? 1231 : 1237);
+		result = prime * result + supportItems;
+		result = prime * result + surroundings;
+		result = prime * result + Arrays.hashCode(textureToReplace);
+		result = prime * result + translateX;
+		result = prime * result + translateY;
+		result = prime * result + translateZ;
+		result = prime * result + varbit;
+		result = prime * result + varp;
+		result = prime * result + width;
+		return result;
 	}
 
-
-	public void setAmbientLighting(byte ambientLighting) {
-		this.ambientLighting = ambientLighting;
-	}
-
-
-	public void setAnimation(int animation) {
-		this.animation = animation;
-	}
-
-
-	public void setCastsShadow(boolean castsShadow) {
-		this.castsShadow = castsShadow;
-	}
-
-
-	public void setContouredGround(boolean contouredGround) {
-		this.contouredGround = contouredGround;
-	}
-
-
-	public void setDecorDisplacement(int decorDisplacement) {
-		this.decorDisplacement = decorDisplacement;
-	}
-
-
-	public void setDelayShading(boolean delayShading) {
-		this.delayShading = delayShading;
-	}
-
-
-	public void setDescription(byte[] description) {
-		this.description = description;
-	}
-
-
-	public void setHollow(boolean hollow) {
-		this.hollow = hollow;
-	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
-	public void setImpenetrable(boolean impenetrable) {
-		this.impenetrable = impenetrable;
-	}
-
-
-	public void setInteractions(String[] interactions) {
-		this.interactions = interactions;
-	}
-
-
-	public void setInteractive(boolean interactive) {
-		this.interactive = interactive;
-	}
-
-
-	public void setInverted(boolean inverted) {
-		this.inverted = inverted;
-	}
-
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-
-	public void setLightDiffusion(byte lightDiffusion) {
-		this.lightDiffusion = lightDiffusion;
-	}
-
-
-	public void setMapscene(int mapscene) {
-		this.mapscene = mapscene;
-	}
-
-
-	public void setMinimapFunction(int minimapFunction) {
-		this.minimapFunction = minimapFunction;
-	}
-
-
-	public void setModelIds(int[] modelIds) {
-		this.modelIds = modelIds;
-	}
-
-
-	public void setModelTypes(int[] modelTypes) {
-		this.modelTypes = modelTypes;
-	}
-
-
-	public void setMorphisms(int[] morphisms) {
-		this.morphisms = morphisms;
-	}
-
-
-	public void setVarbit(int varbit) {
-		this.varbit = varbit;
-	}
-
-
-	public void setVarp(int varp) {
-		this.varp = varp;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public void setObstructsGround(boolean obstructsGround) {
-		this.obstructsGround = obstructsGround;
-	}
-
-
-	public void setOccludes(boolean occludes) {
-		this.occludes = occludes;
-	}
-
-
-	public void setOriginalColours(int[] originalColours) {
-		this.originalColours = originalColours;
-	}
-
-
-	public void setReplacementColours(int[] replacementColours) {
-		this.replacementColours = replacementColours;
-	}
-
-
-	public void setScaleX(int scaleX) {
-		this.scaleX = scaleX;
-	}
-
-
-	public void setScaleY(int scaleY) {
-		this.scaleY = scaleY;
-	}
-
-
-	public void setScaleZ(int scaleZ) {
-		this.scaleZ = scaleZ;
-	}
-
-
-	public void setSolid(boolean solid) {
-		this.solid = solid;
-	}
-
-
-	public void setSupportItems(int supportItems) {
-		this.supportItems = supportItems;
-	}
-
-
-	public void setSurroundings(int surroundings) {
-		this.surroundings = surroundings;
-	}
-
-
-	public void setTranslateX(int translateX) {
-		this.translateX = translateX;
-	}
-
-
-	public void setTranslateY(int translateY) {
-		this.translateY = translateY;
-	}
-
-
-	public void setTranslateZ(int translateZ) {
-		this.translateZ = translateZ;
-	}
-
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public boolean isCastsShadow() {
-		return castsShadow;
-	}
-
-
-	public boolean isContouredGround() {
-		return contouredGround;
-	}
-
-
-	public boolean isDelayShading() {
-		return delayShading;
-	}
-
-
-	public boolean isHollow() {
-		return hollow;
-	}
-
-
-	public boolean isInverted() {
-		return inverted;
-	}
-
-
-	public byte getLightDiffusion() {
-		return lightDiffusion;
-	}
-
-
-	public int getVarbit() {
-		return varbit;
-	}
-
-
-	public int getVarp() {
-		return varp;
-	}
-
-
-	public boolean isObstructsGround() {
-		return obstructsGround;
-	}
-
-
-	public boolean isOccludes() {
-		return occludes;
-	}
-
-
-	public int[] getOriginalColours() {
-		return originalColours;
-	}
-
-
-	public int[] getReplacementColours() {
-		return replacementColours;
-	}
-
-
-	public int getScaleX() {
-		return scaleX;
-	}
-
-
-	public int getScaleY() {
-		return scaleY;
-	}
-
-
-	public int getScaleZ() {
-		return scaleZ;
-	}
-
-
-	public int getSupportItems() {
-		return supportItems;
-	}
-
-
-	public int getTranslateX() {
-		return translateX;
-	}
-
-
-	public int getTranslateY() {
-		return translateY;
-	}
-
-
-	public int getTranslateZ() {
-		return translateZ;
-	}
-
-	
 
 }

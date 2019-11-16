@@ -16,17 +16,17 @@ class BZip2DecompressionState {
 	/* the buffer for bit stream reading */
 	int bsBuff;
 	int bsLive;
-	final int bzGSize = 50;
+	static final int bzGSize = 50;
 
 	/* Constants */
-	final int bzMaxAlphaSize = 258;
+	static final int bzMaxAlphaSize = 258;
 
-	final int bzMaxCodeLen = 23;
-	final int bzMaxSelectors = 18002; // (2 + (900000 / BZ_G_SIZE))
+	static final int bzMaxCodeLen = 23;
+	static final int bzMaxSelectors = 18002; // (2 + (900000 / BZ_G_SIZE))
 
-	final int bzNGroups = 6;
-	final int bzNIters = 4;
-	final int bzRunB = 1;
+	static final int bzNGroups = 6;
+	static final int bzNIters = 4;
+	static final int bzRunB = 1;
 	int[] cftab;
 	byte[] compressed;
 

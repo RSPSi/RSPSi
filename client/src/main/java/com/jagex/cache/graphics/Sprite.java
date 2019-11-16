@@ -1,19 +1,19 @@
 package com.jagex.cache.graphics;
 
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.image.PixelGrabber;
-import java.util.Arrays;
-
-import javax.swing.ImageIcon;
-
 import com.jagex.draw.raster.GameRaster;
 import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.io.Buffer;
+import com.jagex.util.ByteBufferUtils;
 
-import io.nshusa.rsam.binary.Archive;
+import org.displee.cache.index.archive.Archive;
+import org.displee.cache.index.archive.file.File;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public final class Sprite extends GameRaster {
 
@@ -38,8 +38,8 @@ public final class Sprite extends GameRaster {
 		}
 	}
 
-	private static void draw(int raster[], int[] image, int colour, int sourceIndex, int destIndex, int width,
-			int height, int destStep, int sourceStep) {
+	private static void draw(int[] raster, int[] image, int colour, int sourceIndex, int destIndex, int width,
+                             int height, int destStep, int sourceStep) {
 		int minX = -(width >> 2);
 		width = -(width & 3);
 
@@ -172,7 +172,256 @@ public final class Sprite extends GameRaster {
 	private int verticalOffset;
 
 	private int width;
+	
+	/**
+	 * This flag indicates that the pixels should be read vertically instead of
+	 * horizontally.
+	 */
+	public static final int FLAG_VERTICAL = 0x01;
 
+	/**
+	 * This flag indicates that every pixel has an alpha, as well as red, green
+	 * and blue, component.
+	 */
+	public static final int FLAG_ALPHA = 0x02;
+
+	public static Sprite[] unpackAndDecode(ByteBuffer buffer) {
+		/* find the size of this sprite set */
+		buffer.position(buffer.limit() - 2);
+		int size = buffer.getShort() & 0xFFFF;
+
+		/* allocate arrays to store info */
+		int[] offsetsX = new int[size];
+		int[] offsetsY = new int[size];
+		int[] subWidths = new int[size];
+		int[] subHeights = new int[size];
+
+		/* read the width, height and palette size */
+		buffer.position(buffer.limit() - size * 8 - 7);
+		int width = buffer.getShort() & 0xFFFF;
+		int height = buffer.getShort() & 0xFFFF;
+		int[] palette = new int[(buffer.get() & 0xFF) + 1];
+
+		/* and allocate an object for this sprite set */
+
+		/* read the offsets and dimensions of the individual sprites */
+		for (int i = 0; i < size; i++) {
+			offsetsX[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			offsetsY[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			subWidths[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			subHeights[i] = buffer.getShort() & 0xFFFF;
+		}
+
+		/* read the palette */
+		buffer.position(buffer.limit() - size * 8 - 7 - (palette.length - 1) * 3);
+		palette[0] = 0; /* transparent colour (black) */
+		for (int index = 1; index < palette.length; index++) {
+			palette[index] = ByteBufferUtils.getUMedium(buffer);
+			if (palette[index] == 0)
+				palette[index] = 1;
+		}
+
+		Sprite[] sprites = new Sprite[size];
+		/* read the pixels themselves */
+		buffer.position(0);
+		for (int id = 0; id < size; id++) {
+			Sprite set = new Sprite(subWidths[id], subHeights[id]);
+			/* grab some frequently used values */
+			int subWidth = subWidths[id], subHeight = subHeights[id];
+			int offsetX = offsetsX[id], offsetY = offsetsY[id];
+
+			/* create a BufferedImage to store the resulting image */
+			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+			/* allocate an array for the palette indices */
+			int[][] indices = new int[subWidth][subHeight];
+
+			/*
+			 * read the flags so we know whether to read horizontally or
+			 * vertically
+			 */
+			int flags = buffer.get() & 0xFF;
+
+			/* now read the image */
+			if (image != null) {
+				/* read the palette indices */
+				if ((flags & FLAG_VERTICAL) != 0) {
+					for (int x = 0; x < subWidth; x++) {
+						for (int y = 0; y < subHeight; y++) {
+							indices[x][y] = buffer.get() & 0xFF;
+						}
+					}
+				} else {
+					for (int y = 0; y < subHeight; y++) {
+						for (int x = 0; x < subWidth; x++) {
+							indices[x][y] = buffer.get() & 0xFF;
+						}
+					}
+				}
+
+				/*
+				 * read the alpha (if there is alpha) and convert values to ARGB
+				 */
+				set.hasAlpha = true;
+				if ((flags & FLAG_ALPHA) != 0) {
+					if ((flags & FLAG_VERTICAL) != 0) {
+						for (int x = 0; x < subWidth; x++) {
+							for (int y = 0; y < subHeight; y++) {
+								int alpha = buffer.get() & 0xFF;
+								image.setRGB(x + offsetX, y + offsetY, alpha << 24 | palette[indices[x][y]]);
+							}
+						}
+					} else {
+						for (int y = 0; y < subHeight; y++) {
+							for (int x = 0; x < subWidth; x++) {
+								int alpha = buffer.get() & 0xFF;
+								image.setRGB(x + offsetX, y + offsetY, alpha << 24 | palette[indices[x][y]]);
+							}
+						}
+					}
+				} else {
+					for (int x = 0; x < subWidth; x++) {
+						for (int y = 0; y < subHeight; y++) {
+							int index = indices[x][y];
+							if (index == 0) {
+								image.setRGB(x + offsetX, y + offsetY, 0);
+							} else {
+								image.setRGB(x + offsetX, y + offsetY, 0xFF000000 | palette[index]);
+							}
+						}
+					}
+				}
+			}
+		
+			image.getRGB(0, 0, subWidth, subHeight, set.raster, 0, subWidth);
+			sprites[id] = set;
+		}
+		return sprites;
+	}
+	
+	public static Sprite decode(ByteBuffer buffer) {
+		/* find the size of this sprite set */
+		buffer.position(buffer.limit() - 2);
+		int size = buffer.getShort() & 0xFFFF;
+
+		/* allocate arrays to store info */
+		int[] offsetsX = new int[size];
+		int[] offsetsY = new int[size];
+		int[] subWidths = new int[size];
+		int[] subHeights = new int[size];
+
+		/* read the width, height and palette size */
+		buffer.position(buffer.limit() - size * 8 - 7);
+		int width = buffer.getShort() & 0xFFFF;
+		int height = buffer.getShort() & 0xFFFF;
+		int[] palette = new int[(buffer.get() & 0xFF) + 1];
+
+		/* and allocate an object for this sprite set */
+
+		/* read the offsets and dimensions of the individual sprites */
+		for (int i = 0; i < size; i++) {
+			offsetsX[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			offsetsY[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			subWidths[i] = buffer.getShort() & 0xFFFF;
+		}
+		for (int i = 0; i < size; i++) {
+			subHeights[i] = buffer.getShort() & 0xFFFF;
+		}
+		Sprite set = new Sprite(subWidths[0], subHeights[0]);
+
+		/* read the palette */
+		buffer.position(buffer.limit() - size * 8 - 7 - (palette.length - 1) * 3);
+		palette[0] = 0; /* transparent colour (black) */
+		for (int index = 1; index < palette.length; index++) {
+			palette[index] = ByteBufferUtils.getUMedium(buffer);
+			if (palette[index] == 0)
+				palette[index] = 1;
+		}
+
+		/* read the pixels themselves */
+		buffer.position(0);
+		//for (int id = 0; id < size; id++) {
+			/* grab some frequently used values */
+			int subWidth = subWidths[0], subHeight = subHeights[0];
+			int offsetX = offsetsX[0], offsetY = offsetsY[0];
+
+			/* create a BufferedImage to store the resulting image */
+			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+			/* allocate an array for the palette indices */
+			int[][] indices = new int[subWidth][subHeight];
+
+			/*
+			 * read the flags so we know whether to read horizontally or
+			 * vertically
+			 */
+			int flags = buffer.get() & 0xFF;
+
+			/* now read the image */
+			if (image != null) {
+				/* read the palette indices */
+				if ((flags & FLAG_VERTICAL) != 0) {
+					for (int x = 0; x < subWidth; x++) {
+						for (int y = 0; y < subHeight; y++) {
+							indices[x][y] = buffer.get() & 0xFF;
+						}
+					}
+				} else {
+					for (int y = 0; y < subHeight; y++) {
+						for (int x = 0; x < subWidth; x++) {
+							indices[x][y] = buffer.get() & 0xFF;
+						}
+					}
+				}
+
+				/*
+				 * read the alpha (if there is alpha) and convert values to ARGB
+				 */
+				set.hasAlpha = true;
+				if ((flags & FLAG_ALPHA) != 0) {
+					if ((flags & FLAG_VERTICAL) != 0) {
+						for (int x = 0; x < subWidth; x++) {
+							for (int y = 0; y < subHeight; y++) {
+								int alpha = buffer.get() & 0xFF;
+								image.setRGB(x + offsetX, y + offsetY, alpha << 24 | palette[indices[x][y]]);
+							}
+						}
+					} else {
+						for (int y = 0; y < subHeight; y++) {
+							for (int x = 0; x < subWidth; x++) {
+								int alpha = buffer.get() & 0xFF;
+								image.setRGB(x + offsetX, y + offsetY, alpha << 24 | palette[indices[x][y]]);
+							}
+						}
+					}
+				} else {
+					for (int x = 0; x < subWidth; x++) {
+						for (int y = 0; y < subHeight; y++) {
+							int index = indices[x][y];
+							if (index == 0) {
+								image.setRGB(x + offsetX, y + offsetY, 0);
+							} else {
+								image.setRGB(x + offsetX, y + offsetY, 0xFF000000 | palette[index]);
+							}
+						}
+					}
+				}
+			}
+		//}
+			image.getRGB(0, 0, subWidth, subHeight, set.raster, 0, subWidth);
+		return set;
+	}
+	
 	public Sprite(Archive archive, String name, int id) {
 		Buffer sprite = new Buffer(archive.readFile(name + ".dat"));
 		Buffer meta = new Buffer(archive.readFile("index.dat"));
@@ -188,7 +437,11 @@ public final class Sprite extends GameRaster {
 
 		for (int index = 0; index < colours - 1; index++) {
 			int colour = meta.readUTriByte();
-			palette[index + 1] = colour == 0 ? 1 : colour;
+			if(colour == 0)
+				colour = 1;
+			else if(colour == 0xff00ff)
+				colour = 0;
+			palette[index + 1] = colour;
 		}
 
 		for (int i = 0; i < id; i++) {
@@ -768,6 +1021,20 @@ public final class Sprite extends GameRaster {
 	        }
 	    }
 	    return temp ;
+	}
+	
+	private boolean hasAlpha;
+
+	public boolean hasAlpha() {
+		// TODO Auto-generated method stub
+		return hasAlpha;
+	}
+
+	public void resize(int width, int height) {
+		resizeWidth = width;
+		resizeHeight = height;
+		resize();
+		
 	}
 
 }

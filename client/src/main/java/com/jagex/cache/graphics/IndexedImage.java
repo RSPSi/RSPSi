@@ -1,22 +1,19 @@
 package com.jagex.cache.graphics;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.image.PixelGrabber;
-import java.nio.ByteBuffer;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 import com.google.common.collect.Lists;
 import com.jagex.draw.raster.GameRaster;
 import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.io.Buffer;
 import com.jagex.util.ColourUtils;
-
-import io.nshusa.rsam.binary.Archive;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
+import org.displee.cache.index.archive.Archive;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.PixelGrabber;
+import java.nio.ByteBuffer;
+import java.util.List;
 
 public final class IndexedImage extends GameRaster {
 

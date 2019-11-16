@@ -1,8 +1,7 @@
 package com.jagex.cache.loader.map;
 
 import com.jagex.io.Buffer;
-
-import io.nshusa.rsam.binary.Archive;
+import org.displee.cache.index.archive.Archive;
 
 public abstract class MapIndexLoader {
 	
@@ -35,6 +34,14 @@ public abstract class MapIndexLoader {
 	
 	public static void setRegionData(int regionX, int regionY, int landscapeId, int objectsId) {
 		instance.set(regionX, regionY, landscapeId, objectsId);
+	}
+	
+	public String getFileName(int hash, MapType type) {
+		return String.valueOf(lookup(hash, type));
+	}
+	public static String getName(int regionX, int regionY, MapType type) {
+		int code = (regionX << 8) + regionY;
+		return MapIndexLoader.instance.getFileName(code, type);
 	}
 
 

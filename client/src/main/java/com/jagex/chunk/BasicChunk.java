@@ -1,5 +1,6 @@
 package com.jagex.chunk;
 
+import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,7 +21,7 @@ public class BasicChunk {
 	
 	@Subscribe(threadMode = ThreadMode.ASYNC)
 	public void onResourceResponse(ResourceResponse response) {
-		if(response.getRequest().getType() == 3) {
+		if(response.getRequest().getType() == CacheFileType.MAP) {
 			int fileId = response.getRequest().getFile();
 			if(fileId == landscapeId) {
 				landscapeBytes = response.decompress();
@@ -46,7 +47,7 @@ public class BasicChunk {
 	
 	public int[] drawMinimapOriented(int plane) {
 		int pixels = 256 * 256;
-		int raster[] = new int[pixels];
+        int[] raster = new int[pixels];
 		for (int i = 0; i < pixels; i++) {
 			raster[i] = 0;
 		}
@@ -69,7 +70,7 @@ public class BasicChunk {
 	
 	public int[] drawMinimapBasic(int plane) {
 		int pixels = 256 * 256;
-		int raster[] = new int[pixels];
+        int[] raster = new int[pixels];
 		for (int i = 0; i < pixels; i++) {
 			raster[i] = 0;
 		}

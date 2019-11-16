@@ -102,11 +102,7 @@ public final class BZip2Decompressor {
 			uc = getUnsignedChar(state);
 			uc = getBit(state);
 
-			if (uc != 0) {
-				state.randomised = true;
-			} else {
-				state.randomised = false;
-			}
+            state.randomised = uc != 0;
 
 			if (state.randomised) {
 				System.out.println("PANIC! RANDOMISED BLOCK!");
@@ -124,11 +120,7 @@ public final class BZip2Decompressor {
 
 			for (int i = 0; i < 16; i++) {
 				byte bit = getBit(state);
-				if (bit == 1) {
-					state.inUse16[i] = true;
-				} else {
-					state.inUse16[i] = false;
-				}
+                state.inUse16[i] = bit == 1;
 			}
 
 			for (int i = 0; i < 256; i++) {
@@ -427,11 +419,7 @@ public final class BZip2Decompressor {
 			state.count = nblock;
 			finish(state);
 
-			if (state.usedBlocks == state.count + 1 && state.stateOutLen == 0) {
-				flag19 = true;
-			} else {
-				flag19 = false;
-			}
+            flag19 = state.usedBlocks == state.count + 1 && state.stateOutLen == 0;
 		}
 	}
 

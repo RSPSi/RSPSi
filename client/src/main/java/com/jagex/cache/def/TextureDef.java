@@ -1,8 +1,7 @@
 package com.jagex.cache.def;
 
 import com.jagex.io.Buffer;
-
-import io.nshusa.rsam.binary.Archive;
+import org.displee.cache.index.archive.Archive;
 
 public final class TextureDef
 {
