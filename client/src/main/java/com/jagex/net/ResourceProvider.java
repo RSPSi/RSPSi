@@ -3,13 +3,11 @@ package com.jagex.net;
 import java.util.Collections;
 import java.util.List;
 
+import com.jagex.Cache;
+import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 
 import com.google.common.collect.Lists;
-import com.jagex.Cache;
-import com.jagex.io.Buffer;
-
-import io.nshusa.rsam.binary.Archive;
 
 public class ResourceProvider implements Runnable {
 
@@ -43,11 +41,16 @@ public class ResourceProvider implements Runnable {
 		return musicPriorities[file] == 1;
 	}
 
-	public final void init(Archive archive) {
+	public final void requestMap(int file, int regionId) {
+		if(Lists.newArrayList(requests).stream().anyMatch(node -> node != null && node.getType() == CacheFileType.MAP && node.getFile() == file)) {
+			return;
+		}
 	
+		ResourceRequest node = new MapResourceRequest(regionId, file);
+		requests.add(node);
 	}
 
-	public final void requestFile(int type, int file) {
+	public final void requestFile(CacheFileType type, int file) {
 		if(Lists.newArrayList(requests).stream().anyMatch(node -> node != null && node.getType() == type && node.getFile() == file)) {
 			return;
 		}
@@ -61,35 +64,46 @@ public class ResourceProvider implements Runnable {
 			return;
 		//System.out.println("Grabbing from cache " + (cache == null));
 		List<ResourceRequest> loopedResources = Lists.newArrayList(requests);
-		
+		List<ResourceRequest> successfulRequests = Lists.newArrayList();
 		for(ResourceRequest request : loopedResources) {
+			
 			if(request == null) {
 				//System.out.println("NODE NULL");
 				continue;
 			}
 			//System.out.println("Grabbing " + request.getType() + ":" + request.getFile());
 			try {
-				byte[] data = cache.getFile(request.getType(), request.getFile());
+				byte[] data;
+				if(request.getType() == CacheFileType.MAP) {
+					MapResourceRequest mapReq = (MapResourceRequest) request;
+					data = cache.readMap(request.getFile(), mapReq.getRegionId());
+				} else {
+					data = cache.readFile(request.getType(), request.getFile());
+				}
 				//System.out.println("data null ? " + (data == null));
 				if(data != null) {
+					successfulRequests.add(request);
 					ResourceResponse response = new ResourceResponse(request, data);
 					EventBus.getDefault().post(response);
 				} else {
 					throw new Exception("Fetch Error");
 				}
 			} catch(Exception ex) {
-				System.out.println("Failed to fetch resource " + request.getFile() + " from index " + request.getType());
+				if(request.getAge() > 150000) {
+					requests.remove(request);
+					System.out.println("Failed to fetch resource " + request.getFile() + " from index " + request.getType());
+				}
 			}
 		}
-		requests.removeAll(loopedResources);
+		requests.removeAll(successfulRequests);
 		
 		
 	}
 
 	public final int remaining() {
-		synchronized (requests) {
+		//synchronized (requests) {
 			return requests.size();
-		}
+		//}
 	}
 	
 
