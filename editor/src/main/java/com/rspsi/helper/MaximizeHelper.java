@@ -28,7 +28,7 @@ public class MaximizeHelper {
 		mainPane = stage.getScene().lookup("#main-pane");
 		
 		originalBox = new BoundingBox(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
-		maximized.addListener((ChangeListener<Boolean>) (observable, oldVal, newVal) -> {
+		maximized.addListener((observable, oldVal, newVal) -> {
 			if(mainPane != null) {
 				mainPane.pseudoClassStateChanged(maximizedPseudoClass, newVal);
 			}
@@ -46,6 +46,7 @@ public class MaximizeHelper {
 				stage.setY(maximizedBox.getMinY());
 				stage.setWidth(maximizedBox.getWidth());
 				stage.setHeight(maximizedBox.getHeight());
+				stage.getScene().getProperties().put("maximized", true);
 				if (button != null) {
 					button.setGraphic(SGVConstants.getResizeMin());
 				}
@@ -56,6 +57,7 @@ public class MaximizeHelper {
 				stage.setWidth(originalBox.getWidth());
 				stage.setHeight(originalBox.getHeight());
 				originalBox = null;
+				stage.getScene().getProperties().remove("maximized");
 				if (button != null) {
 					button.setGraphic(SGVConstants.getMaximize());
 				}

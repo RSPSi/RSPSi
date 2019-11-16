@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.jagex.map.tile.SceneTile;
 import com.rspsi.misc.CopyOptions;
 import com.rspsi.misc.ExportOptions;
+import com.rspsi.misc.Location;
 
 public class SceneTileData {
 
@@ -269,6 +270,10 @@ public class SceneTileData {
 
 	public void setZ(int z) {
 		this.z = z;
+	}
+
+	public Location getLocation() {
+		return new Location(x, y, z);
 	}
 
 }

@@ -45,6 +45,10 @@ public class ResizeHelper {
 		public void handle(MouseEvent mouseEvent) {
 			EventType<? extends MouseEvent> mouseEventType = mouseEvent.getEventType();
 			Scene scene = stage.getScene();
+			
+			if((boolean) scene.getProperties().getOrDefault("maximized", false)) {
+				return;
+			}
 
 			double mouseEventX = mouseEvent.getSceneX(), mouseEventY = mouseEvent.getSceneY(),
 					sceneWidth = scene.getWidth(), sceneHeight = scene.getHeight();
@@ -118,6 +122,9 @@ public class ResizeHelper {
 						}
 					}
 				}
+				
+				if(resizing)
+					mouseEvent.consume();
 
 			}
 		}
