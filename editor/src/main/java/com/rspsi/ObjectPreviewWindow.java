@@ -2,13 +2,15 @@ package com.rspsi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
+import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.def.ObjectDefinition;
+import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.entity.model.PreviewModel;
 import com.rspsi.controllers.ObjectPreviewController;
@@ -17,14 +19,15 @@ import com.rspsi.controls.SwatchControl;
 import com.rspsi.controls.WindowControls;
 import com.rspsi.datasets.ObjectDataset;
 import com.rspsi.misc.NamedValueObject;
+import com.rspsi.misc.Vector3;
 import com.rspsi.resources.ResourceLoader;
 import com.rspsi.swatches.ObjectSwatch;
+import com.rspsi.util.FXDialogs;
 import com.rspsi.util.FXUtils;
 import com.rspsi.util.FontAwesomeUtil;
 import com.rspsi.util.ReflectionUtil;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +35,8 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -64,11 +69,7 @@ public class ObjectPreviewWindow extends Application {
 		controller.getDefinitionTable().setOnMouseClicked(mouseEvent -> {
 			if(mouseEvent.getButton() == MouseButton.SECONDARY) {
 				NamedValueObject obj = controller.getDefinitionTable().getSelectionModel().getSelectedItem();
-				if(obj != null) {
-					final ClipboardContent content = new ClipboardContent();
-				     content.putString(obj.getName() + ": " + obj.getValue());
-					Clipboard.getSystemClipboard().setContent(content);
-				}
+				
 			}
 		});
 		TreeView<ObjectDataset> treeView = controller.getObjectDefinitionList();
@@ -82,12 +83,12 @@ public class ObjectPreviewWindow extends Application {
 					} else if (item.isRoot()) {
 						setText("Type: " + item.getType());
 					} else {
-						setText(item.getId() + ": " + item.getName());
+						setText(item.getId() + ": " + item.getName() + " [" + item.getType() + "]");
 					}
 				}
 
 			};
-			cell.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldVal, newVal) -> {
+			cell.selectedProperty().addListener((observable, oldVal, newVal) -> {
 				if (newVal) {
 					if (!cell.isEmpty() && !cell.getItem().isRoot()) {
 						ObjectDataset cellSelection = cell.getItem();
@@ -97,6 +98,34 @@ public class ObjectPreviewWindow extends Application {
 						
 						controller.getDefinitionTable().getItems().clear();
 						controller.getDefinitionTable().getItems().addAll(ReflectionUtil.getValueAsNamedValueList(def));
+						ContextMenu contextMenu = new ContextMenu();
+						MenuItem copyItem = new MenuItem("Copy");
+						copyItem.setOnAction(al -> {
+							NamedValueObject obj = controller.getDefinitionTable().getSelectionModel().getSelectedItem();
+							if(obj != null) {
+								final ClipboardContent content = new ClipboardContent();
+							     content.putString(obj.getName() + ": " + obj.getValue());
+								Clipboard.getSystemClipboard().setContent(content);
+							}
+						});
+						MenuItem showVarbit = new MenuItem("Show varbit");
+						showVarbit.setOnAction(al -> {
+							Optional<NamedValueObject> optObj = controller.getDefinitionTable().getItems().stream().filter(obj -> obj.getName().equalsIgnoreCase("varbit")).findAny();
+							if(optObj.isPresent()) {
+								if(!optObj.get().getValue().equalsIgnoreCase("-1")) {
+									VariableBits bit = VariableBitLoader.lookup(Integer.parseInt(optObj.get().getValue()));
+									FXDialogs.showInformation("Varbit [" + optObj.get().getValue() + "]", "Setting: " + bit.getSetting() + "\nHigh: " + bit.getHigh() + "\nLow: " + bit.getLow());
+								} else {
+									FXDialogs.showError("Error grabbing varbit", "Varbit ID was -1");
+								}
+								
+									
+								
+							}
+						});
+						contextMenu.getItems().add(copyItem);
+						contextMenu.getItems().add(showVarbit);
+						controller.getDefinitionTable().setContextMenu(contextMenu);
 					}
 				}
 			});
@@ -105,15 +134,18 @@ public class ObjectPreviewWindow extends Application {
 		
 		
 		
-		for (int i = 0; i < ObjectDefinitionLoader.instance.getCount(); i++) {
+		for (int i = 0; i < ObjectDefinitionLoader.getCount(); i++) {
 			ObjectDefinition def = ObjectDefinitionLoader.lookup(i);
 			if (def != null) {
 				if (def.getModelTypes() != null) {
 					for (int idx = 0; idx < def.getModelTypes().length; idx++) {
 						data.add(new ObjectDataset(def.getId(), def.getModelTypes()[idx], def.getName()));
+						if(def.getModelTypes()[idx] == 10)
+							data.add(new ObjectDataset(def.getId(), 11, def.getName()));
 					}
 				} else {
 					data.add(new ObjectDataset(def.getId(), 10, def.getName()));
+					data.add(new ObjectDataset(def.getId(), 11, def.getName()));
 				}
 			}
 		}
@@ -133,7 +165,7 @@ public class ObjectPreviewWindow extends Application {
 			TreeItem<ObjectDataset> leafItem = new TreeItem<>(new ObjectDataset(i));
 			leafCells.add(leafItem);
 		}
-		data.stream().forEach(dataset -> {
+		data.forEach(dataset -> {
 			if(filterString.equals("") || dataset.toString().toLowerCase().contains(filterString.toLowerCase())) {
 				int type = dataset.getType();
 				TreeItem<ObjectDataset> leaf = leafCells.get(type);
@@ -148,6 +180,25 @@ public class ObjectPreviewWindow extends Application {
 		}
 		treeView.setRoot(branch);
 		treeView.setShowRoot(false);
+	}
+
+	public void openObject(ObjectDataset dataset){
+		try {
+			Optional<TreeItem<ObjectDataset>> leafOpt = controller.getObjectDefinitionList().getRoot().getChildren().stream().filter(item -> item.getValue().getType() == dataset.getType()).findFirst();
+			leafOpt.ifPresent(leaf -> {
+				controller.getObjectDefinitionList().getRoot().getChildren().stream().filter(item -> item.getValue().getType() != dataset.getType()).forEach(item -> item.setExpanded(false));
+				leaf.setExpanded(true);
+				leaf.getChildren().stream().filter(item -> item.getValue().getId() == dataset.getId()).findFirst().ifPresent(item -> {
+					controller.getObjectDefinitionList().getSelectionModel().select(item);
+					controller.getObjectDefinitionList().scrollTo(controller.getObjectDefinitionList().getSelectionModel().getSelectedIndex());
+
+				});
+
+			});
+		} catch(Exception ex){
+			ex.printStackTrace();
+			FXDialogs.showError("Error loading object", "Could not load the selected object to view");
+		}
 	}
 
 	public ObjectPreviewController getController() {
@@ -165,7 +216,7 @@ public class ObjectPreviewWindow extends Application {
 		stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/objectview.fxml"));
 		loader.setController(controller);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content, 800, 600);
 
 
@@ -212,70 +263,78 @@ public class ObjectPreviewWindow extends Application {
 			imgView.setLayoutY(5);
 			
 			g.getChildren().add(imgView);
-			ObjectDataset dataset = new ObjectDataset(view.getCurrentSelection(), view.getZoom());
+			ObjectDataset dataset = new ObjectDataset(view.getCurrentSelection(), view.getZoom(), view.getRotationControl().getAsVector3());
 			ObjectSwatch data = new ObjectSwatch(dataset, g, dataset.getId() + ": " + dataset.getName());
 			
 			objectSwatch.addSwatch(data);
 		});
 		
 
-		view.setZoom(view.getZoom() + 1);//Cheap fix for first added swatches being broken
+		view.setZoom(1500);//Cheap fix for first added swatches being broken
 
 	}
 	
 	public void loadToSwatches(List<ObjectDataset> data) {
 		PreviewModel oldModel = view.getModel();
 		int oldZoom = view.getZoom();
+		Vector3 oldRotation = view.getRotationControl().getAsVector3();
+		view.setZoom(1900);
 		for(ObjectDataset dataset : data) {
-			view.setZoom(dataset.getZoom() == -1 ? 1900 : dataset.getZoom());
-			view.prepareView(dataset);
-			WritableImage img = view.getModelCanvas().trimmedSnapshot();
-			Group g = new Group();
-			ImageView imgView = new ImageView(img);
-			imgView.setPreserveRatio(true);
-			imgView.setSmooth(true);
-			
-			imgView.setFitHeight(40.0);
-			imgView.setFitWidth(62.0);
-			imgView.setLayoutX(5);
-			imgView.setLayoutY(5);
-			
-			g.getChildren().add(imgView);
-			ObjectSwatch swatch = new ObjectSwatch(dataset, g,
-					dataset.getId() + ": " + dataset.getName());
-
-			objectSwatch.addSwatch(swatch);
+			loadToSwatches(dataset);
 		}
+		view.getRotationControl().loadFromVector3(oldRotation);
+		view.setZoom(oldZoom);
 		view.setModel(oldModel);
 		view.renderModel();
-		view.setZoom(oldZoom);
 	}
 	
 	public void loadToSwatches(ObjectDataset dataset) {
 		PreviewModel oldModel = view.getModel();
 		int oldZoom = view.getZoom();
-		view.setZoom(dataset.getZoom() == -1 ? 1900 : dataset.getZoom());
-			view.prepareView(dataset);
-			WritableImage img = view.getModelCanvas().trimmedSnapshot();
-			Group g = new Group();
-			ImageView imgView = new ImageView(img);
-			imgView.setPreserveRatio(true);
-			imgView.setSmooth(true);
-			
-			imgView.setFitHeight(40.0);
-			imgView.setFitWidth(62.0);
-			imgView.setLayoutX(5);
-			imgView.setLayoutY(5);
-			
-			g.getChildren().add(imgView);
-			ObjectSwatch swatch = new ObjectSwatch(dataset, g,
-					dataset.getId() + ": " + dataset.getName());
+		Vector3 oldRotation = view.getRotationControl().getAsVector3();
+		view.setZoom(dataset.getZoom() == -1 ? 1600 : dataset.getZoom());
+		if(dataset.getRotation() != null){
+			view.getRotationControl().loadFromVector3(dataset.getRotation());
+		}
+		view.prepareView(dataset);
+		WritableImage img = null;
+		while(img == null) {
+			try {
+				img = view.getModelCanvas().trimmedSnapshot();
+			} catch (Exception ex) {
+				//Image is all black
+				ex.printStackTrace();
+				view.getRotationControl().getRotateX().setAngle(oldRotation.getX() + 32);
+				view.getRotationControl().getRotateZ().setAngle(180);
+				view.getRotationControl().getRotateY().setAngle(180);
+			}
+		}
+		Group g = new Group();
+		ImageView imgView = new ImageView(img);
+		imgView.setPreserveRatio(true);
+		imgView.setSmooth(true);
 
-			objectSwatch.addSwatch(swatch);
-		
+		imgView.setFitHeight(40.0);
+		imgView.setFitWidth(62.0);
+		imgView.setLayoutX(5);
+		imgView.setLayoutY(5);
+
+		g.getChildren().add(imgView);
+		if(dataset.getRotation() == null)
+			dataset.setRotation(view.getRotationControl().getAsVector3());
+		if(dataset.getZoom() < 0)
+			dataset.setZoom(view.getZoom());
+		if(dataset.getName().contains("[")){
+			dataset.setName(dataset.getName().substring(0, dataset.getName().indexOf("[")));
+		}
+		ObjectSwatch swatch = new ObjectSwatch(dataset, g,dataset.getId() + ": " + dataset.getName() + "[" + dataset.getType() + "]");
+
+		objectSwatch.addSwatch(swatch);
+
+		view.getRotationControl().loadFromVector3(oldRotation);
+		view.setZoom(oldZoom);
 		view.setModel(oldModel);
 		view.renderModel();
-		view.setZoom(oldZoom);
 	}
 
 	@Override
