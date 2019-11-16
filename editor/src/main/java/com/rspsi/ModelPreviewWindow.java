@@ -84,7 +84,7 @@ public class ModelPreviewWindow extends Application {
 				}
 
 			};
-			cell.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldVal, newVal) -> {
+			cell.selectedProperty().addListener((observable, oldVal, newVal) -> {
 				if (newVal) {
 					if (!cell.isEmpty()) {
 						Integer cellSelection = cell.getItem();
@@ -104,7 +104,7 @@ public class ModelPreviewWindow extends Application {
 		
 
 		
-		data = FXCollections.observableArrayList(IntStream.range(0, 10000).boxed().collect(Collectors.toList()));
+		data = FXCollections.observableArrayList(IntStream.range(0, 100000).boxed().collect(Collectors.toList()));
 		//TODO increase this to actual model count
 		filterList("");
 		// branch.setExpanded(true);
@@ -118,7 +118,7 @@ public class ModelPreviewWindow extends Application {
 		
 		TreeItem<Integer> branch = new TreeItem<>();
 
-		data.stream().forEach(dataset -> {
+		data.forEach(dataset -> {
 			if(filterString.equals("") || dataset.toString().toLowerCase().contains(filterString.toLowerCase())) {
 				
 				branch.getChildren().add(new TreeItem<Integer>(dataset));
@@ -144,7 +144,7 @@ public class ModelPreviewWindow extends Application {
 		stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/modelview.fxml"));
 		loader.setController(controller);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content, 800, 600);
 
 
@@ -182,7 +182,7 @@ public class ModelPreviewWindow extends Application {
 
 
 		view.setZoom(view.getZoom() + 1);//Cheap fix for first added swatches being broken
-
+		fillList();
 	}
 	
 

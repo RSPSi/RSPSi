@@ -1,5 +1,6 @@
 package com.rspsi.controls;
 
+import com.rspsi.misc.Vector3;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -11,15 +12,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import lombok.Getter;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class RotationControl extends AnchorPane implements EventHandler<MouseEvent> {
 
 	public ColouredCube rotationCube;
 
+	@Getter
 	private Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
+	@Getter
 	private Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
+	@Getter
 	private Rotate rotateZ = new Rotate(0, Rotate.Z_AXIS);
-	private final double CUBE_SIZE = 3;
+	private static final double CUBE_SIZE = 3;
 	private double mousePosX, mousePosY = 0;
 
 	public RotationControl() {
@@ -43,18 +49,6 @@ public class RotationControl extends AnchorPane implements EventHandler<MouseEve
 		subScene.setCamera(camera);
 
 		return new Group(subScene);
-	}
-
-	public Rotate getRotateX() {
-		return rotateX;
-	}
-
-	public Rotate getRotateY() {
-		return rotateY;
-	}
-
-	public Rotate getRotateZ() {
-		return rotateZ;
 	}
 
 	@Override
@@ -85,4 +79,12 @@ public class RotationControl extends AnchorPane implements EventHandler<MouseEve
 		this.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 	}
 
+	public void loadFromVector3(Vector3 vector3){
+		rotateX.setAngle(vector3.getX());
+		rotateY.setAngle(vector3.getY());
+		rotateZ.setAngle(vector3.getZ());
+	}
+	public Vector3 getAsVector3() {
+		return new Vector3(rotateX.getAngle(), rotateY.getAngle(), rotateZ.getAngle());
+	}
 }

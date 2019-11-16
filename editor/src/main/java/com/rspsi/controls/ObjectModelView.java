@@ -27,6 +27,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ObjectModelView extends VBox {
 	
@@ -34,31 +36,32 @@ public class ObjectModelView extends VBox {
 
 	private PreviewModel ballModel;
 	private PreviewModel nullModel;
+
+	@Setter
+	@Getter
+	private int zoom = 600;
+	@Getter
 	private RotationControl rotationControl = new RotationControl();
+
 	private DisplayCanvas modelCanvas;
+    @Setter
+    @Getter
 	private PreviewModel model;
 	private Sprite sprite;
 	private CanvasPane pane;
-	private int zoom = 600;
+
 	private ObjectDataset currentSelection;
 	private Slider slider;
 
 	private ImageGraphicsBuffer buffer;
-	
-	public int getZoom() {
-		return zoom;
-	}
-
-	public void setZoom(int zoom) {
-		this.zoom = zoom;
-	}
 
 	public ObjectModelView() {
 		modelCanvas = new DisplayCanvas(300, 300);
 		
 		modelRaster = new GameRasterizer();
 		
-		modelRaster.setBrightness(0.8);
+		modelRaster.setBrightness(0.6);
+		modelRaster.setTextureBrightness(0.6);
 		
 		buffer = new ImageGraphicsBuffer(300, 300, modelRaster);
 		buffer.initializeRasterizer();
@@ -84,7 +87,7 @@ public class ObjectModelView extends VBox {
 		slider.setShowTickMarks(true);
 		slider.setPrefSize(200, 30);
 
-		slider.valueProperty().addListener((ChangeListener<Number>) (observable, oldVal, newVal) -> {
+		slider.valueProperty().addListener((observable, oldVal, newVal) -> {
 			zoom = (int) (300 * (100 / (1 + newVal.doubleValue())));
 			this.renderModel();
 		});
@@ -126,7 +129,7 @@ public class ObjectModelView extends VBox {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 
 			renderModel();
 		}, Client.gameLoaded);
@@ -140,6 +143,8 @@ public class ObjectModelView extends VBox {
 		// TODO Auto-generated method stub
 		return modelCanvas;
 	}
+	
+	int modelTries = 0;
 
 	public void prepareView(ObjectDataset cell) {
 		currentSelection = cell;
@@ -148,12 +153,16 @@ public class ObjectModelView extends VBox {
 		}
 		ObjectDefinition origDef = ObjectDefinitionLoader.lookup(cell.getId());
 		ObjectDefinition morphed = origDef.getMorphisms() != null ? ObjectDefinitionLoader.getMorphism(cell.getId()) : null;
+		int type = cell.getType();
+		if(type == 11)
+			type = 10;
 		final ObjectDefinition def = morphed != null ? morphed : origDef;
-		Runnable loadModel = () -> {
-			while (!def.ready(cell.getType())) {
-				Threads.sleep(50);
+		//Runnable loadModel = () -> {
+		try {
+			while (!def.readyOrThrow(type)) {
+				Threads.sleep(5);
 			}
-			Mesh m = def.modelAt(cell.getType(), 1, 0, 0, 0, 0, -1);
+			Mesh m = def.modelAt(cell.getType() == 11 ? 10 : type, 1, 0, 0, 0, 0, -1);
 			if (m == null || def.getModelIds()[0] == 111 && def.getMinimapFunction() != -1) {
 				if(def.getMinimapFunction() != -1 && def.getMinimapFunction() < Client.mapFunctions.length) {
 					sprite = Client.mapFunctions[def.getMinimapFunction()];
@@ -167,8 +176,14 @@ public class ObjectModelView extends VBox {
 			model = new PreviewModel(m);
 			sprite = null;
 			renderModel();
-		};
-		loadModel.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+			model = nullModel;
+			sprite = null;
+			renderModel();
+		}
+		//};
+		//loadModel.run();
 
 	}
 
@@ -186,7 +201,7 @@ public class ObjectModelView extends VBox {
 			sprite.drawSprite(modelRaster, xPos, yPos, zoom);
 			buffer.finalize();
 
-			modelCanvas.getGraphics().drawImage(buffer.getImage(), 0, 0, java.awt.Color.BLACK, null);
+			modelCanvas.drawImage(buffer.getFXImage(), 0, 0);
 			return;
 		}
 		if (model == null) {
@@ -200,7 +215,7 @@ public class ObjectModelView extends VBox {
 		model.render(modelRaster, roll, yaw, pitch, 0, 0, 0, zoom, 0);
 		buffer.finalize();
 
-		modelCanvas.getGraphics().drawImage(buffer.getImage(), 0, 0, java.awt.Color.BLACK, null);
+		modelCanvas.drawImage(buffer.getFXImage(), 0, 0);
 	}
 
 	private void resizeViews() {
@@ -214,12 +229,9 @@ public class ObjectModelView extends VBox {
 		modelRaster.useViewport();
 	}
 
-	public PreviewModel getModel() {
-		return model;
-	}
-
-	public void setModel(PreviewModel oldModel) {
-		this.model = oldModel;
-	}
-
+	public void setZoom(int zoom){
+	    this.zoom = zoom;
+	    double adjustedZoom = zoom / 30;//300 * (100 / (1 + newVal.doubleValue())));
+	    this.slider.setValue(adjustedZoom);
+    }
 }

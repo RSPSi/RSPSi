@@ -56,7 +56,8 @@ public class GenericModelView extends VBox {
 		
 		modelRaster = new GameRasterizer();
 		
-		modelRaster.setBrightness(0.8);
+		modelRaster.setBrightness(0.6);
+		modelRaster.setTextureBrightness(0.6);
 		
 		buffer = new ImageGraphicsBuffer(300, 300, modelRaster);
 		buffer.initializeRasterizer();
@@ -84,7 +85,7 @@ public class GenericModelView extends VBox {
 		slider.setShowTickMarks(true);
 		slider.setPrefSize(200, 30);
 
-		slider.valueProperty().addListener((ChangeListener<Number>) (observable, oldVal, newVal) -> {
+		slider.valueProperty().addListener((observable, oldVal, newVal) -> {
 			zoom = (int) (300 * (100 / (1 + newVal.doubleValue())));
 			this.renderModel();
 		});
@@ -190,7 +191,7 @@ public class GenericModelView extends VBox {
 
 		buffer.finalize();
 
-		modelCanvas.getGraphics().drawImage(buffer.getImage(), 0, 0, java.awt.Color.BLACK, null);
+		modelCanvas.drawImage(buffer.getFXImage(), 0, 0);
 	}
 
 	private void resizeViews() {
