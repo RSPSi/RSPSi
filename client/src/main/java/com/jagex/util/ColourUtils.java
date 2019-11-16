@@ -104,7 +104,8 @@ public class ColourUtils {
 	}
 	
 	public static int exponent(int colour, double exponent) {
-		double r = (colour >> 16) / 256D;
+		int alpha = colour >> 24 & 0xff;
+		double r = (colour >> 16 & 0xff) / 256D;
 		double g = (colour >> 8 & 0xff) / 256D;
 		double b = (colour & 0xff) / 256D;
 
@@ -115,12 +116,12 @@ public class ColourUtils {
 		int newR = (int) (r * 256D);
 		int newG = (int) (g * 256D);
 		int newB = (int) (b * 256D);
-		return (newR << 16) + (newG << 8) + newB;
+		return alpha << 24 | (newR << 16) | (newG << 8) | newB;
 	}
 
 	public static int[] getARGB(int[] pixels) {
 		for(int i = 0;i<pixels.length;i++) {
-			pixels[i] = addAlpha(pixels[i], 254);
+			pixels[i] = addAlpha(pixels[i], 255);
 		}
 		return pixels;
 	}

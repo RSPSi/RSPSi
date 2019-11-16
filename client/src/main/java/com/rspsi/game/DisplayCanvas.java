@@ -1,36 +1,31 @@
 package com.rspsi.game;
 
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
-import org.jfree.fx.FXGraphics2D;
+import javax.swing.event.ChangeListener;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 
-/**
- * A custom {@link Frame} used to draw the game in.
- */
-
 public final class DisplayCanvas extends Canvas {
 
-	private FXGraphics2D fxGraphics;
-	
 	public DisplayCanvas(int width, int height) {
 		this(width, height, true);
 	}
 	
 	public DisplayCanvas(int width, int height, boolean renderingHints) {
-		this.widthProperty().set(width);
-		this.heightProperty().set(height);
+		this.setHeight(height);
+		this.setWidth(width);
 		this.setFocusTraversable(true);
 		this.setFocused(true);
-		this.addEventFilter(MouseEvent.ANY, (e) -> requestFocus());
-		fxGraphics = new FXGraphics2D(this.getGraphicsContext2D());
+		this.addEventFilter(MouseEvent.MOUSE_CLICKED, (e) -> requestFocus());
+		this.addEventFilter(MouseEvent.MOUSE_DRAGGED, (e) -> requestFocus());
+		this.addEventFilter(MouseEvent.MOUSE_RELEASED, (e) -> requestFocus());
+		/*fxGraphics = new FXGraphics2D(this.getGraphicsContext2D());
 		if(renderingHints) {
 			fxGraphics.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
 			fxGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -38,24 +33,35 @@ public final class DisplayCanvas extends Canvas {
 			fxGraphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 			fxGraphics.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
 		}
+		
+		fxGraphics.setRenderingHint(FXHints.KEY_USE_FX_FONT_METRICS, false);*/
 	}
+
 	
 	
 	public GraphicsContext getContext() {
 		return getGraphicsContext2D();
 	}
 
+	/*public FXGraphics2D getFxGraphics2D(){
+		return fxGraphics;
+	}*/
+
 	@Override
 	public boolean isResizable() {
 		return true;
 	}
 
-	public Graphics getGraphics() {
-		return fxGraphics;
-	}
+	/*	public Graphics getGraphics() {
+			return fxGraphics;
+		}*/
 	
 	public void clear() {
 		this.getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
+	}
+	
+	public void drawImage(WritableImage fxImage, int x, int y) {
+		getGraphicsContext2D().drawImage(fxImage, x, y);
 	}
 	
 	public WritableImage trimmedSnapshot() {
@@ -70,10 +76,10 @@ public final class DisplayCanvas extends Canvas {
 			for (int y = height - 1; y > 0; y--) {
 				int color = reader.getArgb(x, y) & 0xffffff;
 				// System.out.println(color);
-				if (color != 0 && firstXPos > x) {
+				if (color != 0 && color != 0xFFFFFF && firstXPos > x) {
 					firstXPos = x;
 				}
-				if (color != 0 && firstYPos > y) {
+				if (color != 0 && color != 0xFFFFFF && firstYPos > y) {
 					firstYPos = y;
 				}
 			}
@@ -83,14 +89,22 @@ public final class DisplayCanvas extends Canvas {
 			for (int y = height - 1; y > 0; y--) {
 				int color = reader.getArgb(x, y) & 0xffffff;
 				// System.out.println(color);
-				if (color != 0 && x > lastXPos) {
+				if (color != 0 && color != 0xFFFFFF && x > lastXPos) {
 					lastXPos = x;
 				}
-				if (color != 0 && y > lastYPos) {
+				if (color != 0 && color != 0xFFFFFF && y > lastYPos) {
 					lastYPos = y;
 				}
 			}
 		}
+		if(lastXPos == -1)
+			lastXPos = width;
+		if(lastYPos == -1)
+			lastYPos = height;
+		if(firstXPos == width)
+			firstXPos = 0;
+		if(firstYPos == height)
+			firstYPos = 0;
 		//System.out.println(firstXPos + "/" + lastXPos + ":" + firstYPos + "/" + lastYPos + " | " + snapshot.getWidth() + ":"
 		//		+ snapshot.getHeight());
 
