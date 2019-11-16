@@ -1,5 +1,6 @@
 package com.rspsi.plugin.loader;
 
+import com.jagex.cache.def.RSArea;
 import org.displee.cache.index.archive.Archive;
 import org.displee.cache.index.archive.file.File;
 
@@ -292,4 +293,11 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 	}
 
 
+	public void renameMapFunctions(RSAreaLoaderOSRS areaLoader) {
+		cache.values().stream().filter(objectDefinition -> objectDefinition.getAreaId() != -1).forEach(objectDefinition -> {
+				RSArea area = areaLoader.forId(objectDefinition.getAreaId());
+				if(objectDefinition.getName() == null || objectDefinition.getName().equals("null") || objectDefinition.getName().isEmpty())
+					objectDefinition.setName("minimap-function:" + area.getSpriteId());
+		});
+	}
 }
