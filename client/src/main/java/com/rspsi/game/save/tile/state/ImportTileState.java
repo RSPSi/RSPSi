@@ -1,5 +1,8 @@
 package com.rspsi.game.save.tile.state;
 
+import lombok.Data;
+
+@Data
 public class ImportTileState extends TileState {
 	
 	
@@ -27,7 +30,7 @@ public class ImportTileState extends TileState {
 
 	@Override
 	public int getUniqueId() {
-		return 5;
+		return 22;
 	}
 
 	public FlagState getFlagState() {

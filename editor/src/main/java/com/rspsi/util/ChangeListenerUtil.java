@@ -18,7 +18,7 @@ public class ChangeListenerUtil {
 	private static List<ChangeListener<?>> weakListeners = Lists.newArrayList();
 	
 	public static ChangeListener<Boolean> addRunOnceListener(boolean onSelected, Runnable r) {
-		ChangeListener<Boolean> changeListener = (ChangeListener<Boolean>) (observable, oldVal, newVal) -> {
+		ChangeListener<Boolean> changeListener = (observable, oldVal, newVal) -> {
 			if (onSelected && newVal) {
 				r.run();
 			} else if (!onSelected && !newVal) {
@@ -39,7 +39,7 @@ public class ChangeListenerUtil {
 	}
 
 	public static void addListener(boolean onSelected, Runnable r, ReadOnlyBooleanProperty... nodes) {
-		ChangeListener<Boolean> changeListener = (ChangeListener<Boolean>) (observable, oldVal, newVal) -> {
+		ChangeListener<Boolean> changeListener = (observable, oldVal, newVal) -> {
 			if (onSelected && newVal) {
 				r.run();
 			} else if (!onSelected && !newVal) {
@@ -52,23 +52,23 @@ public class ChangeListenerUtil {
 
 	public static void addListener(Runnable r, ReadOnlyBooleanProperty... nodes) {
 		for(ReadOnlyBooleanProperty node : nodes)
-			node.addListener((ChangeListener<Boolean>) (observable, oldVal, newVal) -> r.run());
+			node.addListener((observable, oldVal, newVal) -> r.run());
 	}
 
 	public static void addListener(Runnable r, ReadOnlyIntegerProperty... nodes) {
 		for(ReadOnlyIntegerProperty node : nodes)
-			node.addListener((ChangeListener<Number>) (observable, oldVal, newVal) -> r.run());
+			node.addListener((observable, oldVal, newVal) -> r.run());
 	}
 	
 	public static void addListener(Runnable r, ReadOnlyDoubleProperty... nodes) {
 		for(ReadOnlyDoubleProperty node : nodes)
-			node.addListener((ChangeListener<Number>) (observable, oldVal, newVal) -> {
+			node.addListener((observable, oldVal, newVal) -> {
 				r.run();
 			});
 	}
 
 	public static void addRangeListener(IntegerProperty node, int minimum, int maximum, boolean loopAround) {
-		node.addListener((ChangeListener<Number>) (observable, oldVal, newVal) -> {
+		node.addListener((observable, oldVal, newVal) -> {
 			if (newVal.intValue() < minimum) {
 				node.setValue(loopAround ? maximum : minimum);
 			} else if (newVal.intValue() > maximum) {

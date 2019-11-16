@@ -8,7 +8,7 @@ public enum RenderFlags {
 	DISABLE_RENDERING(16)
 	;
 	
-	private RenderFlags(int bit) {
+	RenderFlags(int bit) {
 		this.bit = bit;
 	}
 	

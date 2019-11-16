@@ -2,10 +2,17 @@ package com.rspsi.datasets;
 
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.misc.Vector3;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+@Getter
+@Setter
 public class ObjectDataset {
 
 	private int id;
+	private Vector3 rotation;
 	private int type;
 	private int zoom = -1;
 	private String name;
@@ -24,58 +31,24 @@ public class ObjectDataset {
 	public ObjectDataset(int id, int type, String name) {
 		this.id = id;
 		this.type = type;
-		this.name = name + "[" + type + "]";
+		this.name = name;
 	}
 
-	public ObjectDataset(ObjectDataset copy, int zoom) {
+	public ObjectDataset(ObjectDataset copy, int zoom, Vector3 rotation) {
 		this.id = copy.id;
 		this.type = copy.type;
 		this.name = copy.name;
 		this.zoom = zoom;
+		this.rotation = rotation;
 	}
+
 
 	public ObjectDefinition getDefinition() {
 		return ObjectDefinitionLoader.lookup(id);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public boolean isRoot() {
-		return root;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	@Override
 	public String toString() {
 		return id + ": " + name;
-	}
-
-	public int getZoom() {
-		return zoom;
-	}
-
-	public void setZoom(int zoom) {
-		this.zoom = zoom;
 	}
 }

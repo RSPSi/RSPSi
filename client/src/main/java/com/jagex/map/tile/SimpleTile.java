@@ -3,6 +3,8 @@ package com.jagex.map.tile;
 
 
 import com.rspsi.options.Options;
+import lombok.Getter;
+import lombok.Setter;
 
 public final class SimpleTile {
 
@@ -101,6 +103,11 @@ public final class SimpleTile {
 	public int getColour() {
 		return colour;
 	}
+
+
+	@Getter
+	@Setter
+	private int bufferOffset, uvBufferOffset, bufferLen;
 	
 	
 

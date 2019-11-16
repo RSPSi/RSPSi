@@ -14,7 +14,7 @@ public enum StateChangeType {
 	
 	;
 
-	private StateChangeType(ToolType tool) {
+	StateChangeType(ToolType tool) {
 		this.tool = tool;
 	}
 	

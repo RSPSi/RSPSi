@@ -1,7 +1,9 @@
 package com.rspsi.game.save.tile.state;
 
 import com.jagex.Client;
+import lombok.Data;
 
+@Data
 public class HeightState extends TileState {
 	
 	private int height;

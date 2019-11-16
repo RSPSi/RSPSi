@@ -1,6 +1,8 @@
 package com.jagex.map.tile;
 
 import com.rspsi.options.Options;
+import lombok.Getter;
+import lombok.Setter;
 
 public final class ShapedTile {
 
@@ -146,7 +148,7 @@ public final class ShapedTile {
 			origVertexZ[idx] = vertexZ;
 		}
 
-		int ai3[] = shapedTileElementData[type];
+        int[] ai3 = shapedTileElementData[type];
 		int j7 = ai3.length / 4;
 		triangleA = new int[j7];
 		triangleB = new int[j7];
@@ -192,10 +194,7 @@ public final class ShapedTile {
 		color72 = eastOverColour;
 		color82 = neOverColour;
 		color92 = northOverColour;
-		flat = true;
-		if (centreZ != eastZ || centreZ != northEastZ || centreZ != northZ) {
-			flat = false;
-		}
+        flat = centreZ == eastZ && centreZ == northEastZ && centreZ == northZ;
 
 		tileType = type;
 		this.orientation = orientation;
@@ -213,8 +212,8 @@ public final class ShapedTile {
 		origVertexX = new int[tileShapeLength];
 		origVertexY = new int[tileShapeLength];
 		origVertexZ = new int[tileShapeLength];
-		int vertexColourOverlay[] = new int[tileShapeLength];
-		int vertexColourUnderlay[] = new int[tileShapeLength];
+        int[] vertexColourOverlay = new int[tileShapeLength];
+        int[] vertexColourUnderlay = new int[tileShapeLength];
 		int i6 = x * c;
 		int j6 = y * c;
 
@@ -343,7 +342,7 @@ public final class ShapedTile {
 			vertexColourUnderlay[idx] = vertexUnderlayColour;
 		}
 
-		int ai3[] = shapedTileElementData[type];
+        int[] ai3 = shapedTileElementData[type];
 		int j7 = ai3.length / 4;
 		triangleA = new int[j7];
 		triangleB = new int[j7];
@@ -430,7 +429,7 @@ public final class ShapedTile {
 
 		i9 /= 14;
 		l9 /= 14;
-		textured = hdTextures ? tex : true;
+		textured = !hdTextures || tex;
 	}
 
 	public int getOrientation() {
@@ -599,7 +598,7 @@ public final class ShapedTile {
 			origVertexZ[idx] = vertexZ;
 		}
 
-		int ai3[] = shapedTileElementData[tileType];
+        int[] ai3 = shapedTileElementData[tileType];
 		int j7 = ai3.length / 4;
 		triangleA = new int[j7];
 		triangleB = new int[j7];
@@ -715,4 +714,8 @@ public final class ShapedTile {
 		this.underlayColour = underlayColour;
 	}
 
+
+	@Getter
+	@Setter
+	private int bufferOffset, uvBufferOffset, bufferLen;
 }

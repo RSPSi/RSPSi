@@ -3,7 +3,9 @@ package com.rspsi.game.save.object.state;
 import com.jagex.Client;
 import com.jagex.util.ObjectKey;
 import com.rspsi.game.save.tile.state.TileState;
+import lombok.Data;
 
+@Data
 public class ObjectState extends TileState {
 
 	/**
@@ -26,17 +28,9 @@ public class ObjectState extends TileState {
 		this.shading = Client.getSingleton().mapRegion.shading[z][x][y];
 	}
 
-	public ObjectKey getKey() {
-		return key;
-	}
 
-	public void setKey(ObjectKey key) {
-		this.key = key;
+	@Override
+	public int getUniqueId() {
+		return key.hashCode() + this.hashCode();
 	}
-
-	public byte getShading() {
-		return shading;
-	}
-	
-	
 }

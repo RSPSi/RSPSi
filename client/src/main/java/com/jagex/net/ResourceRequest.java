@@ -1,16 +1,20 @@
 package com.jagex.net;
 
+import com.rspsi.cache.CacheFileType;
+import lombok.Getter;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
+@Getter
 public class ResourceRequest {
 	
 	private int file;
-	private int type;
+	private CacheFileType type;
 	private long requestTime;
 	
-	public ResourceRequest(int file, int type) {
+	public ResourceRequest(int file, CacheFileType type) {
 		this.file = file;
 		this.type = type;
 		this.requestTime = System.currentTimeMillis();
@@ -20,21 +24,6 @@ public class ResourceRequest {
 		return System.currentTimeMillis() - requestTime;
 	}
 
-	public int getFile() {
-		return file;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setFile(int file) {
-		this.file = file;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
 	
 	
 
