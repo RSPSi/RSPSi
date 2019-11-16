@@ -1,8 +1,8 @@
 package com.jagex.net;
 
-import java.io.IOException;
+import org.displee.utilities.GZIPUtils;
 
-import com.jagex.util.GZIPUtils;
+import java.io.IOException;
 
 public class ResourceResponse {
 	
@@ -24,13 +24,8 @@ public class ResourceResponse {
 	}
 	
 	public byte[] decompress() {
-		try {
-			return GZIPUtils.unzip(data);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		byte[] unzipped = GZIPUtils.unzip(data);
+		return unzipped == null ? data : unzipped;
 	}
 
 }
