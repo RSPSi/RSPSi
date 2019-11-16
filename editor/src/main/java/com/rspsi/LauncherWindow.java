@@ -19,6 +19,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -32,10 +33,11 @@ public class LauncherWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loadscreen.fxml"));
 		controller = new LauncherController();
 		loader.setController(controller);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
-		
+
+		scene.setFill(Color.TRANSPARENT);
 		
 		primaryStage.setTitle("RSPSi Map Editor Launcher");
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -86,6 +88,12 @@ public class LauncherWindow extends Application {
 				File oldPluginFile = new File(PLUGINS_PATH + "inactive" + File.separator + pluginName + ".jar");
 				File newPluginFile = new File(PLUGINS_PATH + "active" + File.separator + pluginName + ".jar");
 				try {
+					for(File active : activeFolder.listFiles()){
+						if(active.getName().replace(".jar", "").equalsIgnoreCase(pluginName)){
+							active.delete();
+						} else
+							Files.move(active, new File(inactiveFolder, active.getName()));
+					}
 					inactiveFolder.mkdirs();
 					activeFolder.mkdirs();
 					Files.copy(oldPluginFile, newPluginFile);
@@ -115,6 +123,7 @@ public class LauncherWindow extends Application {
 		controller.getLaunchButton().setOnAction(evt -> {
 			Config.cacheLocation.set(controller.getCacheLocation().getEditor().getText());
 			Settings.properties.put("cacheLocation", Config.cacheLocation.get());
+			Settings.properties.put("lastCacheLocation", cacheLoc);
 			primaryStage.hide();
 			MainWindow window = new MainWindow();
 			window.start(new Stage());
