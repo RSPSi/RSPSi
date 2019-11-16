@@ -1,7 +1,13 @@
 package com.rspsi.game.save.object;
 
 import java.awt.Rectangle;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.jagex.util.ObjectKey;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import com.jagex.Client;
@@ -24,7 +30,11 @@ public class DeleteObject extends TileChange<ObjectState> {
 
 	@Override
 	public void restoreStates() {
-		for(ObjectState state : preservedTileStates.values()) {
+		Comparator<ObjectState> objectStateComparator = (state1, state2) -> {
+			return Integer.compare(state1.getKey().getType(), state2.getKey().getType());
+		};
+		List<ObjectState> sortedStates = preservedTileStates.values().stream().sorted(objectStateComparator).collect(Collectors.toList());
+		for(ObjectState state : sortedStates) {
 			if(state.getKey() == null)
 				continue;
 			int x = state.getX();
@@ -36,7 +46,7 @@ public class DeleteObject extends TileChange<ObjectState> {
 			int rotation = state.getKey().getOrientation();
 			Client.getSingleton().sceneGraph.addObject(x, y, z, id, type, rotation, false);
 			
-			//System.out.println("LOAD STATE SPAWNED " + id + ":" + type + ":" + rotation + " at " + x + ", " + y + ", " + z);
+			System.out.println("LOAD STATE SPAWNED " + id + ":" + type + ":" + rotation + " at " + x + ", " + y + ", " + z);
 			
 		}
 	}
