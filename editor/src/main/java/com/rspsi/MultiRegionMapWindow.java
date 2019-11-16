@@ -15,6 +15,8 @@ import com.rspsi.util.RetentionFileChooser;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,6 +55,7 @@ public class MultiRegionMapWindow extends Application {
     
     @FXML
     private Button saveImageBtn;
+    
 
     @FXML
     private Font x312;
@@ -68,13 +71,16 @@ public class MultiRegionMapWindow extends Application {
 
     @FXML
     private CheckBox showCameraCheck;
+    
+    @FXML
+    private CheckBox showFileCheck;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mapview.fxml"));
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
@@ -84,14 +90,15 @@ public class MultiRegionMapWindow extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 		
-		WindowControls controls = WindowControls.addWindowControls(primaryStage, topBar, controlBox);
+		primaryStage.setOnHiding(evt -> visible.set(false));
+		
+		WindowControls.addWindowControls(primaryStage, topBar, controlBox);
 		
 		redrawImageBtn.setOnAction(evt -> SceneGraph.minimapUpdate = true);
 		Options.showBorders.bind(this.showBordersCheck.selectedProperty());
 		Options.showCamera.bind(this.showCameraCheck.selectedProperty());
-		ChangeListenerUtil.addListener(() -> {
-			SceneGraph.minimapUpdate = true;
-		}, Options.showCamera, Options.showBorders);
+		Options.showMapFileNames.bind(this.showFileCheck.selectedProperty());
+		ChangeListenerUtil.addListener(() -> SceneGraph.minimapUpdate = true, Options.showCamera, Options.showBorders, Options.showMapFileNames);
 		saveImageBtn.setOnAction(evt -> {
 			File f = RetentionFileChooser.showSaveDialog(FilterMode.PNG);
 			if(f != null) {
@@ -119,6 +126,7 @@ public class MultiRegionMapWindow extends Application {
 	}
     
 	public void show() {
+		visible.set(true);
 		primaryStage.show();
 		primaryStage.sizeToScene();
 	}
@@ -127,6 +135,11 @@ public class MultiRegionMapWindow extends Application {
 	public void stop() throws Exception {
 		super.stop();
 		this.primaryStage.close();
+	}
+
+	private SimpleBooleanProperty visible = new SimpleBooleanProperty();
+	public SimpleBooleanProperty visibleProperty() {
+		return visible;
 	}
 
 
