@@ -4,6 +4,8 @@ import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.entity.model.Mesh;
 import com.jagex.entity.model.VertexNormal;
 import com.jagex.util.ObjectKey;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Renderable {
 
@@ -12,10 +14,6 @@ public class Renderable {
 	protected int modelHeight = 1000;
 	protected VertexNormal[] normals;
 	public boolean selected;
-
-	public Renderable clone() {
-		return this;//TODO
-	}
 
 	public int getModelHeight() {
 		return modelHeight;
@@ -61,5 +59,13 @@ public class Renderable {
 		throw new ClassCastException("This is not an instance of mesh!");
 		
 	}
+
+
+	public Renderable copy(){
+		return this;
+	}
+	@Getter
+	@Setter
+	private int bufferOffset, uvBufferOffset, bufferLen;
 
 }

@@ -2,7 +2,9 @@ package com.jagex.map.tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.jagex.link.Linkable;
 import com.jagex.map.GroundItem;
@@ -12,6 +14,10 @@ import com.jagex.map.object.GroundDecoration;
 import com.jagex.map.object.Wall;
 import com.jagex.map.object.WallDecoration;
 import com.jagex.util.ObjectKey;
+import com.rspsi.misc.Location;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public final class SceneTile extends Linkable {
 
@@ -42,6 +48,7 @@ public final class SceneTile extends Linkable {
 	public WallDecoration wallDecoration;
 	public boolean tileHighlighted;
 	public boolean tileSelected;
+	public boolean tileBeingSelected;
 	public Optional<DefaultWorldObject> temporaryObject = Optional.empty();
 	public Optional<Integer> temporaryObjectAttributes = Optional.empty();
 	public Optional<ShapedTile> temporaryShapedTile = Optional.empty();
@@ -210,14 +217,11 @@ public final class SceneTile extends Linkable {
 
 	public boolean contains(int id, int type) {
 		if (type >= 0 && type < 4) {
-			if (wall != null && wall.getId() == id)
-				return true;
+            return wall != null && wall.getId() == id;
 		} else if (type >= 4 && type < 9) {
-			if (wallDecoration != null && wallDecoration.getId() == id)
-				return true;
+            return wallDecoration != null && wallDecoration.getId() == id;
 		} else if (type == 22) {
-			if (groundDecoration != null && groundDecoration.getId() == id)
-				return true;
+            return groundDecoration != null && groundDecoration.getId() == id;
 		} else if (type >= 9) {
 			for (GameObject obj : gameObjects) {
 				if (obj != null && obj.getId() == id)
@@ -226,5 +230,16 @@ public final class SceneTile extends Linkable {
 		}
 		return false;
 	}
+
+	public Location getSceneLocation() {
+		return new Location(positionX, positionY, plane);
+	}
+	
+	public Stream<DefaultWorldObject> nonNullStream(){
+		return Stream.concat(Stream.of(gameObjects), Stream.of(wall, wallDecoration, groundDecoration)).filter(Objects::nonNull);
+	}
+
+	@Getter @Setter
+	private int bufferOffset, bufferUvOffset, bufferLen;
 
 }

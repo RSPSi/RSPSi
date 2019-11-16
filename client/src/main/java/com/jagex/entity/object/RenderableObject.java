@@ -84,7 +84,7 @@ public class RenderableObject extends Renderable {
 		Mesh model = definition == null ? null
 				: definition.modelAt(type, orientation, anInt1603, centre, anInt1605, anInt1606, lastFrame);
 		if(model != null && this.selected) {
-			model = model.clone();
+			model = model.copy();
 			model.selected = true;
 		}
 		return model;

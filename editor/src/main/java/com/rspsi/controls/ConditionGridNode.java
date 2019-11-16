@@ -29,7 +29,7 @@ public class ConditionGridNode extends Group {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/conditiongrid.fxml"));
 		
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		this.getChildren().add(content);
 		
 		gridCondition.getItems().addAll(ComparatorOperator.values());

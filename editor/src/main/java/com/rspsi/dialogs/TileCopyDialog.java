@@ -129,7 +129,7 @@ public class TileCopyDialog extends Application {
 		stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/copytiles.fxml"));
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 
 		primaryStage.setTitle("Tile Export Tool");

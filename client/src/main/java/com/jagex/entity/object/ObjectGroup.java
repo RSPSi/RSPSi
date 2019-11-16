@@ -33,9 +33,8 @@ public class ObjectGroup {
 		return objects;
 	}
 
-	public void sort(Chunk chunk) {
-		
-		Collections.sort(objects, (p1, p2) -> p1.getLocHash(chunk) - p2.getLocHash(chunk));
+	public void sort() {
+		Collections.sort(objects, (p1, p2) -> Integer.compare(p1.getLocHash(), p2.getLocHash()));
 
 	}
 

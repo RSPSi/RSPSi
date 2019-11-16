@@ -68,7 +68,7 @@ public class GenerateNewMapWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/newregion.fxml"));
 
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 
 
@@ -302,7 +302,7 @@ public class GenerateNewMapWindow extends Application {
 		Image image = this.tileHeightImageView.getImage();
 		if(image != null) {
 			
-				heights = new int[(int) ((widthSpinner.getValue() * 64) + 1)][(int) ((lengthSpinner.getValue() * 64) + 1)];
+				heights = new int[((widthSpinner.getValue() * 64) + 1)][((lengthSpinner.getValue() * 64) + 1)];
 				for(int w = 0;w<image.getWidth();w++) {
 					for(int h = 0;h<image.getHeight();h++) {
 						int tileColor = image.getPixelReader().getArgb(w, h);
@@ -327,14 +327,12 @@ public class GenerateNewMapWindow extends Application {
 		Polygon polygon = new Polygon();  
 
 		//Adding coordinates to the polygon 
-		polygon.getPoints().addAll(new Double[]{ 
-				20.0, 5.0, 
-				40.0, 5.0, 
-				45.0, 15.0,          
-				40.0, 25.0, 
-				20.0, 25.0,                   
-				15.0, 15.0, 
-		}); 
+		polygon.getPoints().addAll(20.0, 5.0,
+				40.0, 5.0,
+				45.0, 15.0,
+				40.0, 25.0,
+				20.0, 25.0,
+				15.0, 15.0);
 		return polygon;
 	}
 

@@ -1,11 +1,12 @@
 package com.rspsi.controls;
 
+import org.displee.utilities.GZIPUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.function.Consumer;
 
-import com.jagex.util.GZIPUtils;
 import com.jagex.util.IntParser;
 import com.rspsi.util.FilterMode;
 import com.rspsi.util.RetentionFileChooser;
@@ -24,7 +25,7 @@ public class SelectFilesNode extends Group {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/selectfilesingle.fxml"));
 		
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		this.getChildren().add(content);
 		
 		

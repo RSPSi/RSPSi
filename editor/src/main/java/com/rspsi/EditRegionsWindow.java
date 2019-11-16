@@ -30,7 +30,7 @@ public class EditRegionsWindow extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editregions.fxml"));
 	
 		loader.setController(this);
-		Parent content = (Parent) loader.load();
+		Parent content = loader.load();
 		Scene scene = new Scene(content);
 		
 		
