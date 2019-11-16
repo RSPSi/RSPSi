@@ -2,7 +2,7 @@ package com.rspsi.misc;
 
 public enum BrushType {
 
-	RECTANGLE, CIRCLE;
+	RECTANGLE, CIRCLE, CHECKER;
 
 	@Override
 	public String toString() {
