@@ -14,3 +14,4 @@ out/
 .project
 
 hs_err_*
+/Editor/plugins/
