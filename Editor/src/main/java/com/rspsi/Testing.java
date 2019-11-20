@@ -1,14 +1,41 @@
 package com.rspsi;
 
+import com.google.common.collect.Maps;
+import com.google.gson.GsonBuilder;
 import com.jagex.map.tile.ShapedTile;
 
+import com.rspsi.misc.XTEA;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import org.apache.commons.compress.utils.Lists;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Testing {
+
+	public static void main(String[] args) throws Exception{
+		File folder = new File("F:\\61xteasunpakced\\unpacked\\");
+		List<XTEA> xteas = Lists.newArrayList();
+		for(File file : folder.listFiles()) {
+			if(file.getName().toLowerCase().endsWith(".txt")) {
+				int regionId = Integer.parseInt(file.getName().toLowerCase().replace(".txt", "").trim());
+				int[] keys = Files.readAllLines(file.toPath()).stream().filter(Objects::nonNull).filter(s -> !s.isEmpty()).mapToInt(Integer::parseInt).toArray();
+				xteas.add(new XTEA(regionId, keys));
+			}
+		}
+		try(FileWriter fw = new FileWriter("F:/614xteas.json")) {
+			new GsonBuilder().setPrettyPrinting().create().toJson(xteas, fw);
+		}
+	}
 
 	public static Pane generateImage(int type) {
 		ShapedTile tile = new ShapedTile(type, 0);
@@ -23,7 +50,7 @@ public class Testing {
 
 		group.getChildren().add(r);
 
-		int ai3[] = ShapedTile.shapedTileElementData[tile.getTileType()];
+        int[] ai3 = ShapedTile.shapedTileElementData[tile.getTileType()];
 		int triangleCount = tile.getTriangleA().length;
 		int offset = 0;
 		for (int triangleIndex = 0; triangleIndex < triangleCount; triangleIndex++) {
