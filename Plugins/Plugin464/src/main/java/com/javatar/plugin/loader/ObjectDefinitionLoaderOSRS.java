@@ -52,6 +52,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     public void init(Buffer data, Buffer indexBuffer) {
     }
 
+
+
     public ObjectDefinition decode(int id, Buffer buffer) {
         ObjectDefinition definition = new ObjectDefinition();
         definition.reset();
@@ -216,7 +218,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     }
 
     public ObjectDefinition forId(int id) {
-        return this.cache.get(id);
+        return this.cache.getOrDefault(id, new ObjectDefinition());
     }
 
     public int count() {
