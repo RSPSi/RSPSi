@@ -5,6 +5,7 @@ import org.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.RSAreaLoader;
@@ -30,9 +31,11 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
 	public void init(Archive archive) {
 		if(archive == null){
 			areas = new RSArea[1000];
-			RSArea dummyArea = new RSArea(0);
-			dummyArea.setSpriteId(-1);
-			Arrays.fill(areas, dummyArea);
+			IntStream.range(0, areas.length).forEach(index -> {
+				RSArea dummyArea = new RSArea(index);
+				dummyArea.setSpriteId(index);
+				areas[index] = dummyArea;
+			});
 			return;
 		}
 		areas = new RSArea[archive.getHighestId() + 1];
