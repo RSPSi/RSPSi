@@ -1,5 +1,7 @@
 package com.rspsi.plugin;
 
+import com.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.plugin.loader.*;
 import org.displee.cache.index.archive.Archive;
 
 import java.io.IOException;
@@ -17,14 +19,6 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.options.Options;
-import com.rspsi.plugin.loader.MyAnimationDefinitionLoader;
-import com.rspsi.plugin.loader.MyFloorDefinitionLoader;
-import com.rspsi.plugin.loader.MyFrameBaseLoader;
-import com.rspsi.plugin.loader.MyFrameLoader;
-import com.rspsi.plugin.loader.MyGraphicLoader;
-import com.rspsi.plugin.loader.MyMapIndexLoader;
-import com.rspsi.plugin.loader.MyObjectDefinitionLoader;
-import com.rspsi.plugin.loader.MyTextureLoader;
 import com.rspsi.plugins.ClientPlugin;
 import com.rspsi.util.ChangeListenerUtil;
 
@@ -46,6 +40,7 @@ public class MyClientPlugin implements ClientPlugin {
 		frameLoader = new MyFrameLoader();
 		FrameLoader.instance = frameLoader; 
 		FrameBaseLoader.instance = new MyFrameBaseLoader();
+		VariableBitLoader.instance = new MyVarbitLoader();
 		
 	}
 
@@ -61,8 +56,9 @@ public class MyClientPlugin implements ClientPlugin {
 			objLoader.init(config, sound);
 			
 			FloorDefinitionLoader.instance.init(config);
-			
-			
+
+
+			VariableBitLoader.instance.init(config);
 			ChangeListenerUtil.addListener(() -> {
 				FloorDefinitionLoader.instance.init(config);
 				textureLoader.clearCache();

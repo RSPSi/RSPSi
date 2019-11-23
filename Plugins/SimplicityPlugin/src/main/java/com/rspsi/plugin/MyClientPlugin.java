@@ -6,6 +6,7 @@ import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.anim.FrameBaseLoader;
 import com.jagex.cache.loader.anim.FrameLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
+import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.floor.FloorDefinitionLoader;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
@@ -39,6 +40,7 @@ public class MyClientPlugin implements ClientPlugin {
 		frameLoader = new MyFrameLoader();
 		FrameLoader.instance = frameLoader; 
 		FrameBaseLoader.instance = new MyFrameBaseLoader();
+		VariableBitLoader.instance = new MyVarbitLoader();
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class MyClientPlugin implements ClientPlugin {
 			Archive config = cache.createArchive(2, "config");
 			Archive sound = cache.createArchive(8, "sound");
 			objLoader.init(config, sound);
-			
+			VariableBitLoader.instance.init(config);
 			FloorDefinitionLoader.instance.init(config);
 			
 			AnimationDefinitionLoader.instance.init(config);
