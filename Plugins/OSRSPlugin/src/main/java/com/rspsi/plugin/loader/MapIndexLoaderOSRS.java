@@ -131,7 +131,7 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 			int y = (i & 0xFF);
 
 			Archive map = mapIndex.getArchive("m" + x + "_" + y);
-			Archive land = mapIndex.getArchive("l" + x + "_" + y);
+			Archive land = mapIndex.getArchive("l" + x + "_" + y, null);
 			
 			RegionData data = new RegionData(i, map != null ? map.getId() : -1, land != null ? land.getId() : -1);
 			

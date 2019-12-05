@@ -1,19 +1,20 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
-
-import org.apache.commons.compress.utils.Lists;
-
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.map.MapType;
 import com.jagex.io.Buffer;
 import com.rspsi.misc.RegionData;
+import com.rspsi.options.Config;
+import org.apache.commons.compress.utils.Lists;
+import org.displee.cache.index.Index;
+import org.displee.cache.index.archive.Archive;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class MapIndexLoaderOSRS extends MapIndexLoader {
 	
@@ -63,7 +64,7 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 		if(index >= 0) {
 			return type == MapType.LANDSCAPE ? landscapes[index] : objects[index];
 		}
-		
+
 		return -1;
 	}
 
@@ -115,26 +116,25 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 			mapHashes[index] = hash;
 			landscapes[index] = landscapeId;
 			objects[index] = objectsId;
-		
+
 			this.mapHashes = mapHashes;
 			this.landscapes = landscapes;
 			this.objects = objects;
 		}
-		
 	}
 
 	public void init(Index mapIndex) {
 		// TODO Auto-generated method stub
 		List<RegionData> regionData = Lists.newArrayList();
-		for (int i = 0; i < 32768; i++) {	
+		for (int i = 0; i < 32768; i++) {
 			int x = (i >> 8);
 			int y = (i & 0xFF);
 
 			Archive map = mapIndex.getArchive("m" + x + "_" + y);
 			Archive land = mapIndex.getArchive("l" + x + "_" + y);
-			
+
 			RegionData data = new RegionData(i, map != null ? map.getId() : -1, land != null ? land.getId() : -1);
-			
+
 			if(data.getLoc() != -1 && data.getObj() != -1) {
 				regionData.add(data);
 			}

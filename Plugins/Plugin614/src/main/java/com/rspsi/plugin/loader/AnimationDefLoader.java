@@ -1,46 +1,24 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-
-import java.util.List;
-
-import org.apache.commons.compress.utils.Lists;
-
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
+import org.displee.cache.index.archive.Archive;
 
-public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 
+public class AnimationDefLoader extends com.jagex.cache.loader.anim.AnimationDefinitionLoader {
 
 	private int count;
 	private Animation[] animations;
 	
 	@Override
 	public void init(Archive archive) {
-		animations = new Animation[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
-			if(file != null && file.getData() != null) {
-				animations[file.getId()] = decode(new Buffer(file.getData()));
-			}
-		}
-		
+		animations = new Animation[1];
 	}
 
 	@Override
 	public void init(byte[] data) {
-		Buffer buffer = new Buffer(data);
-		count = buffer.readUShort();
-
-		if (animations == null) {
-			animations = new Animation[count];
-		}
-
-		for (int id = 0; id < count; id++) {
-
-			animations[id] = decode(buffer);
-		}
+		animations = new Animation[1];
 	}
 	
 	protected Animation decode(Buffer buffer) {
@@ -57,18 +35,14 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 				int[] durations = new int[frameCount];
 
 				for (int frame = 0; frame < frameCount; frame++) {
-					durations[frame] = buffer.readUShort();
-				}
-
-				for (int frame = 0; frame < frameCount; frame++) {
-					primaryFrames[frame] = buffer.readUShort();
+					primaryFrames[frame] = buffer.readIMEInt();
 					secondaryFrames[frame] = -1;
 				}
 				
-
 				for (int frame = 0; frame < frameCount; frame++) {
-					primaryFrames[frame] += buffer.readUShort() << 16;
+					durations[frame] = buffer.readUByte();
 				}
+
 
 				animation.setFrameCount(frameCount);
 				animation.setPrimaryFrames(primaryFrames);

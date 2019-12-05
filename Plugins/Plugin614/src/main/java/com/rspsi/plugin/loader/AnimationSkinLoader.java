@@ -1,23 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-
-import java.util.Map;
-
-import com.google.common.collect.Maps;
 import com.jagex.cache.anim.FrameBase;
 import com.jagex.cache.loader.anim.FrameBaseLoader;
 import com.jagex.io.Buffer;
 
-public class FrameBaseLoaderOSRS extends FrameBaseLoader {
-	
-	private Map<Integer, FrameBase> skeletons = Maps.newConcurrentMap();
-	
-	@Override
-	public FrameBase get(int id) {
-		return skeletons.get(id);
-	}
+public class AnimationSkinLoader extends com.jagex.cache.loader.anim.FrameBaseLoader {
 
 	@Override
 	public FrameBase decode(Buffer buffer) {
@@ -42,15 +29,6 @@ public class FrameBaseLoaderOSRS extends FrameBaseLoader {
 		base.setTransformationType(transformationType);
 		base.setVertexGroups(vertexGroups);
 		return base;
-	}
-
-	public void init(Index skeletonIndex) {
-		for(Archive archive : skeletonIndex.getArchives()) {
-			if(archive != null && archive.containsData()) {
-				FrameBase base = decode(new Buffer(archive.getFile(0).getData()));
-				skeletons.put(archive.getId(), base);
-			}
-		}
 	}
 
 }

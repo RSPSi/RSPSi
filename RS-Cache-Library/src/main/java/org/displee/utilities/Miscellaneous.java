@@ -43,4 +43,12 @@ public class Miscellaneous {
 		return hash;
 	}
 
+	public static int getConfigArchive(int id, int bits) {
+		return (id) >> bits;
+	}
+
+	public static int getConfigFile(int id, int bits) {
+		return (id) & (1 << bits) - 1;
+	}
+
 }

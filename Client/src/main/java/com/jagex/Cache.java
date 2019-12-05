@@ -22,6 +22,8 @@ import com.rspsi.misc.XTEAManager;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.displee.utilities.Miscellaneous;
+
 @Slf4j
 public class Cache {
 
@@ -46,9 +48,8 @@ public class Cache {
 	@Getter
 	private CacheLibrary indexedFileSystem;
 
-	private Index modelArchive, mapArchive, configArchive, skeletonArchive, skinArchive, spriteIndex, textureIndex;
+	private Index modelArchive, mapArchive, configArchive, skeletonArchive, skinArchive, spriteIndex, textureIndex, spotAnimIndex, varbitIndex, locIndex;
 
-		
 	public Cache(Path path) throws IOException {
 			log.info("Loading cache at {}", path);
 			indexedFileSystem = new CacheLibrary(path);
@@ -76,6 +77,9 @@ public class Cache {
 				skinArchive = indexedFileSystem.getIndex(1);
 				spriteIndex = indexedFileSystem.getIndex(8);
 				textureIndex = indexedFileSystem.getIndex(9);
+				spotAnimIndex = indexedFileSystem.getIndex(21);
+				varbitIndex = indexedFileSystem.getIndex(22);
+				locIndex = indexedFileSystem.getIndex(16);
 				log.info("Loaded cache in RS3 format!");
 			} else if(indexedFileSystem.isRS3()){
 				throw new UnsupportedOperationException("RS3 Cache not supported!");
@@ -120,6 +124,12 @@ public class Cache {
 					return spriteIndex;
 				case TEXTURE:
 					return textureIndex;
+				case SPOT:
+					return spotAnimIndex;
+				case VARBIT:
+					return varbitIndex;
+				case LOC:
+					return locIndex;
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
@@ -160,6 +170,12 @@ public class Cache {
 					return mapArchive.getArchive(file).readFile(0);
 				case TEXTURE:
 					break;
+				case SPOT:
+					return spotAnimIndex.getArchive(file >>> 8).readFile(file & 0xff);
+				case VARBIT:
+					return varbitIndex.getArchive(file >>> 1416501898).readFile(file & 0x3ffff);
+				case LOC:
+					return locIndex.getArchive(Miscellaneous.getConfigArchive(file, 8)).readFile(Miscellaneous.getConfigFile(file, 8));
 			}
 		} catch(Exception ex) {
 			//ex.printStackTrace();
@@ -186,6 +202,12 @@ public class Cache {
 					return mapArchive.getArchive(file).addFileKeepName(0, data);
 				case TEXTURE:
 					break;
+				case SPOT:
+					return spotAnimIndex.addArchive(file >>> 8).addFile(file & 0xff, data);
+				case VARBIT:
+					return varbitIndex.addArchive(file >>> 1416501898).addFile(file & 0x3ffff, data);
+				case LOC:
+					return locIndex.addArchive(Miscellaneous.getConfigArchive(file, 8)).addFile(Miscellaneous.getConfigFile(file, 8), data);
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();

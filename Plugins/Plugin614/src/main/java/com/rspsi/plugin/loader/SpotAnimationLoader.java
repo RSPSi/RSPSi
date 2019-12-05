@@ -1,14 +1,14 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-
 import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
 import com.jagex.io.Buffer;
+import org.displee.cache.index.Index;
+import org.displee.cache.index.archive.Archive;
 
-public class GraphicLoaderOSRS extends GraphicLoader {
+//Checked
+public class SpotAnimationLoader extends GraphicLoader {
 
 
 	private Graphic[] graphics;
@@ -28,35 +28,18 @@ public class GraphicLoaderOSRS extends GraphicLoader {
 
 	@Override
 	public void init(Archive archive) {
-		
-		graphics = new Graphic[archive.getHighestId() + 1];
-		
 
-		for (File file : archive.getFiles()) {
-			try {
-				graphics[file.getId()] = decode(new Buffer(file.getData()));
-				graphics[file.getId()].setId(file.getId());
-			} catch (Exception ex) {
-
-			}
-		}
 	}
 
 	@Override
 	public void init(byte[] data) {
-		Buffer buffer = new Buffer(data);
-		count = buffer.readUShort();
-		if (graphics == null) {
-			graphics = new Graphic[count];
-		}
 
-		for (int id = 0; id < count; id++) {
-			try {
-				graphics[id] = decode(buffer);
-				graphics[id].setId(id);
-			} catch (Exception ex) {
+	}
 
-			}
+	public void decodeGraphics(Index index) {
+		int size = index.getLastArchive().getId() * 255 + index.getLastArchive().getLastFile().getId();
+		for (int id = 0; id < size; id++) {
+
 		}
 	}
 	
@@ -69,9 +52,9 @@ public class GraphicLoaderOSRS extends GraphicLoader {
 				return graphic;
 
 			if (opcode == 1) {
-				graphic.setModel(buffer.readUShort());
+				graphic.setModel(buffer.readBigSmart());
 			} else if (opcode == 2) {
-				int animationId = buffer.readUShort();
+				int animationId = buffer.readBigSmart();
 				if (animationId >= 0) {
 					graphic.setAnimation(AnimationDefinitionLoader.getAnimation(animationId));
 				}
@@ -98,7 +81,6 @@ public class GraphicLoaderOSRS extends GraphicLoader {
 				graphic.setReplacementColours(replacementColours);
 			} else if(opcode == 41) {
 				int len = buffer.readUByte();
-				
 				for (int i = 0; i < len; i++) {
 					buffer.readUShort();
 					buffer.readUShort();
