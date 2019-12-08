@@ -82,6 +82,21 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 					}
 					definition.setModelIds(IntStream.range(0, modelIds.length).map(index -> modelIds[index][0]).toArray());
 					definition.setModelTypes(modelTypes);
+				} else if (opcode == 5) {
+					int count = buffer.get() & 0xff;
+					if (count > 0) {
+						if (definition.getModelIds() == null) {
+							definition.setModelTypes(null);
+							int[] modelIds = new int[count];
+
+							for (int i = 0; i < count; i++) {
+								modelIds[i] = buffer.getShort() & 0xffff;
+							}
+							definition.setModelIds(modelIds);
+						} else {
+							buffer.get(new byte[count * 2]);
+						}
+					}
 				} else if (opcode == 2) {
 					definition.setName(ByteBufferUtils.getOSRSString(buffer));
 				} else if (opcode == 14) {
@@ -318,6 +333,10 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 		int morphismIndex = -1;
 		if (def.getVarbit() != -1) {
 			VariableBits bits = VariableBitLoader.lookup(def.getVarbit());
+			if(bits == null){
+				log.info("varbit {} was null!", def.getVarbit());
+				return null;
+			}
 			int variable = bits.getSetting();
 			int low = bits.getLow();
 			int high = bits.getHigh();
