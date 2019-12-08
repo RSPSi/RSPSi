@@ -26,7 +26,7 @@ import com.rspsi.plugin.loader.VarbitLoaderOSRS;
 import com.rspsi.plugins.ClientPlugin;
 
 //For 718
-public class Plugin614 implements ClientPlugin {
+public class Plugin718 implements ClientPlugin {
 
 	private AnimationFrameLoader frameLoader;
 	private FloorDefLoader floorLoader;
