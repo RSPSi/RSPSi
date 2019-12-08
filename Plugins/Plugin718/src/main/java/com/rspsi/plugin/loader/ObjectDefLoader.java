@@ -17,6 +17,8 @@ import org.displee.utilities.Miscellaneous;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Slf4j
 public class ObjectDefLoader extends ObjectDefinitionLoader {
@@ -37,14 +39,11 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 
 	public void decodeObjects(Index index) {
 		size = index.getLastArchive().getId() * 256 + index.getLastArchive().getLastFile().getId();
-		size = 1;
 		for (int id = 0; id < size; id++) {
 			int archiveId = Miscellaneous.getConfigArchive(id, 8);
-			System.out.println("ArchiveId: " + archiveId);
 			Archive archive = index.getArchive(archiveId);
 			if (Objects.nonNull(archive)) {
 				int fileId = Miscellaneous.getConfigFile(id, 8);
-				System.out.println("FileId: " + fileId);
 				File file = archive.getFile(fileId);
 				if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
 					try {
@@ -61,6 +60,7 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 	public ObjectDefinition decode(int id, ByteBuffer buffer) {
 		ObjectDefinition definition = new ObjectDefinition();
 		definition.reset();
+		definition.setId(id);
 		int interactive = -1;
 		int lastOpcode = -1;
 		try {
@@ -68,34 +68,21 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 				int opcode = buffer.get() & 0xff;
 				if (opcode == 0)
 					break;
-				System.out.println("Opcode" + opcode);
 				if (opcode == 1) {
 					int typeSize = buffer.get() & 0xff;
 					int[][] modelIds = new int[typeSize][];
-					int[] shapes = new int[typeSize];
+					int[] modelTypes = new int[typeSize];
 					for (int type = 0; type < typeSize; type++) {
-						shapes[type] = buffer.get();
+						modelTypes[type] = buffer.get();
 						int modelsLength = buffer.get() & 0xff;
 						modelIds[type] = new int[modelsLength];
 						for (int model = 0; modelsLength > model; model++) {
 							modelIds[type][model] = ByteBufferUtils.getSmartInt(buffer);
 						}
 					}
-//						int[] models = Ints.concat(modelIds);
-//						definition.setModelIds(models);
-//						definition.setModelTypes(shapes);
-//						Ignore models for now
-				}
-//					if (opcode == 5) {
-//						int length =  buffer.get() & 0xff;
-//						if (length > 0) {
-//							for (int index = 0; index < length; index++) {
-//								int i = buffer.getShort() & 0xffff;
-//							}
-//						}
-//					}
-
-				else if (opcode == 2) {
+					definition.setModelIds(IntStream.range(0, modelIds.length).map(index -> modelIds[index][0]).toArray());
+					definition.setModelTypes(modelTypes);
+				} else if (opcode == 2) {
 					definition.setName(ByteBufferUtils.getOSRSString(buffer));
 				} else if (opcode == 14) {
 					definition.setWidth(buffer.get() & 0xff);
@@ -176,13 +163,13 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 				} else if (opcode == 68) {
 					definition.setMapscene(buffer.getShort() & 0xffff);
 				} else if (opcode == 69) {
-					definition.setSurroundings(buffer.get() & 0xff);//Not used in OSRS?
+					definition.setSurroundings(buffer.get() & 0xff);
 				} else if (opcode == 70) {
-					definition.setTranslateX(buffer.getShort() & 0xffff << 2);
+					definition.setTranslateX(buffer.getShort() & 0xffff);
 				} else if (opcode == 71) {
-					definition.setTranslateY(buffer.getShort() & 0xffff << 2);
+					definition.setTranslateY(buffer.getShort() & 0xffff);
 				} else if (opcode == 72) {
-					definition.setTranslateZ(buffer.getShort() & 0xffff << 2);
+					definition.setTranslateZ(buffer.getShort() & 0xffff);
 				} else if (opcode == 73) {
 					definition.setObstructsGround(true);
 				} else if (opcode == 74) {
