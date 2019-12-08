@@ -2,17 +2,13 @@ package com.rspsi.plugin.loader;
 
 import com.google.common.collect.Lists;
 import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
 import com.jagex.cache.loader.floor.FloorType;
 import com.jagex.util.ByteBufferUtils;
-import com.rspsi.options.Config;
 import lombok.extern.slf4j.Slf4j;
 import org.displee.cache.index.archive.Archive;
 import org.displee.cache.index.archive.file.File;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,42 +60,52 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 		int last = -1;
 		while (true) {
 			int opcode = buffer.get();
-			if (opcode == 0) {
+			if (opcode == 0)
 				break;
-			} else if (opcode == 1) {
-				int rgb = ((buffer.get() & 0xff) << 16) + ((buffer.get() & 0xff) << 8) + (buffer.get() & 0xff);
-
-				rgbhsl(floor, rgb);
-				floor.setRgb(rgb);
+			if (opcode == 1) {
+				floor.setRgb(ByteBufferUtils.readU24Int(buffer));
 			} else if (opcode == 2) {
 				int texture = buffer.get() & 0xff;
 				floor.setTexture(texture);
 			} else if(opcode == 3) {
-				int texture = buffer.getShort() & 0xffff;
-
-				floor.setTexture(texture);
+				int id = buffer.getShort() & 0xffff;
+				if (id == 65535) {
+					id = -1;
+				}
+				floor.setTexture(id);
 			} else if (opcode == 5) {
 				floor.setShadowed(false);
 			} else if (opcode == 7) {
-				int anotherRgb = ((buffer.get() & 0xff) << 16) + ((buffer.get() & 0xff) << 8) + (buffer.get() & 0xff);
-		
+				int anotherRgb = ByteBufferUtils.readU24Int(buffer);
 				floor.setAnotherRgb(anotherRgb);
-			} else if(opcode == 9) {//TODO Implement this into the client
-				buffer.getShort();
-			} else if(opcode == 11) {
-				buffer.get();
-			} else if(opcode == 13) {
-				buffer.get();
-				buffer.get();
-				buffer.get();
-			} else if(opcode == 14) {
-				buffer.get();
-			} else if(opcode == 15) {
-				buffer.getShort();
-			} else if(opcode == 16) {
-				buffer.get();
+			} else if (opcode == 8) {
+				//unknown
+			} else if (opcode == 9) {
+				//scale
+				int scale = buffer.getShort() & 0xffff;
+			} else if (opcode == 10) {
+				//unknown
+			} else if (opcode == 11) {
+				int i = buffer.get() & 0xff;
+			} else if (opcode == 12) {
+				//unknown
+			} else if (opcode == 13) {
+				//water color
+				int i = ByteBufferUtils.readU24Int(buffer);
+			} else if (opcode == 14) {
+				//water scale
+				int i = buffer.get() & 0xff << 2;
+			} else if (opcode == 16) {
+				//water intensity
+				int i = buffer.get() & 0xff;
+			} else if (opcode == 20) {
+				int i = buffer.getShort() & 0xffff;
+			} else if (opcode == 21) {
+				int i = buffer.get() & 0xff;
+			} else if (opcode == 22) {
+				int i = buffer.getShort() & 0xffff;
 			} else {
-				System.out.println("Error unrecognised overlay code: " + opcode + " last: " + last);
+				System.out.println("Error overlay code: " + opcode + " last: " + last);
 				continue;
 			}
 			last = opcode;
@@ -112,23 +118,19 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 		int last = -1;
 		while (true) {
 			int opcode = buffer.get();
-			if (opcode == 0) {
+			if (opcode == 0)
 				break;
-			} else if (opcode == 1) {
-				int rgb = ((buffer.get() & 0xff) << 16) + ((buffer.get() & 0xff) << 8) + (buffer.get() & 0xff);
-				floor.setRgb(rgb);
+			if (opcode == 1) {
+				floor.setRgb(ByteBufferUtils.readU24Int(buffer));
 			} else if (opcode == 2) {
-				int texture = buffer.get() & 0xff;
+				int texture = buffer.getShort() & 0xffff;
 				floor.setTexture(texture);
 			} else if(opcode == 3) {
-				
+				int id = buffer.getShort() & 0xffff << 2;
+			} else if (opcode == 4) {
+				//unknown
 			} else if (opcode == 5) {
 				floor.setShadowed(false);
-			} else if(opcode == 6) {
-				ByteBufferUtils.getString(buffer);
-			} else if (opcode == 7) {
-				int anotherRgb = ((buffer.get() & 0xff) << 16) + ((buffer.get() & 0xff) << 8) + (buffer.get() & 0xff);
-				floor.setAnotherRgb(anotherRgb);
 			} else {
 				System.out.println("Error underlay code: " + opcode + " last: " + last);
 				continue;
