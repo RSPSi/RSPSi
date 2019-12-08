@@ -3,7 +3,9 @@ package com.jagex.map.tile;
 import com.rspsi.options.Options;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 public final class ShapedTile {
 
 	public static int[] screenX = new int[6];

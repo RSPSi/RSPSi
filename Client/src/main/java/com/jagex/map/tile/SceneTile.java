@@ -18,7 +18,9 @@ import com.rspsi.misc.Location;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 public final class SceneTile extends Linkable {
 
 	public ShapedTile shape;
@@ -36,22 +38,31 @@ public final class SceneTile extends Linkable {
 	public int collisionPlane;
 	public boolean hasUpdated;
 
+	@ToString.Exclude
 	public GameObject[] gameObjects;
+	@ToString.Exclude
 	public GroundDecoration groundDecoration;
+	@ToString.Exclude
 	public GroundItem groundItem;
 	public int[] objectAttributes;
 	public int objectCount;
 	public int plane;
 	public int positionX;
 	public int positionY;
+	@ToString.Exclude
 	public Wall wall;
+	@ToString.Exclude
 	public WallDecoration wallDecoration;
 	public boolean tileHighlighted;
 	public boolean tileSelected;
 	public boolean tileBeingSelected;
+	@ToString.Exclude
 	public Optional<DefaultWorldObject> temporaryObject = Optional.empty();
+	@ToString.Exclude
 	public Optional<Integer> temporaryObjectAttributes = Optional.empty();
+	@ToString.Exclude
 	public Optional<ShapedTile> temporaryShapedTile = Optional.empty();
+	@ToString.Exclude
 	public Optional<SimpleTile> temporarySimpleTile = Optional.empty();
 	public byte tileFlags;
 	

@@ -34,7 +34,7 @@ public class ObjectGroup {
 	}
 
 	public void sort() {
-		Collections.sort(objects, (p1, p2) -> Integer.compare(p1.getLocHash(), p2.getLocHash()));
+		Collections.sort(objects, Comparator.comparingInt(DefaultWorldObject::getLocHash));
 
 	}
 

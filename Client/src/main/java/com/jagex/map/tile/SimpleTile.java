@@ -5,7 +5,9 @@ package com.jagex.map.tile;
 import com.rspsi.options.Options;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 public final class SimpleTile {
 
 	int centreColour;

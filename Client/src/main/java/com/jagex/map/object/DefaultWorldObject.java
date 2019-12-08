@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jagex.chunk.Chunk;
 import com.jagex.entity.Renderable;
 import com.jagex.util.ObjectKey;
+import lombok.ToString;
 
+@ToString
 public abstract class DefaultWorldObject implements WorldObject {
 
 	private int x;
