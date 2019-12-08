@@ -1,5 +1,8 @@
 package com.rspsi;
 
+import com.rspsi.options.KeyboardState;
+import com.sun.javafx.stage.FocusUngrabEvent;
+import javafx.stage.WindowEvent;
 import org.displee.utilities.GZIPUtils;
 
 import java.io.File;
@@ -9,6 +12,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -238,7 +242,7 @@ public class MainWindow extends Application {
 
 			scene.setFill(Color.TRANSPARENT);
 
-			primaryStage.setTitle("RSPSi Map Editor 1.16.0");
+			primaryStage.setTitle("RSPSi Map Editor 1.16.1");
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setScene(scene);
 			primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
@@ -449,10 +453,24 @@ public class MainWindow extends Application {
 				}
 			}
 			primaryStage.addEventHandler(KeyEvent.ANY, new GameKeyListener(clientInstance));
+			primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+				if(!newValue){
+					log.info("Lost focus!");
+					KeyboardState.reset();
+					SceneGraph.setMouseIsDown(false);
+					Arrays.fill(clientInstance.keyStatuses, 0);
+					//clientInstance.visible = false;
+				} else {
+					log.info("Gained focus!");
+					//clientInstance.visible = true;
+				}
+			});
+
 
 			SceneGraph.setMouseIsDown(true);
 			SceneGraph.setMouseIsDown(false);
 
+			clientInstance.visible = true;
 
 			controller.getGamePane().getChildren().add(gamePane);
 			controller.getMapPane().getChildren().add(new CanvasPane(clientInstance.mapCanvas));

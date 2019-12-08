@@ -123,8 +123,9 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 			if (keyEvent.getCode() == KeyCode.DELETE) {
 				if(Options.currentTool.get() == ToolType.SELECT_OBJECT) {
 					SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.deleteObjects());
-				} else 
+				} else
 					TileDeleteDialog.instance.show();
+				KeyboardState.onKeyUp(keyEvent.getCode());
 			}
 		}
 
