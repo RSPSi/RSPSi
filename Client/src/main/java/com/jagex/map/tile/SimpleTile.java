@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
+@Getter
+@Setter
 public final class SimpleTile {
 
 	int centreColour;
@@ -38,79 +40,5 @@ public final class SimpleTile {
 			cheapHax = -1;
 		textured = cheapHax != -1;
 	}
-	
-
-	public int getCentreColour() {
-		return centreColour;
-	}
-
-	public int getEastColour() {
-		return eastColour;
-	}
-
-	public int getNorthColour() {
-		return northColour;
-	}
-
-	public int getNorthEastColour() {
-		return northEastColour;
-	}
-
-	public int getTexture() {
-		return texture;
-	}
-
-	public int getTileColour() {
-		return tileColour;
-	}
-
-	public boolean isFlat() {
-		return flat;
-	}
-
-	public void setCentreColour(int centreColour) {
-		this.centreColour = centreColour;
-	}
-
-	public void setEastColour(int eastColour) {
-		this.eastColour = eastColour;
-	}
-
-	public void setFlat(boolean flat) {
-		this.flat = flat;
-	}
-
-	public void setNorthColour(int northColour) {
-		this.northColour = northColour;
-	}
-
-	public void setNorthEastColour(int northEastColour) {
-		this.northEastColour = northEastColour;
-	}
-
-	public void setTexture(int texture) {
-		this.texture = texture;
-	}
-
-	public void setTileColour(int anInt722) {
-		tileColour = anInt722;
-	}
-
-
-	public boolean isTextured() {
-		return textured;
-	}
-
-
-	public int getColour() {
-		return colour;
-	}
-
-
-	@Getter
-	@Setter
-	private int bufferOffset, uvBufferOffset, bufferLen;
-	
-	
 
 }

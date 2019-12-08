@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
+@Getter
+@Setter
 public final class ShapedTile {
 
 	public static int[] screenX = new int[6];
@@ -651,73 +653,4 @@ public final class ShapedTile {
 		i9 /= 14;
 		l9 /= 14;
 	}
-
-	public void setAnInt687(int anInt687) {
-		textureColour = anInt687;
-	}
-
-	public void setFlat(boolean flat) {
-		this.flat = flat;
-	}
-
-	public void setOrientation(int orientation) {
-		this.orientation = orientation;
-	}
-
-	public void setOrigVertexX(int[] origVertexX) {
-		this.origVertexX = origVertexX;
-	}
-
-	public void setOrigVertexY(int[] anIntArray674) {
-		origVertexY = anIntArray674;
-	}
-
-	public void setOrigVertexZ(int[] anIntArray675) {
-		origVertexZ = anIntArray675;
-	}
-
-	public void setTextureId(int textureId) {
-		this.textureId = textureId;
-	}
-
-	public void setTileType(int tileType) {
-		this.tileType = tileType;
-	}
-
-	public void setTriangleA(int[] triangleA) {
-		this.triangleA = triangleA;
-	}
-
-	public void setTriangleB(int[] triangleB) {
-		this.triangleB = triangleB;
-	}
-
-	public void setTriangleC(int[] triangleC) {
-		this.triangleC = triangleC;
-	}
-
-	public void setTriangleHslA(int[] triangleHslA) {
-		this.triangleHslA = triangleHslA;
-	}
-
-	public void setTriangleHslB(int[] triangleHslB) {
-		this.triangleHslB = triangleHslB;
-	}
-
-	public void setTriangleHslC(int[] triangleHslC) {
-		this.triangleHslC = triangleHslC;
-	}
-
-	public void setTriangleTexture(int[] triangleTexture) {
-		this.triangleTexture = triangleTexture;
-	}
-
-	public void setUnderlayColour(int underlayColour) {
-		this.underlayColour = underlayColour;
-	}
-
-
-	@Getter
-	@Setter
-	private int bufferOffset, uvBufferOffset, bufferLen;
 }
