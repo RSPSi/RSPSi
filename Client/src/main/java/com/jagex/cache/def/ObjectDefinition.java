@@ -84,7 +84,7 @@ public final class ObjectDefinition {
 	private int areaId = -1;
 
 	public int[] getModelIds() {
-		if(modelIds != null && modelTypes != null && modelTypes[0] == 22 && modelIds[0] == 1105 && minimapFunction != -1)
+		if(modelIds != null && modelTypes != null && modelTypes[0] == 22 && modelIds[0] == 1105 && (areaId != -1 || minimapFunction != -1))
 			return new int[] {111};
 		return modelIds;
 	}

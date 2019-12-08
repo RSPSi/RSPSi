@@ -151,8 +151,7 @@ public class Chunk {
 	public void drawMinimapScene(int plane) {
 		if(!updated)
 			return;
-		
-		boolean osrs = client.getCache().getIndexedFileSystem().isOSRS();
+
         int[] raster = largeMinimapSprite.getRaster();
 		int pixels = raster.length;
 		for (int i = 0; i < pixels; i++) {
@@ -199,7 +198,7 @@ public class Chunk {
 						int id = key.getId();
 						ObjectDefinition definition = ObjectDefinitionLoader.lookup(id);
 						if(definition != null) {
-							if(osrs && definition.getAreaId() != -1) {
+							if(definition.getAreaId() != -1) {
 								RSArea area = RSAreaLoader.get(definition.getAreaId());
 								int function = area.getSpriteId();
 								

@@ -7,7 +7,9 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
 import com.jagex.Client;
 import com.jagex.cache.def.ObjectDefinition;
+import com.jagex.cache.def.RSArea;
 import com.jagex.cache.graphics.Sprite;
+import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.draw.ImageGraphicsBuffer;
 import com.jagex.draw.raster.GameRasterizer;
@@ -163,9 +165,14 @@ public class ObjectModelView extends VBox {
 				Threads.sleep(5);
 			}
 			Mesh m = def.modelAt(cell.getType() == 11 ? 10 : type, 1, 0, 0, 0, 0, -1);
-			if (m == null || def.getModelIds()[0] == 111 && def.getMinimapFunction() != -1) {
-				if(def.getMinimapFunction() != -1 && def.getMinimapFunction() < Client.mapFunctions.length) {
-					sprite = Client.mapFunctions[def.getMinimapFunction()];
+
+			if (m == null || def.getModelIds()[0] == 111 && (def.getAreaId() != -1 || def.getMinimapFunction() != -1)) {
+				if(def.getAreaId() != -1){
+					RSArea area = RSAreaLoader.get(def.getAreaId());
+					int func = area.getSpriteId();
+					sprite = Client.getSingleton().getCache().getSprite(func);
+				} else if(def.getMinimapFunction() != -1) {
+					sprite =  Client.mapFunctions[def.getMinimapFunction()];
 				} else {
 					model = nullModel;
 					sprite = null;

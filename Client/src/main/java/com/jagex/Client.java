@@ -524,16 +524,32 @@ public final class Client implements Runnable {
 				} catch (Exception ex) {
 					//ex.printStackTrace();
 				}
-				
-				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
-				log.info("Loaded {} map functions.", mapFunctions.length);
-			} else if(cache.getIndexedFileSystem().isOSRS()) {
-				mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
-				mapFunctions = null;
 
-				log.info("Skipped loading map functions!");
+				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
+			} else {
+				mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
+				try {
+					int lastIdx = 0;
+
+					Archive graphics = cache.createArchive(4, "2d graphics");
+					Sprite[] functions = new Sprite[1000];
+					try {
+						for (int function = 0; function < functions.length; function++) {
+							functions[function] = new Sprite(graphics, "mapfunction", function);
+							lastIdx = function;
+						}
+					} catch (Exception ex) {
+						//ex.printStackTrace();
+						lastIdx = -1;
+					}
+
+					mapFunctions = lastIdx == -1 ? new Sprite[0] : Arrays.copyOf(functions, lastIdx + 1);
+				} catch(Exception ex){
+					mapFunctions = new Sprite[0];
+				}
 			}
-			
+
+			log.info("Loaded {} map functions.", mapFunctions.length);
 			log.info("Loaded {} map scenes.", mapScenes.length);
 			drawLoadingText(100, "Preparing game engine");
 			GameRasterizer.getInstance().setBounds(0, 0, (int)gameCanvas.getWidth(), (int)gameCanvas.getHeight());
