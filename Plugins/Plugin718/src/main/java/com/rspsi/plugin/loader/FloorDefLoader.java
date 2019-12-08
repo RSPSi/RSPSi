@@ -34,7 +34,9 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 		for (int id = 0; id < size; id++) {
 			File underlay = archive.getFile(id);
 			if (Objects.nonNull(underlay) && Objects.nonNull(underlay.getData())) {
-				floors.add(decodeUnderlay(ByteBuffer.wrap(underlay.getData())));
+				Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
+				floor.generateHsl();
+				floors.add(floor);
 			}
 		}
 		underlays = floors.toArray(new Floor[0]);
@@ -47,7 +49,9 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 		for (int id = 0; id < size; id++) {
 			File overlays = archive.getFile(id);
 			if (Objects.nonNull(overlays) && Objects.nonNull(overlays.getData())) {
-				floors.add(decodeOverlay(ByteBuffer.wrap(overlays.getData())));
+				Floor floor = decodeOverlay(ByteBuffer.wrap(overlays.getData()));
+				floor.generateHsl();
+				floors.add(floor);
 			}
 		}
 		overlays = floors.toArray(new Floor[0]);
@@ -126,9 +130,9 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 				int texture = buffer.getShort() & 0xffff;
 				floor.setTexture(texture);
 			} else if(opcode == 3) {
-				int id = buffer.getShort() & 0xffff << 2;
+				int scale = buffer.getShort() & 0xffff << 2;
 			} else if (opcode == 4) {
-				//unknown
+				//blocks shadows
 			} else if (opcode == 5) {
 				floor.setShadowed(false);
 			} else {
