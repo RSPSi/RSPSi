@@ -154,7 +154,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				definition.setReplacementColours(replacementColours);
 			} else if (opcode == 60) {
 				definition.setMinimapFunction(buffer.readUShort());
-				definition.setAreaId(definition.getMinimapFunction());
+				//definition.setAreaId(definition.getMinimapFunction());
 			} else if (opcode == 62) {
 				definition.setInverted(true);
 			} else if (opcode == 64) {
@@ -264,11 +264,4 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 	}
 
 
-	public void renameMapFunctions(RSAreaLoaderOSRS areaLoader) {
-		cache.values().stream().filter(objectDefinition -> objectDefinition.getAreaId() != -1).forEach(objectDefinition -> {
-				RSArea area = areaLoader.forId(objectDefinition.getAreaId());
-				if(objectDefinition.getName() == null || objectDefinition.getName().equals("null") || objectDefinition.getName().isEmpty())
-					objectDefinition.setName("minimap-function:" + area.getSpriteId());
-		});
-	}
 }

@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.jagex.Client;
+import com.jagex.cache.def.RSArea;
+import com.jagex.cache.loader.config.RSAreaLoader;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
 import com.jagex.cache.def.Floor;
@@ -26,6 +30,7 @@ import com.jagex.util.MapObjectData;
 import com.jagex.util.ObjectKey;
 import com.rspsi.options.Options;
 
+@Slf4j
 public final class MapRegion {
 
 	private static final int[] anIntArray140 = { 16, 32, 64, 128 };
@@ -70,7 +75,7 @@ public final class MapRegion {
 		return interpolate(l2, i3, k1, frequencyReciprocal);
 	}
 
-	private static int light(int colour, int light) {
+	public static int light(int colour, int light) {
 		if (colour == -1)
 			return 0xbc614e;
 
@@ -1164,9 +1169,15 @@ public final class MapRegion {
 			}
 
 			GroundDecoration deco = scene.addFloorDecoration(x, y, z, object, objectKey, mean, temporary);
-			if(deco != null && definition.getMinimapFunction() >= 0) {
-				deco.setMinimapFunction(definition.getMinimapFunction());
-			}
+
+				if (deco != null && definition.getMinimapFunction() >= 0 && definition.getMinimapFunction() < Client.mapFunctions.length && definition.getModelIds() != null && definition.getModelIds()[0] == 111) {
+					deco.setMinimapFunction(Client.mapFunctions[definition.getMinimapFunction()]);
+				} else if (deco != null && definition.getAreaId() >= 0 && definition.getModelIds() != null && definition.getModelIds()[0] == 111) {
+					RSArea area = RSAreaLoader.get(definition.getAreaId());
+					int func = area.getSpriteId();
+					deco.setMinimapFunction(Client.getSingleton().getCache().getSprite(func));
+				}
+
 		} else if (type == 10 || type == 11) {
 			Renderable object;
 			if (definition.getAnimation() == -1 && definition.getMorphisms() == null) {

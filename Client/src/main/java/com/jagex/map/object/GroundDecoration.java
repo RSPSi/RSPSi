@@ -1,8 +1,10 @@
 package com.jagex.map.object;
 
+import com.jagex.cache.graphics.Sprite;
 import com.jagex.util.ObjectKey;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 public final class GroundDecoration extends DefaultWorldObject {
 
@@ -11,7 +13,7 @@ public final class GroundDecoration extends DefaultWorldObject {
 	}
 
 	@Getter @Setter
-	private int minimapFunction = -1;
+	private Sprite minimapFunction = null;
 	@Override
 	public WorldObjectType getType() {
 		return WorldObjectType.GROUND_DECORATION;

@@ -1,5 +1,6 @@
 package com.jagex;
 
+import com.jagex.map.tile.SceneTile;
 import org.displee.cache.index.archive.Archive;
 import org.displee.utilities.GZIPUtils;
 
@@ -119,7 +120,7 @@ public final class Client implements Runnable {
 		}
 	}
 
-	public static Sprite[] mapFunctions = new Sprite[100];
+	public static Sprite[] mapFunctions = new Sprite[0];
 
 	public static Sprite[] mapScenes = new Sprite[100];
 
@@ -524,16 +525,32 @@ public final class Client implements Runnable {
 				} catch (Exception ex) {
 					//ex.printStackTrace();
 				}
-				
-				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
-				log.info("Loaded {} map functions.", mapFunctions.length);
-			} else if(cache.getIndexedFileSystem().isOSRS()) {
-				mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
-				mapFunctions = null;
 
-				log.info("Skipped loading map functions!");
+				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
+			} else {
+				mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
+				try {
+					int lastIdx = 0;
+
+					Archive graphics = cache.createArchive(4, "2d graphics");
+					Sprite[] functions = new Sprite[1000];
+					try {
+						for (int function = 0; function < functions.length; function++) {
+							functions[function] = new Sprite(graphics, "mapfunction", function);
+							lastIdx = function;
+						}
+					} catch (Exception ex) {
+						//ex.printStackTrace();
+						lastIdx = -1;
+					}
+
+					mapFunctions = lastIdx == -1 ? new Sprite[0] : Arrays.copyOf(functions, lastIdx + 1);
+				} catch(Exception ex){
+					mapFunctions = new Sprite[0];
+				}
 			}
-			
+
+			log.info("Loaded {} map functions.", mapFunctions.length);
 			log.info("Loaded {} map scenes.", mapScenes.length);
 			drawLoadingText(100, "Preparing game engine");
 			GameRasterizer.getInstance().setBounds(0, 0, (int)gameCanvas.getWidth(), (int)gameCanvas.getHeight());
@@ -580,8 +597,8 @@ public final class Client implements Runnable {
 		// frameFont.renderCentre(256, 150, "Loading - please wait.", 0xffffff);
 		gameImageBuffer.finalize();
 		drawGameImage();
-		xCameraPos = 32 * 128;
-		yCameraPos = 32 * 128;
+		xCameraPos = ((int)(Math.ceil(chunkXLength / 2)) * 8192) + 4096;
+		yCameraPos = ((int)(Math.ceil(chunkYLength / 2)) * 8192) + 4096;
 		sceneGraph = new SceneGraph(64 * (chunkXLength), 64 * (chunkYLength), 4);
 		mapRegion = new MapRegion(sceneGraph, 64 * (chunkXLength), 64 * (chunkYLength));
 		for (int chunkX = 0; chunkX < chunkXLength; chunkX++) {
@@ -617,7 +634,7 @@ public final class Client implements Runnable {
 						getProvider().requestMap(objectMapId, hash);
 						System.out.println("Requesting object map " + objectMapId);
 					}
-
+					log.info("Added chunk, obj/landscape {}/{}", objectMapId, landscapeMapId);
 					pendingChunks.add(chunk);
 				//} catch (Exception exception) {
 				//	break;
@@ -1011,6 +1028,13 @@ public final class Client implements Runnable {
 			k += 15;
 			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Hover UID: " + hoveredUID + "", c, k, 0xffff00);
 			k += 15;
+			if(sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY] != null) {
+				SceneTile tile = sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY];
+				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Simple Data: " + (tile.simple != null ? tile.simple.toString() : "") , c, k, 0xffff00);
+				k += 15;
+				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Shaped Data: "+ (tile.shape != null ? tile.shape.toString() : "null"), c, k, 0xffff00);
+				k += 15;
+			}
 			
 			
 			if (hoveredUID != null) {

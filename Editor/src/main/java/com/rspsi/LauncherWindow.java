@@ -85,14 +85,14 @@ public class LauncherWindow extends Application {
 				File inactiveFolder = new File(PLUGINS_PATH + "inactive" + File.separator);
 				File activeFolder = new File(PLUGINS_PATH + "active" + File.separator);
 				
-				File oldPluginFile = new File(PLUGINS_PATH + "inactive" + File.separator + pluginName + ".jar");
-				File newPluginFile = new File(PLUGINS_PATH + "active" + File.separator + pluginName + ".jar");
+				File oldPluginFile = new File(inactiveFolder,  pluginName + ".jar");
+				File newPluginFile = new File(activeFolder, pluginName + ".jar");
 				try {
+					if(newPluginFile.exists()){
+						newPluginFile.delete();
+					}
 					for(File active : activeFolder.listFiles()){
-						if(active.getName().replace(".jar", "").equalsIgnoreCase(pluginName)){
-							active.delete();
-						} else
-							Files.move(active, new File(inactiveFolder, active.getName()));
+						Files.move(active, new File(inactiveFolder, active.getName()));
 					}
 					inactiveFolder.mkdirs();
 					activeFolder.mkdirs();
@@ -100,7 +100,6 @@ public class LauncherWindow extends Application {
 					oldPluginFile.delete();
 					populatePlugins();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

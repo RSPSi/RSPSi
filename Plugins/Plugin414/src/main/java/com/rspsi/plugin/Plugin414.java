@@ -82,8 +82,6 @@ public class Plugin414 implements ClientPlugin {
 			graphicLoader.init(configIndex.getArchive(13));
 			varbitLoader.init(configIndex.getArchive(14));
 			areaLoader.init(configIndex.getArchive(35));
-
-			objLoader.renameMapFunctions(areaLoader);
 			
 			Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 			skeletonLoader.init(skeletonIndex);
