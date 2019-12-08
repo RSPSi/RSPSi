@@ -1030,7 +1030,9 @@ public final class Client implements Runnable {
 			k += 15;
 			if(sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY] != null) {
 				SceneTile tile = sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY];
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Tile Data: " + (tile.simple != null ? tile.simple.toString() : "")  + "" + (tile.shape != null ? tile.shape.toString() : "null"), c, k, 0xffff00);
+				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Simple Data: " + (tile.simple != null ? tile.simple.toString() : "") , c, k, 0xffff00);
+				k += 15;
+				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Shaped Data: "+ (tile.shape != null ? tile.shape.toString() : "null"), c, k, 0xffff00);
 				k += 15;
 			}
 			
