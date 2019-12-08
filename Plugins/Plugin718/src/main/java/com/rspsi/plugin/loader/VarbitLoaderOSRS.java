@@ -65,6 +65,7 @@ public class VarbitLoaderOSRS extends VariableBitLoader{
 			}
 		}
 		bits = varbits.toArray(new VariableBits[0]);
+		this.count = bits.length;
 	}
 
 	@Override

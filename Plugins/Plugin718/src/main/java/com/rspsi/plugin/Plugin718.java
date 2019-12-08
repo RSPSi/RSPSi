@@ -1,5 +1,6 @@
 package com.rspsi.plugin;
 
+import org.displee.CacheLibrary;
 import org.displee.cache.index.Index;
 
 import com.jagex.Client;
@@ -24,7 +25,8 @@ import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
 import com.rspsi.plugins.ClientPlugin;
 
-public class Plugin614 implements ClientPlugin {
+//For 718
+public class Plugin718 implements ClientPlugin {
 
 	private AnimationFrameLoader frameLoader;
 	private FloorDefLoader floorLoader;
@@ -73,13 +75,12 @@ public class Plugin614 implements ClientPlugin {
 		floorLoader.decodeUnderlays(configIndex.getArchive(1));
 		floorLoader.decodeOverlays(configIndex.getArchive(4));
 		varbitLoader.decodeVarbits(client.getCache().readFile(CacheFileType.VARBIT));
-		objLoader.decodeObjects(client.getCache().readFile(CacheFileType.LOC));
+		objLoader.decodeObjects(client.getCache().getIndexedFileSystem().getIndex(16));
 
-		animDefLoader.init(configIndex.getArchive(12));
-		graphicLoader.init(configIndex.getArchive(13));
+//		animDefLoader.init(configIndex.getArchive(12));
+//		graphicLoader.init(configIndex.getArchive(13));
 
 		areaLoader.init(configIndex.getArchive(35));
-
 
 //		Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 //		skeletonLoader.init(skeletonIndex);

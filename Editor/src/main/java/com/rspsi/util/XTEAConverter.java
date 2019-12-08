@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * @author ReverendDread on 12/5/2019
@@ -19,7 +20,7 @@ public class XTEAConverter {
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter directory containing .txt files:");
-        File dir = new File("F:\\Conspiracyx\\Cock Server\\conspiracyx\\data\\map\\archiveKeys\\unpacked");
+        File dir = new File("C:\\Users\\Andrew\\Desktop\\718 xteas\\");
         if(!dir.isDirectory()){
             System.err.println("Entered path is not a directory!");
             System.exit(0);
@@ -32,11 +33,10 @@ public class XTEAConverter {
                 try {
                     int regionId = Integer.parseInt(file.getName().replace(".txt", "").trim());
                     int[] keys = new int[4];
-                    List<String> lines = Files.readAllLines(file.toPath());
+                    List<String> lines = Files.readAllLines(file.toPath()).stream().filter(str -> str != null && !str.isEmpty()).limit(4).collect(Collectors.toList());
                     for(int index = 0;index<lines.size();index++){
                         keys[index] = Integer.parseInt(lines.get(index));
                     }
-
                     xteas.add(new XTEA(regionId, keys));
                 } catch(Exception ex){
                     System.out.println("Failed to parse " + file.getName());

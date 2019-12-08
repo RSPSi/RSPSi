@@ -1,24 +1,24 @@
 package com.rspsi.plugin.loader;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
 import com.jagex.Client;
 import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.displee.cache.index.Index;
 import org.displee.cache.index.archive.Archive;
 import org.displee.cache.index.archive.file.File;
+import org.displee.utilities.Miscellaneous;
 
-import java.util.List;
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Slf4j
 public class ObjectDefLoader extends ObjectDefinitionLoader {
@@ -40,75 +40,75 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 	public void decodeObjects(Index index) {
 		size = index.getLastArchive().getId() * 256 + index.getLastArchive().getLastFile().getId();
 		for (int id = 0; id < size; id++) {
-			File file = index.getArchive(id >>> 8).getFile(id & 0xff);
-			if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
-				ObjectDefinition def = null;
-				def = decode(id, new Buffer(file.getData()));
-				definitions.put(id, def);
-				System.out.println("id: " + id);
+			int archiveId = Miscellaneous.getConfigArchive(id, 8);
+			Archive archive = index.getArchive(archiveId);
+			if (Objects.nonNull(archive)) {
+				int fileId = Miscellaneous.getConfigFile(id, 8);
+				File file = archive.getFile(fileId);
+				if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
+					try {
+						ObjectDefinition def = decode(id, ByteBuffer.wrap(file.getData()));
+						definitions.put(id, def);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
 			}
 		}
 	}
 
-	public ObjectDefinition decode(int id, Buffer buffer) {
+	public ObjectDefinition decode(int id, ByteBuffer buffer) {
 		ObjectDefinition definition = new ObjectDefinition();
 		definition.reset();
+		definition.setId(id);
 		int interactive = -1;
 		int lastOpcode = -1;
-		int opcode = -1;
-		do {
-			try {
-				opcode = buffer.readUByte();
+		try {
+			for (;;) {
+				int opcode = buffer.get() & 0xff;
 				if (opcode == 0)
 					break;
-				if (opcode == 1 || opcode == 5) {
-					if (opcode == 5) {
-						int length = buffer.readUByte();
-						if (length > 0) {
-							for (int index = 0; index < length; index++) {
-								buffer.readUShort();
-							}
+				if (opcode == 1) {
+					int typeSize = buffer.get() & 0xff;
+					int[][] modelIds = new int[typeSize][];
+					int[] modelTypes = new int[typeSize];
+					for (int type = 0; type < typeSize; type++) {
+						modelTypes[type] = buffer.get();
+						int modelsLength = buffer.get() & 0xff;
+						modelIds[type] = new int[modelsLength];
+						for (int model = 0; modelsLength > model; model++) {
+							modelIds[type][model] = ByteBufferUtils.getSmartInt(buffer);
 						}
 					}
-					if (opcode == 1) {
-						int i_73_ = buffer.readUByte();
-						int[][] modelIds = new int[i_73_][];
-						int[] shapes = new int[i_73_];
-						for (int type = 0; type < i_73_; type++) {
-							shapes[type] = (byte) buffer.readByte();
-							int i_75_ = buffer.readUByte();
-							modelIds[type] = new int[i_75_];
-							System.out.println("Type " + type);
-							for (int model = 0; i_75_ > model; model++) {
-								System.out.println("model index " + model + ", max " + i_75_);
-								modelIds[type][model] = buffer.readBigSmart();
+					definition.setModelIds(IntStream.range(0, modelIds.length).map(index -> modelIds[index][0]).toArray());
+					definition.setModelTypes(modelTypes);
+				} else if (opcode == 5) {
+					int count = buffer.get() & 0xff;
+					if (count > 0) {
+						if (definition.getModelIds() == null) {
+							definition.setModelTypes(null);
+							int[] modelIds = new int[count];
+
+							for (int i = 0; i < count; i++) {
+								modelIds[i] = buffer.getShort() & 0xffff;
 							}
+							definition.setModelIds(modelIds);
+						} else {
+							buffer.get(new byte[count * 2]);
 						}
-						int[] models = Ints.concat(modelIds);
-						definition.setModelIds(models);
-						definition.setModelTypes(shapes);
 					}
-//				if (opcode == 5) {
-//					int length = buffer.readUByte();
-//					for (int index = 0; index < length; index++) {
-//						buffer.skip(1);
-//						int length2 = buffer.readUByte();
-//						for (int i = 0; i < length2; i++)
-//							buffer.readBigSmart();
-//					}
-//				}
 				} else if (opcode == 2) {
-					definition.setName(buffer.readStringAlternative());
+					definition.setName(ByteBufferUtils.getOSRSString(buffer));
 				} else if (opcode == 14) {
-					definition.setWidth(buffer.readUByte());
+					definition.setWidth(buffer.get() & 0xff);
 				} else if (opcode == 15) {
-					definition.setLength(buffer.readUByte());
+					definition.setLength(buffer.get() & 0xff);
 				} else if (opcode == 17) {
 					definition.setSolid(false);
 				} else if (opcode == 18) {
 					definition.setImpenetrable(false);
 				} else if (opcode == 19) {
-					interactive = buffer.readUByte();
+					interactive = buffer.get() & 0xff;
 					if (interactive == 1) {
 						definition.setInteractive(true);
 					}
@@ -119,7 +119,7 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 				} else if (opcode == 23) {
 					definition.setOccludes(true);
 				} else if (opcode == 24) {
-					int animation = buffer.readBigSmart();
+					int animation = ByteBufferUtils.getSmartInt(buffer);
 					if (animation == 65535) {
 						animation = -1;
 					}
@@ -127,180 +127,181 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 				} else if (opcode == 27) {
 					//setInteractType(1);
 				} else if (opcode == 28) {
-					definition.setDecorDisplacement(buffer.readUByte());
+					definition.setDecorDisplacement((buffer.get() & 0xff) << 2);
 				} else if (opcode == 29) {
-					definition.setAmbientLighting(buffer.readByte());
+					definition.setAmbientLighting((byte) (buffer.get()));
 				} else if (opcode == 39) {
-					definition.setLightDiffusion(buffer.readByte());
+					definition.setLightDiffusion((byte) (buffer.get()));
 				} else if (opcode >= 30 && opcode < 39) {
 					String[] interactions = new String[10];
-
-					interactions[opcode - 30] = buffer.readStringAlternative();
+					interactions[opcode - 30] = ByteBufferUtils.getOSRSString(buffer);
 					if (interactions[opcode - 30].equalsIgnoreCase("hidden")) {
 						interactions[opcode - 30] = null;
 					}
 					definition.setInteractions(interactions);
 				} else if (opcode == 40) {
-					int count = buffer.readUByte();
+					int count = buffer.get() & 0xff;
 					int[] originalColours = new int[count];
 					int[] replacementColours = new int[count];
 					for (int i = 0; i < count; i++) {
-						originalColours[i] = buffer.readUShort();
-						replacementColours[i] = buffer.readUShort();
+						originalColours[i] = buffer.getShort() & 0xffff;
+						replacementColours[i] = buffer.getShort() & 0xffff;
 					}
 					definition.setOriginalColours(originalColours);
 					definition.setReplacementColours(replacementColours);
 				} else if (opcode == 41) {
-					int i = buffer.readUByte();
+					int i = buffer.get() & 0xff;
 					for (int x = 0; x < i; x++) {
-						buffer.readUShort();
-						buffer.readUShort();
-					}//TODO OSRS Texturing
+						int i1 = buffer.getShort() & 0xffff;
+						int i2 = buffer.getShort() & 0xffff;
+					}
 				} else if (opcode == 42) {
-					int i = buffer.readUByte();
-					buffer.skip(i);
+					int i = buffer.get() & 0xff;
+					for (int index = 0; index < i; index++)
+						buffer.get();
 				} else if (opcode == 44) {
-					int i = buffer.readUShort();
+					int i = buffer.getShort() & 0xffff;
 				} else if (opcode == 45) {
-					int i = buffer.readUShort();
+					int i = buffer.getShort() & 0xffff;
 				} else if (opcode == 60) {
-					definition.setMinimapFunction(buffer.readUShort());
+					definition.setMinimapFunction(buffer.getShort() & 0xffff);
 				} else if (opcode == 62) {
 					definition.setInverted(true);
 				} else if (opcode == 64) {
 					definition.setCastsShadow(false);
 				} else if (opcode == 65) {
-					definition.setScaleX(buffer.readUShort());
+					definition.setScaleX(buffer.getShort() & 0xffff);
 				} else if (opcode == 66) {
-					definition.setScaleY(buffer.readUShort());
+					definition.setScaleY(buffer.getShort() & 0xffff);
 				} else if (opcode == 67) {
-					definition.setScaleZ(buffer.readUShort());
+					definition.setScaleZ(buffer.getShort() & 0xffff);
 				} else if (opcode == 68) {
-					definition.setMapscene(buffer.readUShort());
+					definition.setMapscene(buffer.getShort() & 0xffff);
 				} else if (opcode == 69) {
-					definition.setSurroundings(buffer.readUByte());//Not used in OSRS?
+					definition.setSurroundings(buffer.get() & 0xff);
 				} else if (opcode == 70) {
-					definition.setTranslateX(buffer.readShort());
+					definition.setTranslateX(buffer.getShort() & 0xffff);
 				} else if (opcode == 71) {
-					definition.setTranslateY(buffer.readShort());
+					definition.setTranslateY(buffer.getShort() & 0xffff);
 				} else if (opcode == 72) {
-					definition.setTranslateZ(buffer.readShort());
+					definition.setTranslateZ(buffer.getShort() & 0xffff);
 				} else if (opcode == 73) {
 					definition.setObstructsGround(true);
 				} else if (opcode == 74) {
 					definition.setHollow(true);
 				} else if (opcode == 75) {
-					definition.setSupportItems(buffer.readUByte());
+					definition.setSupportItems(buffer.get() & 0xff);
 				} else if (opcode == 77 || opcode == 92) {
-					int varbit = buffer.readUShort();
+					int varbit = buffer.getShort() & 0xffff;
 					if (varbit == 65535) {
 						varbit = -1;
 					}
-
-					int varp = buffer.readUShort();
+					int varp = buffer.getShort() & 0xffff;
 					if (varp == 65535) {
 						varp = -1;
 					}
-
 					int var3 = -1;
 					if (opcode == 92) {
-						var3 = buffer.readBigSmart();
+						var3 = ByteBufferUtils.getSmartInt(buffer);
 						if (var3 == 65535)
 							var3 = -1;
 					}
-
-					int count = buffer.readUByte();
+					int count = buffer.get() & 0xff;
 					int[] morphisms = new int[count + 2];
 					for (int i = 0; i <= count; i++) {
-						morphisms[i] = buffer.readBigSmart();
+						morphisms[i] = ByteBufferUtils.getSmartInt(buffer);
 						if (morphisms[i] == 65535) {
 							morphisms[i] = -1;
 						}
 					}
 					morphisms[count + 1] = var3;
-
 					definition.setMorphisms(morphisms);
 					definition.setVarbit(varbit);
 					definition.setVarp(varp);
-				} else if (opcode == 78) {//TODO Figure out what these do in OSRS
-					//First short = ambient sound
-					buffer.skip(3);
+				} else if (opcode == 78) {
+					buffer.getShort();
+					buffer.get();
 				} else if (opcode == 79) {
-					buffer.skip(5);
-					int count = buffer.readByte();
-					buffer.skip(2 * count);
+					buffer.getShort();
+					buffer.getShort();
+					buffer.get();
+					int count = buffer.get();
+					for (int index = 0; index < count; index++)
+						buffer.getShort();
 				} else if (opcode == 81) {
-					buffer.skip(1);//Clip type?
+					buffer.get();
 				} else if (opcode == 93) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 95) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 99) {
-					buffer.skip(3);
+					buffer.get();
+					buffer.getShort();
 				} else if (opcode == 100) {
-					buffer.skip(3);
+					buffer.get();
+					buffer.getShort();
 				} else if (opcode == 101) {
-					buffer.skip(1);
+					buffer.get();
 				} else if (opcode == 102) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 104) {
-					buffer.skip(1);
+					buffer.get();
 				} else if (opcode == 106) {
-					int size = buffer.readUByte();
+					int size = buffer.get() & 0xff;
 					for (int index = 0; index < size; index++) {
-						buffer.readBigSmart();
-						buffer.readUByte();
+						int i = ByteBufferUtils.getSmartInt(buffer);
+						int i2 = buffer.get() & 0xff;
 					}
-				} else if (opcode == 7) {
-					buffer.skip(2);
+				} else if (opcode == 107) {
+					buffer.getShort();
 				} else if (opcode >= 150 && opcode < 155) {
-					buffer.readStringAlternative();
+					ByteBufferUtils.getOSRSString(buffer);
 				} else if (opcode == 160) {
-					int size = buffer.readUByte();
-					buffer.skip(size * 2);
+					int size = buffer.get() & 0xff;
+					for (int index = 0; index < size; index++) {
+						buffer.getShort();
+					}
 				} else if (opcode == 162) {
-					buffer.skip(4);
+					buffer.getInt();
 				} else if (opcode == 163) {
-					buffer.skip(4);
+					buffer.get();
+					buffer.get();
+					buffer.get();
+					buffer.get();
 				} else if (opcode == 164) {
-					buffer.skip(4);
+					buffer.getShort();
 				} else if (opcode == 165) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 166) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 167) {
-					buffer.skip(2);
+					buffer.getShort();
 				} else if (opcode == 170) {
-					buffer.readUSmart();
+					ByteBufferUtils.getSmart(buffer);
 				} else if (opcode == 171) {
-					buffer.readUSmart();
+					ByteBufferUtils.getSmart(buffer);
 				} else if (opcode == 173) {
-					buffer.skip(4);
+					buffer.getShort();
+					buffer.getShort();
 				} else if (opcode == 178) {
-					buffer.skip(1);
+					buffer.get();
 				} else if (opcode == 249) {
-					int var1 = buffer.readUByte();
+					int var1 = buffer.get() & 0xff;
 					for (int var2 = 0; var2 < var1; var2++) {
-						boolean b = buffer.readUByte() == 1;
-						int var5 = buffer.readUTriByte();
+						boolean b = (buffer.get() & 0xff) == 1;
+						int var5 = ByteBufferUtils.readU24Int(buffer);
 						if (b) {
-							buffer.readStringAlternative();
+							ByteBufferUtils.getOSRSString(buffer);
 						} else {
-							buffer.readInt();
+							buffer.getInt();
 						}
 					}
 				}
 				lastOpcode = opcode;
-			} catch (Exception ex) {
-				ObjectDefinition def =  new ObjectDefinition();
-				def.setName("Nigga cock");
-				return def;
 			}
-		} while (true);
-
-//		if (interactive == -1) {
-//			definition.setInteractive(definition.getModelIds() != null && (definition.getModelTypes() == null || definition.getModelTypes()[0] == 10) || definition.getInteractions() != null);
-//		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
 		if (definition.isHollow()) {
 			definition.setSolid(false);
@@ -332,6 +333,10 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 		int morphismIndex = -1;
 		if (def.getVarbit() != -1) {
 			VariableBits bits = VariableBitLoader.lookup(def.getVarbit());
+			if(bits == null){
+				log.info("varbit {} was null!", def.getVarbit());
+				return null;
+			}
 			int variable = bits.getSetting();
 			int low = bits.getLow();
 			int high = bits.getHigh();
