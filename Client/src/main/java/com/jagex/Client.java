@@ -1626,9 +1626,9 @@ public final class Client implements Runnable {
 		int y = canvasHeight / 2 - 18;
 		graphics.setColor(color);
 		graphics.drawRect(canvasWidth / 2 - 152, y, 304, 34);
-		graphics.fillRect(canvasWidth / 2 - 150, y + 2, x * 3, 30);
+		graphics.fillRect(canvasWidth / 2 - 150, y + 2, x * 3, 31);
 		graphics.setColor(java.awt.Color.black);
-		graphics.fillRect(canvasWidth / 2 - 150 + x * 3, y + 2, 300 - x * 3, 30);
+		graphics.fillRect(canvasWidth / 2 - 150 + x * 3, y + 2, 300 - x * 3, 31);
 		graphics.setFont(helvetica1);
 		graphics.setColor(java.awt.Color.white);
 		graphics.drawString(string, (canvasWidth - font.stringWidth(string)) / 2, y + 22);
