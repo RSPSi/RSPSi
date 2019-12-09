@@ -777,6 +777,8 @@ public final class MapRegion {
 											underlay = FloorDefinitionLoader.getUnderlayCount();
 										}
 										Floor floor = FloorDefinitionLoader.getUnderlay(underlay - 1);
+										if(floor == null)
+											continue;
 										int underlay_texture_id = floor.getTexture();
 										if (underlay_texture_id != -1) {
 											underlay_texture_id = 154; // 632, 154
@@ -820,8 +822,13 @@ public final class MapRegion {
 								} else {
 									int tileType = overlayShapes[z][centreX][centreY] + 1;
 									byte orientation = overlayOrientations[z][centreX][centreY];
-
+									if (overlayFloorId - 1 >= FloorDefinitionLoader.getOverlayCount()) {
+										overlayFloorId = FloorDefinitionLoader.getOverlayCount();
+									}
 									Floor overlayFloor = FloorDefinitionLoader.getOverlay(overlayFloorId - 1);
+									if(overlayFloor == null)
+										continue;
+
 									int overlayTextureId = overlayFloor.getTexture();
 
 									int overlayTextureColour = -1;
