@@ -1,5 +1,6 @@
 package com.rspsi;
 
+import java.awt.*;
 import java.io.File;
 
 import com.jagex.Client;
@@ -33,7 +34,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MultiRegionMapWindow extends Application {
 
 	private Stage primaryStage;
@@ -123,7 +126,22 @@ public class MultiRegionMapWindow extends Application {
 			primaryStage.setMaxWidth(screen.getBounds().getWidth() - 30);
 			primaryStage.setMaxHeight(screen.getBounds().getHeight() - 100);
 			mapPane.getChildren().clear();
-			mapPane.getChildren().add(new CanvasPane(Client.getSingleton().fullMapCanvas));
+			int mapHeight = (int) Client.getSingleton().fullMapCanvas.getHeight();
+			CanvasPane canvasPane = new CanvasPane(Client.getSingleton().fullMapCanvas);
+			mapPane.getChildren().add(canvasPane);
+			ContextMenu rightClickMenu = new ContextMenu();
+			MenuItem menuItem = new MenuItem("");
+			rightClickMenu.getItems().add(menuItem);
+			rightClickMenu.setAutoFix(true);
+			rightClickMenu.setAutoHide(true);
+			canvasPane.setOnContextMenuRequested(evt ->{
+					int worldX = (int) evt.getX() / 4;
+					int worldY = (int) (mapHeight - evt.getY()) / 4;
+					menuItem.setText(String.format("Move camera to {%d, %d}", worldX, worldY));
+					menuItem.setOnAction(menuEvnt -> Client.getSingleton().moveCamera(worldX, worldY));
+					rightClickMenu.hide();
+					rightClickMenu.show(primaryStage, evt.getScreenX(), evt.getScreenY());
+			});
 			primaryStage.sizeToScene();
 		});
 	}
