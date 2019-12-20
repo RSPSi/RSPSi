@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox alignment="CENTER" prefWidth="426.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox styleClass="root" stylesheets="@../css/modena_dark.css" HBox.hgrow="ALWAYS">
+         <children>
+            <AnchorPane fx:id="dragBar" prefHeight="22.0" style="-fx-background-color: #2b2b2b;">
+               <children>
+                  <Label alignment="CENTER" text="RSPSi Colour Picker" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <HBox fx:id="controls" layoutX="98.0" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+               </children>
+            </AnchorPane>
+            <HBox alignment="CENTER" spacing="9.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+               </padding>
+               <children>
+                  <VBox alignment="CENTER" spacing="22.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" spacing="6.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <TextField fx:id="hexText" prefWidth="80.0" promptText="HEX" text="#FFFFFF" />
+                              <ColorPicker fx:id="pickerBox" editable="true" prefHeight="32.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="pickerButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <children>
+                              <JFXTextField fx:id="jagHSL" editable="false" focusColor="#3275fa" labelFloat="true" promptText="JAG H, S, L" unFocusColor="#275fcf" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="pickerButton1" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <JFXTextField fx:id="colourIndex" editable="false" focusColor="#3275fa" labelFloat="true" promptText="Colour Index" unFocusColor="#275fcf" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="pickerButton2" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Canvas fx:id="colorCanvas" height="128.0" width="128.0">
+         <HBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </HBox.margin>
+      </Canvas>
+   </children>
+</HBox>

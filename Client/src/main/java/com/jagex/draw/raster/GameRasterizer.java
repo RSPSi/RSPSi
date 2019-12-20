@@ -1,6 +1,7 @@
 package com.jagex.draw.raster;
 
 import com.jagex.map.MapRegion;
+import javafx.scene.paint.Color;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import com.jagex.cache.def.TextureDef;
@@ -54,7 +55,7 @@ public class GameRasterizer extends GameRaster {
 	int anInt1477;
 
 	public int getFuchsia(){
-		return colourPalette[54844];//[MapRegion.light(57024, 96)];
+		return colourPalette[MapRegion.light(ColourUtils.toHsl(128, 255, 127), 96)];//colourPalette[MapRegion.light(0xFF0000, 96)];
 	}
 
 

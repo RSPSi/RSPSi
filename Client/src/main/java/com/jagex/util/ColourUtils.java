@@ -126,4 +126,162 @@ public class ColourUtils {
 		return pixels;
 	}
 
+	/* https://stackoverflow.com/a/40337051 */
+	public static String colorToHex(Color color) {
+		String hex1;
+		String hex2;
+
+		hex1 = Integer.toHexString(color.hashCode()).toUpperCase();
+
+		switch (hex1.length()) {
+			case 2:
+				hex2 = "000000";
+				break;
+			case 3:
+				hex2 = String.format("00000%s", hex1.substring(0,1));
+				break;
+			case 4:
+				hex2 = String.format("0000%s", hex1.substring(0,2));
+				break;
+			case 5:
+				hex2 = String.format("000%s", hex1.substring(0,3));
+				break;
+			case 6:
+				hex2 = String.format("00%s", hex1.substring(0,4));
+				break;
+			case 7:
+				hex2 = String.format("0%s", hex1.substring(0,5));
+				break;
+			default:
+				hex2 = hex1.substring(0, 6);
+		}
+		return hex2;
+	}
+
+
+	public static String rgbToHslStr(int rgb) {
+		double r = (rgb >> 16 & 0xff) / 256.0;
+		double g = (rgb >> 8 & 0xff) / 256.0;
+		double b = (rgb & 0xff) / 256.0;
+		double min = r;
+		if (g < min) {
+			min = g;
+		}
+		if (b < min) {
+			min = b;
+		}
+		double max = r;
+		if (g > max) {
+			max = g;
+		}
+		if (b > max) {
+			max = b;
+		}
+		double h = 0.0;
+		double s = 0.0;
+		double l = (min + max) / 2.0;
+		if (min != max) {
+			if (l < 0.5) {
+				s = (max - min) / (max + min);
+			}
+			if (l >= 0.5) {
+				s = (max - min) / (2.0 - max - min);
+			}
+			if (r == max) {
+				h = (g - b) / (max - min);
+			} else if (g == max) {
+				h = 2.0 + (b - r) / (max - min);
+			} else if (b == max) {
+				h = 4.0 + (r - g) / (max - min);
+			}
+		}
+		h /= 6.0;
+		int hue = (int) (h * 256.0);
+		int saturation = (int) (s * 256.0);
+		int luminance = (int) (l * 256.0);
+		if (saturation < 0) {
+			saturation = 0;
+		} else if (saturation > 255) {
+			saturation = 255;
+		}
+		if (luminance < 0) {
+			luminance = 0;
+		} else if (luminance > 255) {
+			luminance = 255;
+		}
+		int chroma;
+		if (l > 0.5) {
+			chroma = (int) ((1.0 - l) * s * 512.0);
+		} else {
+			chroma = (int) (l * s * 512.0);
+		}
+		if (chroma < 1) {
+			chroma = 1;
+		}
+		int weightedHue = (int) (h * chroma);
+		return hue + ", " + saturation + ", " + luminance;
+	}
+
+	public static int rgbToJagHsl(int rgb) {
+		double r = (rgb >> 16 & 0xff) / 256.0;
+		double g = (rgb >> 8 & 0xff) / 256.0;
+		double b = (rgb & 0xff) / 256.0;
+		double min = r;
+		if (g < min) {
+			min = g;
+		}
+		if (b < min) {
+			min = b;
+		}
+		double max = r;
+		if (g > max) {
+			max = g;
+		}
+		if (b > max) {
+			max = b;
+		}
+		double h = 0.0;
+		double s = 0.0;
+		double l = (min + max) / 2.0;
+		if (min != max) {
+			if (l < 0.5) {
+				s = (max - min) / (max + min);
+			}
+			if (l >= 0.5) {
+				s = (max - min) / (2.0 - max - min);
+			}
+			if (r == max) {
+				h = (g - b) / (max - min);
+			} else if (g == max) {
+				h = 2.0 + (b - r) / (max - min);
+			} else if (b == max) {
+				h = 4.0 + (r - g) / (max - min);
+			}
+		}
+		h /= 6.0;
+		int hue = (int) (h * 256.0);
+		int saturation = (int) (s * 256.0);
+		int luminance = (int) (l * 256.0);
+		if (saturation < 0) {
+			saturation = 0;
+		} else if (saturation > 255) {
+			saturation = 255;
+		}
+		if (luminance < 0) {
+			luminance = 0;
+		} else if (luminance > 255) {
+			luminance = 255;
+		}
+		int chroma;
+		if (l > 0.5) {
+			chroma = (int) ((1.0 - l) * s * 512.0);
+		} else {
+			chroma = (int) (l * s * 512.0);
+		}
+		if (chroma < 1) {
+			chroma = 1;
+		}
+		int weightedHue = (int) (h * chroma);
+		return toHsl(hue, saturation, luminance);
+	}
 }
