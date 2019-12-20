@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="9.0">
+         <children>
+            <Label text="Step" />
+            <TextField fx:id="yCoordinate" prefWidth="50.0" promptText="Y Coordinate" text="0" />
+            <Label text="?">
+               <tooltip>
+                  <Tooltip text="This is how many tiles are adjusted before a &quot;flat&quot; tile is added" />
+               </tooltip>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER" spacing="9.0">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+         <children>
+            <Label text="Angle" />
+            <TextField fx:id="angle" prefWidth="50.0" promptText="Angle" />
+            <Slider max="89.0" min="1.0" prefWidth="70.0" value="45.0" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+         </padding>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="BOTTOM_CENTER" spacing="15.0">
+         <children>
+            <Button fx:id="okButton" minWidth="70.0" mnemonicParsing="false" text="OK" />
+            <Button fx:id="cancelButton" minWidth="70.0" mnemonicParsing="false" text="Cancel" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="18.0" top="12.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

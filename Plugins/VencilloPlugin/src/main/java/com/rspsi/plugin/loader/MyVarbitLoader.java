@@ -43,33 +43,15 @@ public class MyVarbitLoader extends VariableBitLoader{
 			System.out.println("varbit load mismatch");
 		}
 	}
-	
+
 	private VariableBits decode(Buffer buffer) {
 		VariableBits bit = new VariableBits();
-		do {
-			int opcode = buffer.readUByte();
-
-			if (opcode == 0) {
-				break;
-			}
-
-			if (opcode == 1) {
-				int setting = buffer.readUShort();
-				int low = buffer.readUByte();
-				int high = buffer.readUByte();
-				bit.setSetting(setting);
-				bit.setHigh(high);
-				bit.setLow(low);
-			} else if (opcode == 10) {
-				buffer.readString();
-			} else if (opcode == 3) {
-				buffer.skip(4);
-			} else if (opcode == 4) {
-				buffer.skip(4);
-			} else if (opcode != 2) {
-				System.out.println("Error unrecognised config code: " + opcode);
-			}
-		} while(true);
+		int setting = buffer.readUShort();
+		int low = buffer.readUByte();
+		int high = buffer.readUByte();
+		bit.setSetting(setting);
+		bit.setHigh(high);
+		bit.setLow(low);
 		return bit;
 	}
 

@@ -1,12 +1,15 @@
 package com.rspsi.util;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.rspsi.misc.XTEA;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -20,9 +23,22 @@ public class XTEAConverter {
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter directory containing .txt files:");
-        File dir = new File("C:\\Users\\Andrew\\Desktop\\718 xteas\\");
+        File dir = new File("/home/james/Downloads/xteas.json");
         if(!dir.isDirectory()){
             System.err.println("Entered path is not a directory!");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            try(FileReader fr = new FileReader(dir)) {
+                Map<Integer, int[]> map = gson.fromJson(fr, new TypeToken<Map<Integer, int[]>>(){}.getType());
+
+                List<XTEA> xteas = map.entrySet().stream().map(entry -> new XTEA(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+                try (FileWriter fw = new FileWriter(new File("/home/james/Downloads/xteasconv.json"))){
+                    gson.toJson(xteas, fw);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             System.exit(0);
         }
 

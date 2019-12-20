@@ -76,11 +76,6 @@ import com.rspsi.resources.ResourceLoader;
 import com.rspsi.swatches.BaseSwatch;
 import com.rspsi.swatches.OverlaySwatch;
 import com.rspsi.swatches.UnderlaySwatch;
-import com.rspsi.util.ChangeListenerUtil;
-import com.rspsi.util.FXDialogs;
-import com.rspsi.util.FilterMode;
-import com.rspsi.util.RetentionFileChooser;
-import com.rspsi.util.Settings;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -133,7 +128,7 @@ public class MainWindow extends Application {
 	}
 
 
-	private static Client clientInstance;
+	private Client clientInstance;
 
 	private Scene scene;
 
@@ -327,6 +322,8 @@ public class MainWindow extends Application {
 				mapView.setVisible(true);
 				mapView.initTiles();
 			});
+
+
 
 			ChangeListenerUtil.addRangeListener(Options.rotation, 0, 3, true);
 
@@ -641,16 +638,18 @@ public class MainWindow extends Application {
 
 
 			ChangeListenerUtil.addListener(() -> {
-				Client.updateChunkTiles();
-				SceneGraph.minimapUpdate = true;
+				SceneGraph.onCycleEnd.add(() -> {
+					Client.updateChunkTiles();
+					SceneGraph.minimapUpdate = true;
+				});
 			}, Options.showHiddenTiles);
 
 			ChangeListenerUtil.addListener(() -> {
-				Client.updateChunkTiles();
 				SceneGraph.onCycleEnd.add(() -> {
+					Client.updateChunkTiles();
 					Client.getSingleton().sceneGraph.resetTiles();
+					SceneGraph.minimapUpdate = true;
 				});
-				SceneGraph.minimapUpdate = true;
 			}, Options.currentHeight);
 
 

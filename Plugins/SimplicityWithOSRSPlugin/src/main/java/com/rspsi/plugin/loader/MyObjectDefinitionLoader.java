@@ -623,11 +623,12 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 		Buffer buffer = new Buffer(config.readFile("loc.dat"));
 		Buffer index = new Buffer(config.readFile("loc.idx"));
 		
-		buffer667 = new Buffer(sound.readFile("loc2.dat"));
-		Buffer streamIdx667 = new Buffer(sound.readFile("loc2.idx"));
+		buffer667 = new Buffer(config.readFile("loc2.dat"));
+		Buffer streamIdx667 = new Buffer(config.readFile("loc2.idx"));
 
-		osrsBuffer = new Buffer(Files.readAllBytes(new File(Config.cacheLocation.get() + "loc.dat").toPath()));
-		Buffer osrsIdx = new Buffer(Files.readAllBytes(new File(Config.cacheLocation.get() + "loc.idx").toPath()));
+
+		osrsBuffer = new Buffer(config.readFile("loc3.dat"));
+		Buffer osrsIdx = new Buffer(config.readFile("loc3.idx"));
 		try {
 
 

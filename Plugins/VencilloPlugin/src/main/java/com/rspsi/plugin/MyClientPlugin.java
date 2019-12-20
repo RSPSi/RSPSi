@@ -47,7 +47,7 @@ public class MyClientPlugin implements ClientPlugin {
 			
 			FloorDefinitionLoader.instance.init(config);
 
-		VariableBitLoader.instance.init(config);
+			VariableBitLoader.instance.init(config);
 			AnimationDefinitionLoader.instance.init(config);
 
 			Archive versionList = client.getCache().createArchive(5, "versionlist");

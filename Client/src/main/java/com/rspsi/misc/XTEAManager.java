@@ -29,6 +29,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
 
 /**
  * @author Kyle Friz
@@ -37,18 +38,10 @@ import com.google.gson.reflect.TypeToken;
  */
 public final class XTEAManager {
 
+	@Getter
       private static final Map<Integer, int[]> maps = new HashMap<>();
-      private static final Map<Integer, int[]> tables = new HashMap<>();
-
       public static final int[] NULL_KEYS = new int[4];
 
-      public static int[] lookupTable(int id) {
-            int[] keys = tables.get(id);
-            if (keys == null)
-                  return NULL_KEYS;
-
-            return keys;
-      }
 
       public static int[] lookupMap(int region) {
             return maps.getOrDefault(region, NULL_KEYS);
@@ -76,14 +69,12 @@ public final class XTEAManager {
 
       public static void loadFromJSON(File file) {
     	  maps.clear();
-    	  tables.clear();
             try {
                   Gson gson = new Gson();
                   try (Reader reader = new FileReader(file)) {
                 	  List<XTEA> entries = gson.fromJson(reader, new TypeToken<List<XTEA>>(){}.getType());
                       for (XTEA entry : entries) {
                             maps.put(entry.getRegion(), entry.getKeys());
-                            tables.put(entry.getRegion(), entry.getKeys());
                       }
                   } catch(Exception ex) {
                 	  ex.printStackTrace();
