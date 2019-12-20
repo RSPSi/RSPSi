@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.jagex.map.SceneGraph;
+import com.rspsi.MainWindow;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,6 +59,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+@Slf4j
 public class SwatchControl extends AnchorPane {
 
 	private SwatchController controller = new SwatchController();
@@ -100,6 +104,8 @@ public class SwatchControl extends AnchorPane {
 			controller.getLoadBtn().setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 			controller.getLoadBtn().setGraphic(GlyphConstants.OPEN_FOLDER_GLYPH);
 			ContextMenu menu = new ContextMenu();
+			menu.setAutoHide(true);
+			menu.setAutoFix(true);
 			MenuItem selectOption = new MenuItem("Clear all");
 			selectOption.setOnAction(evt -> {
 				controller.getSwatchFlowPane().getChildren().clear();
@@ -108,11 +114,12 @@ public class SwatchControl extends AnchorPane {
 			});
 			menu.getItems().add(selectOption);
 			controller.getSwatchFlowPane().setOnContextMenuRequested(evt -> {
-				menu.show(controller.getSwatchFlowPane(), evt.getScreenX(), evt.getScreenY());
+				menu.show(MainWindow.getSingleton().getStage(), evt.getScreenX(), evt.getScreenY());
 			});
+
 			controller.getLoadBtn().setOnAction(evt -> {
 				if(!Client.gameLoaded.get()) {
-					FXDialogs.showError("Error", "Please wait until the plugin has fully loaded before doing this!");
+					FXDialogs.showError(MainWindow.getSingleton().getStage().getOwner(),"Error", "Please wait until the plugin has fully loaded before doing this!");
 					return;
 				}
 				File file = RetentionFileChooser.showOpenDialog(FilterMode.SWATCH);
@@ -264,7 +271,7 @@ public class SwatchControl extends AnchorPane {
 				selectOption.setText(selectOption.getText() + " [" + dataset.getType() +"]");
 				MenuItem renameOption = new MenuItem("Set nickname");
 				renameOption.setOnAction(evt -> {
-					String newName = FXDialogs.showTextInput("Rename swatch",  "Enter nickname for swatch", dataset.getName());
+					String newName = FXDialogs.showTextInput(MainWindow.getSingleton().getStage(), "Rename swatch",  "Enter nickname for swatch", dataset.getName());
 					if(newName == null)
 						return;
 					dataset.setName(newName);
@@ -340,12 +347,38 @@ public class SwatchControl extends AnchorPane {
 		}
 	}
 
+	public void selectOverlayPair(int pairNum){
+
+		int[][] pairs = {{0, 1}, {2}, {3, 4}, {5, 6}, {7}, {8, 9}, {10, 11}, {12}};
+		int[] pair = pairs[pairNum];
+
+			ToggleButton btn1 = (ToggleButton) overlayShapeGroup.getToggles().get(pair[0]);
+			if(pair.length == 1){
+				btn1.fire();
+			} else {
+				ToggleButton btn2 = (ToggleButton) overlayShapeGroup.getToggles().get(pair[1]);
+				log.info("Selected: {}", overlayShapeGroup.getSelectedToggle());
+				if(overlayShapeGroup.getSelectedToggle() == btn1){
+					btn2.fire();
+				} else {
+					btn1.fire();
+				}
+			}
+
+	}
+
 	public void setOverlayShape(int overlayShape) {
 		if(overlayShape >= 0) {
 			Object obj = overlayShapeGroup.getProperties().get(overlayShape);
 			if(obj instanceof ToggleButton) {
 				ToggleButton btn = (ToggleButton) obj;
+				if(overlayShapeGroup.getSelectedToggle() == btn){
+					btn = (ToggleButton) btn.getProperties().getOrDefault("otherButton", btn);
+				}
 				btn.fire();
+				SceneGraph.onCycleEnd.add(() -> {
+					Client.getSingleton().sceneGraph.forceMouseInTile();
+				});
 			}
 		}
 	}

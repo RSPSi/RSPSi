@@ -2,6 +2,7 @@ package com.rspsi.game.listeners;
 
 import com.jagex.Client;
 import com.jagex.map.SceneGraph;
+import com.rspsi.MainWindow;
 import com.rspsi.dialogs.TileDeleteDialog;
 import com.rspsi.misc.ToolType;
 import com.rspsi.options.KeyboardState;
@@ -11,7 +12,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GameKeyListener implements EventHandler<InputEvent> {
 
 	private final Client client;
@@ -118,7 +121,15 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 
 			if (keyEvent.getCode() == KeyCode.ALT) {
 				SceneGraph.altDown = event.getEventType() == KeyEvent.KEY_PRESSED;
-			} 
+			}
+
+			if(keyEvent.getCode().isDigitKey() && (keyEvent.getEventType() == KeyEvent.KEY_PRESSED || keyEvent.getEventType() == KeyEvent.KEY_TYPED)) {
+				log.info("Key event: {}", keyEvent.getEventType());
+				if(Options.currentTool.get() == ToolType.PAINT_OVERLAY){
+					int val = keyEvent.getCode().compareTo(KeyCode.DIGIT0);
+					MainWindow.getSingleton().overlaySwatch.selectOverlayPair(val - 1);
+				}
+			}
 
 			if (keyEvent.getCode() == KeyCode.DELETE) {
 				if(Options.currentTool.get() == ToolType.SELECT_OBJECT) {
