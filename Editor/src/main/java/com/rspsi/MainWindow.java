@@ -431,9 +431,10 @@ public class MainWindow extends Application {
 
 			CanvasPane gamePane = new CanvasPane(clientInstance.getGameCanvas());
 
+			GameKeyListener gameKeyListener = new GameKeyListener(clientInstance);
 			clientInstance.getGameCanvas().addEventHandler(MouseEvent.ANY, new GameMouseListener(clientInstance));
 			clientInstance.getGameCanvas().addEventHandler(ScrollEvent.ANY, new GameMouseListener(clientInstance));
-			clientInstance.getGameCanvas().addEventHandler(KeyEvent.ANY, new GameKeyListener(clientInstance));
+			clientInstance.getGameCanvas().addEventHandler(KeyEvent.ANY, gameKeyListener);
 
 			clientInstance.fullMapVisible.bind(fullMapView.visibleProperty());
 		
@@ -464,7 +465,7 @@ public class MainWindow extends Application {
 					controller.getFileMenu().getItems().add(controller.getFileMenu().getItems().size() - 2, changeXTEALoc);
 				}
 			}
-			primaryStage.addEventHandler(KeyEvent.ANY, new GameKeyListener(clientInstance));
+			primaryStage.addEventHandler(KeyEvent.ANY, gameKeyListener);
 			primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
 				if(!newValue){
 					log.info("Lost focus!");
