@@ -475,6 +475,8 @@
                               <CheckMenuItem fx:id="showObjectsCheckItem" mnemonicParsing="false" selected="true" text="Show objects" />
                               <CheckMenuItem fx:id="showOverlaysCheckItem" mnemonicParsing="false" selected="true" text="Show overlays" />
                               <CheckMenuItem fx:id="showFPSCheckItem" mnemonicParsing="false" text="Show FPS/debug" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="changeViewDist" mnemonicParsing="false" text="Set view distance" />
                           </items>
                         </Menu>
                         <Menu fx:id="tilesMenu" mnemonicParsing="false" text="Tiles">

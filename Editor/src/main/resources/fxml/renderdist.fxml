@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" spacing="9.0">
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+         </padding>
+         <children>
+            <VBox alignment="CENTER">
+               <children>
+                  <Slider fx:id="renderSlider" blockIncrement="2.0" majorTickUnit="16.0" max="128.0" min="16.0" minorTickCount="4" value="30.0" />
+                  <Label fx:id="renderLabel" text="NaN" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="BOTTOM_CENTER" spacing="15.0">
+         <children>
+            <Button fx:id="okButton" minWidth="70.0" mnemonicParsing="false" text="OK" />
+            <Button fx:id="cancelButton" minWidth="70.0" mnemonicParsing="false" text="Cancel" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="12.0" right="18.0" top="12.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

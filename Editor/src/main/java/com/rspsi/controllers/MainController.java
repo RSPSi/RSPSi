@@ -3,6 +3,7 @@ package com.rspsi.controllers;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
+import com.jfoenix.controls.JFXButton;
 import org.major.map.RenderFlags;
 
 import com.google.common.primitives.Doubles;
@@ -61,6 +62,9 @@ import lombok.Getter;
 
 @Getter
 public class MainController {
+
+	@FXML
+	private MenuItem changeViewDist;
 
 	@FXML
 	private MenuItem openAsPackBtn;
@@ -199,6 +203,10 @@ public class MainController {
 
 	@FXML
 	private ToggleButton moveObjectBtn;
+
+	@FXML
+	private JFXButton returnToLauncher;
+
 
 	@FXML
 	private AnchorPane gamePane;
@@ -427,9 +435,11 @@ public class MainController {
 				ToggleGroup tg = new ToggleGroup();
 
 				AlwaysSelectToggleGroup.setup(tg);
+				ToggleButton[] shapeButtons = new ToggleButton[13];
 				for (int type = 0; type < 13; type++) {
 					Pane g = Testing.generateImage(type);
 					ToggleButton btn = new ToggleButton();
+					shapeButtons[type] = btn;
 					tg.getProperties().put(type, btn);
 					btn.setAlignment(Pos.CENTER);
 					btn.setMaxSize(36, 36);
@@ -454,6 +464,9 @@ public class MainController {
 				swatch.setOverlayShapeGroup(tg);
 				swatch.getController().getVboxContainer().getChildren().add(0, flowPane);
 				application.setOverlaySwatch(swatch);
+
+				//TODO Find a less aids way of doing this
+
 				break;
 			case UNDERLAY:
 				application.setUnderlaySwatch(swatch);
@@ -592,15 +605,17 @@ public class MainController {
 			try {
 				BridgeBuilder.buildBridge();
 			} catch (Exception e) {
-				FXDialogs.showError("Error while generating bridge!", "Message: " + e.getMessage());
+				FXDialogs.showError(application.getStage().getOwner(),"Error while generating bridge!", "Message: " + e.getMessage());
 			}
 		});
 
 		Options.currentTool.addListener((observable, oldVal, newVal) -> {
 
 			deselectTools();
-			Client.getSingleton().sceneGraph.resetTiles();
-			Client.getSingleton().sceneGraph.resetLastHighlightedTiles();
+			if(Client.getSingleton() != null && Client.getSingleton().sceneGraph != null) {
+				Client.getSingleton().sceneGraph.resetTiles();
+				Client.getSingleton().sceneGraph.resetLastHighlightedTiles();
+			}
 			
 			/*if (oldVal == ToolType.PAINT_OVERLAY) {
 				Options.overlayPaintId.set(-1);
