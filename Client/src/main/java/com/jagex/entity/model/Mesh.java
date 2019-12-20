@@ -1196,6 +1196,7 @@ public class Mesh extends Renderable {
 								|| k4 > rasterizer.getMaxRight();
 						int k5 = (rasterizer.vertexScreenZ[indexX] + rasterizer.vertexScreenZ[indexY] + rasterizer.vertexScreenZ[indexZ]) / 3
 								+ boundingCylinderRadius;
+						if(k5 >= 0 && k5 < rasterizer.faceList.length)
 						rasterizer.faceList[k5][rasterizer.depthListIndices[k5]++] = face;
 					}
 				}
