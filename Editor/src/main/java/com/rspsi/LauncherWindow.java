@@ -165,6 +165,7 @@ public class LauncherWindow extends Application {
 				list.add(f.getName().replaceAll(".jar", "").trim());
 			}
 		}
+		list.sort(Comparator.naturalOrder());
 		return list;
 	}
 	
