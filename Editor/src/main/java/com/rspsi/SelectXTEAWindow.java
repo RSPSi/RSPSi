@@ -4,18 +4,22 @@ import java.io.File;
 import java.util.function.Consumer;
 
 import com.rspsi.resources.ResourceLoader;
+import com.rspsi.util.FXUtils;
 import com.rspsi.util.FilterMode;
 import com.rspsi.util.RetentionFileChooser;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -32,14 +36,15 @@ public class SelectXTEAWindow extends Application {
 		loader.setController(this);
 		Parent content = loader.load();
 		Scene scene = new Scene(content);
-		
-		
-		
+
+
 		primaryStage.setTitle("Please select file to load");
 		primaryStage.initStyle(StageStyle.UTILITY);
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
+		primaryStage.centerOnScreen();
+		FXUtils.centerStage(primaryStage);
 		primaryStage.setAlwaysOnTop(true);
 		
 		Consumer<TextField> finishBrowse = textField -> {

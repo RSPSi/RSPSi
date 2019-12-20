@@ -16,7 +16,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 public class FXDialogs {
 
@@ -28,12 +30,15 @@ public class FXDialogs {
 
 	public static final String CANCEL = "Cancel";
 
-	public static String showConfirm(String title, String message, String... options) {
+	public static String showConfirm(Window parent, String title, String message, String... options) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.initStyle(StageStyle.UTILITY);
 		alert.setTitle("Choose an option");
 		alert.setHeaderText(title);
 		alert.setContentText(message);
+		alert.initOwner(parent);
+		alert.initModality(Modality.APPLICATION_MODAL);
+
 
 		// To make enter key press the actual focused button, not the first one. Just
 		// like pressing "space".
@@ -68,22 +73,27 @@ public class FXDialogs {
 			return result.get().getText();
 	}
 
-	public static void showError(String title, String message) {
+	public static void showError(Window parent, String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.initStyle(StageStyle.UTILITY);
 		alert.setTitle("Error");
 		alert.setHeaderText(title);
 		alert.setContentText(message);
 
+		alert.initOwner(parent);
+		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.showAndWait();
 	}
 
-	public static void showException(String title, String message, Exception exception) {
+	public static void showException(Window parent, String title, String message, Exception exception) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.initStyle(StageStyle.UTILITY);
 		alert.setTitle("Exception");
 		alert.setHeaderText(title);
 		alert.setContentText(message);
+
+		alert.initOwner(parent);
+		alert.initModality(Modality.APPLICATION_MODAL);
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -111,23 +121,27 @@ public class FXDialogs {
 		alert.showAndWait();
 	}
 
-	public static void showInformation(String title, String message) {
+	public static void showInformation(Window parent, String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.initStyle(StageStyle.UTILITY);
 		alert.setTitle("Information");
 		alert.setHeaderText(title);
 		alert.setContentText(message);
 
+		alert.initOwner(parent);
+		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.showAndWait();
 	}
 
-	public static String showTextInput(String title, String message, String defaultValue) {
+	public static String showTextInput(Window parent, String title, String message, String defaultValue) {
 		TextInputDialog dialog = new TextInputDialog(defaultValue);
 		dialog.initStyle(StageStyle.UTILITY);
 		dialog.setTitle("Input");
 		dialog.setHeaderText(title);
 		dialog.setContentText(message);
 
+		dialog.initOwner(parent);
+		dialog.initModality(Modality.APPLICATION_MODAL);
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent())
 			return result.get();
@@ -136,13 +150,15 @@ public class FXDialogs {
 
 	}
 
-	public static void showWarning(String title, String message) {
+	public static void showWarning(Window parent, String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		alert.initStyle(StageStyle.UTILITY);
 		alert.setTitle("Warning");
 		alert.setHeaderText(title);
 		alert.setContentText(message);
 
+		alert.initOwner(parent);
+		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.showAndWait();
 	}
 

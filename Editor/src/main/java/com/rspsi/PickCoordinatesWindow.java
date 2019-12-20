@@ -3,6 +3,7 @@ package com.rspsi;
 import com.google.common.primitives.Ints;
 import com.rspsi.resources.ResourceLoader;
 
+import com.rspsi.util.FXUtils;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,7 +43,9 @@ public class PickCoordinatesWindow extends Application {
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
 		primaryStage.setAlwaysOnTop(true);
-		
+
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 	
 		primaryStage.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
 			if(event.getCode() == KeyCode.ENTER) {

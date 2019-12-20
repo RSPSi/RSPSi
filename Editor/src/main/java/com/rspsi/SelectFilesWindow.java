@@ -52,6 +52,8 @@ public class SelectFilesWindow extends Application {
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
 		primaryStage.setAlwaysOnTop(true);
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 
 		widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));

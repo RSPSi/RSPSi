@@ -6,9 +6,11 @@ import java.io.IOException;
 import com.google.common.collect.Lists;
 import com.jagex.Client;
 import com.jagex.chunk.Chunk;
+import com.rspsi.MainWindow;
 import com.rspsi.controls.WindowControls;
 import com.rspsi.misc.ExportOptions;
 import com.rspsi.util.FXDialogs;
+import com.rspsi.util.FXUtils;
 import com.rspsi.util.FilterMode;
 import com.rspsi.util.RetentionFileChooser;
 
@@ -145,6 +147,8 @@ public class TileExportDialog extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setAlwaysOnTop(true);
 
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		
 		// primaryStage.show();
 		WindowControls.addUtilityWindowControls(primaryStage, titleBar, controlBox);
@@ -159,12 +163,12 @@ public class TileExportDialog extends Application {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 
-						FXDialogs.showError("Error while saving prefab!",
+						FXDialogs.showError(primaryStage, "Error while saving prefab!",
 								"There was an error while saving the selected file.");
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						FXDialogs.showError("Error while allocating prefab!",
+						FXDialogs.showError(primaryStage, "Error while allocating prefab!",
 								"There was an error while allocating to the selected file.");
 					}
 

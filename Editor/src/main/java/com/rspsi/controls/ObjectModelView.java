@@ -39,7 +39,6 @@ public class ObjectModelView extends VBox {
 	private PreviewModel ballModel;
 	private PreviewModel nullModel;
 
-	@Setter
 	@Getter
 	private int zoom = 600;
 	@Getter

@@ -1,6 +1,8 @@
 package com.rspsi;
 
+import com.rspsi.dialogs.RenderDistanceDialog;
 import com.rspsi.options.KeyboardState;
+import com.rspsi.util.*;
 import com.sun.javafx.stage.FocusUngrabEvent;
 import javafx.stage.WindowEvent;
 import org.displee.utilities.GZIPUtils;
@@ -279,7 +281,7 @@ public class MainWindow extends Application {
 					}
 
 
-					String response = FXDialogs.showConfirm("Application did not shut down correctly!", 
+					String response = FXDialogs.showConfirm(primaryStage,"Application did not shut down correctly!",
 							"We have detected that your last shutdown did not complete correctly.\nWould you like to load the last autosave?",
 							"Yes", "No");
 					if(response.equalsIgnoreCase("yes")) {
@@ -449,8 +451,9 @@ public class MainWindow extends Application {
 						if(selectXTEA.valid()) {
 							XTEAManager.loadFromJSON(new File(selectXTEA.getJsonLocation()));
 							Settings.putSetting("xteaLoc", selectXTEA.getJsonLocation());
+							log.info("Loaded {} XTEAs", XTEAManager.getMaps().size());
 						} else if(showError) {
-							FXDialogs.showError("Error loading XTEAS", "You need to select an XTEA json file otherwise maps may fail to load!");
+							FXDialogs.showError(primaryStage,"Error loading XTEAS", "You need to select an XTEA json file otherwise maps may fail to load!");
 						}
 					};
 	
@@ -512,18 +515,18 @@ public class MainWindow extends Application {
 						clientInstance.saveMinimapImage(f);
 					} catch (Exception e) {
 						e.printStackTrace();
-						FXDialogs.showError("Error while loading saving image", "There was a failure while attempting to save\nthe minimap to the selected file.");
+						FXDialogs.showError(primaryStage, "Error while loading saving image", "There was a failure while attempting to save\nthe minimap to the selected file.");
 
 					}
 				}
 			});
 			menu.getItems().addAll(item);
 			controller.getMapPane().setOnContextMenuRequested(evt -> {
-				menu.show(controller.getMapPane(), evt.getScreenX(), evt.getScreenY());
+				menu.show(getStage(), evt.getScreenX(), evt.getScreenY());
 			});
 
 			controller.getFixHeightsBtn().setOnAction(evt -> {
-				String result = FXDialogs.showConfirm("Are you sure?", "This fix will set all heights on plane 1 and above based on "
+				String result = FXDialogs.showConfirm(primaryStage, "Are you sure?", "This fix will set all heights on plane 1 and above based on "
 						+ "the tile height at z = 0. This may cause a few issues for some tiles you will have to fix yourself. \n\nWould you like to continue?", 
 						"Yes", "No");
 				if(result.equalsIgnoreCase("Yes")) {
@@ -590,7 +593,7 @@ public class MainWindow extends Application {
 				if(height <= 0) {
 					controller.getHeightLevelSlider().setValue(-height);
 				} else {
-					FXDialogs.showError("Error while loading tile height", "There was a failure while attempting to grab\ntile height from the selected tile.");
+					FXDialogs.showError(primaryStage,"Error while loading tile height", "There was a failure while attempting to grab\ntile height from the selected tile.");
 				}
 			});
 
@@ -625,11 +628,11 @@ public class MainWindow extends Application {
 						clientInstance.sceneGraph.importSelection(f);
 					} catch (IOException e) {
 						e.printStackTrace();
-						FXDialogs.showError("Error while loading prefab!",
+						FXDialogs.showError(primaryStage,"Error while loading prefab!",
 								"There was an error while reading the selected file.");
 					} catch (Exception e) {
 						e.printStackTrace();
-						FXDialogs.showError("Error while parsing prefab!",
+						FXDialogs.showError(primaryStage,"Error while parsing prefab!",
 								"There was an error while parsing the selected file.");
 					}
 				}
@@ -694,7 +697,7 @@ public class MainWindow extends Application {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							FXDialogs.showError("Error while loading map!", "There was an error while loading or parsing the autosave data.");
+							FXDialogs.showError(primaryStage,"Error while loading map!", "There was an error while loading or parsing the autosave data.");
 						}
 					}
 				}
@@ -747,7 +750,7 @@ public class MainWindow extends Application {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				FXDialogs.showError("Error while saving map!", "There was an error while writing packed maps file.");
+				FXDialogs.showError(stage,"Error while saving map!", "There was an error while writing packed maps file.");
 			}
 
 
@@ -780,7 +783,7 @@ public class MainWindow extends Application {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						FXDialogs.showError("Error while saving map!",
+						FXDialogs.showError(stage,"Error while saving map!",
 								"There was an error while writing map file.");
 						return;
 					}
@@ -793,7 +796,7 @@ public class MainWindow extends Application {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						FXDialogs.showError("Error while saving map!",
+						FXDialogs.showError(stage,"Error while saving map!",
 								"There was an error while writing map file.");
 						return;
 					}
@@ -806,7 +809,7 @@ public class MainWindow extends Application {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					FXDialogs.showError("Error while saving map!", "There was an error while writing map file.");
+					FXDialogs.showError(stage,"Error while saving map!", "There was an error while writing map file.");
 				}
 
 			}
@@ -849,7 +852,7 @@ public class MainWindow extends Application {
 						fullMapView.resizeMap();
 					});
 				} catch(Exception ex) {
-					FXDialogs.showError("Error while creating new map", "There was a failure while attempting to initialize\na new map.");
+					FXDialogs.showError(stage,"Error while creating new map", "There was a failure while attempting to initialize\na new map.");
 					ex.printStackTrace();
 				}
 			}
@@ -877,7 +880,7 @@ public class MainWindow extends Application {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				FXDialogs.showError("Error while loading map!",
+				FXDialogs.showError(stage,"Error while loading map!",
 						"There was an error while loading or parsing the selected file.");
 			}
 

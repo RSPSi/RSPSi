@@ -10,17 +10,13 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import com.rspsi.util.*;
 import org.apache.commons.compress.utils.Lists;
 
 import com.jagex.util.Constants;
 import com.rspsi.controls.ConditionGridNode;
 import com.rspsi.misc.TileCondition;
 import com.rspsi.resources.ResourceLoader;
-import com.rspsi.util.ChangeListenerUtil;
-import com.rspsi.util.FXDialogs;
-import com.rspsi.util.FilterMode;
-import com.rspsi.util.GrayscaleFilter;
-import com.rspsi.util.RetentionFileChooser;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -78,6 +74,8 @@ public class GenerateNewMapWindow extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		primaryStage.setAlwaysOnTop(true);
 
 
@@ -127,7 +125,7 @@ public class GenerateNewMapWindow extends Application {
 						setWaterEdges();
 					});
 				} catch (Exception e) {
-					FXDialogs.showError("Error while loading image", "There was an error while attempting to load the selected image.");
+					FXDialogs.showError(primaryStage,"Error while loading image", "There was an error while attempting to load the selected image.");
 				}
 			}
 		});

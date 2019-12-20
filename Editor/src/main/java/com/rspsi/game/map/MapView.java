@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.rspsi.MainWindow;
 import com.rspsi.cache.CacheFileType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,7 +96,7 @@ public class MapView extends JFrame {
 					try {
 						Files.write(MapIndexLoader.instance.encode(), f);
 					} catch (IOException e) {
-						FXDialogs.showError("Error while saving map_index", "There was a failure while attempting to save\nthe map_index to the selected file.");
+						FXDialogs.showError(MainWindow.getSingleton().getStage().getOwner(), "Error while saving map_index", "There was a failure while attempting to save\nthe map_index to the selected file.");
 						e.printStackTrace();
 					}
 				}

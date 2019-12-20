@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import com.rspsi.util.FXUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,8 @@ public class ContactMeWindow extends Application {
 		primaryStage.setAlwaysOnTop(true);
 		primaryStage.setWidth(250);
 		primaryStage.setScene(new Scene(root));
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		
 		pmLink.setOnAction(evt -> {
 			try {

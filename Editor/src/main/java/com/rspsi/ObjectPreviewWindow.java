@@ -114,9 +114,9 @@ public class ObjectPreviewWindow extends Application {
 							if(optObj.isPresent()) {
 								if(!optObj.get().getValue().equalsIgnoreCase("-1")) {
 									VariableBits bit = VariableBitLoader.lookup(Integer.parseInt(optObj.get().getValue()));
-									FXDialogs.showInformation("Varbit [" + optObj.get().getValue() + "]", "Setting: " + bit.getSetting() + "\nHigh: " + bit.getHigh() + "\nLow: " + bit.getLow());
+									FXDialogs.showInformation(stage,"Varbit [" + optObj.get().getValue() + "]", "Setting: " + bit.getSetting() + "\nHigh: " + bit.getHigh() + "\nLow: " + bit.getLow());
 								} else {
-									FXDialogs.showError("Error grabbing varbit", "Varbit ID was -1");
+									FXDialogs.showError(stage,"Error grabbing varbit", "Varbit ID was -1");
 								}
 								
 									
@@ -166,6 +166,9 @@ public class ObjectPreviewWindow extends Application {
 			leafCells.add(leafItem);
 		}
 		data.forEach(dataset -> {
+			if(!filterString.isEmpty() && filterString.startsWith("has:")){
+				//String[] defFilter = filterString.replaceFirst("has:", "").trim().split("[(.*)]");
+			}
 			if(filterString.equals("") || dataset.toString().toLowerCase().contains(filterString.toLowerCase())) {
 				int type = dataset.getType();
 				TreeItem<ObjectDataset> leaf = leafCells.get(type);
@@ -197,7 +200,7 @@ public class ObjectPreviewWindow extends Application {
 			});
 		} catch(Exception ex){
 			ex.printStackTrace();
-			FXDialogs.showError("Error loading object", "Could not load the selected object to view");
+			FXDialogs.showError(stage,"Error loading object", "Could not load the selected object to view");
 		}
 	}
 
@@ -225,6 +228,8 @@ public class ObjectPreviewWindow extends Application {
 
 		primaryStage.initStyle(StageStyle.UNDECORATED);
 		primaryStage.setScene(scene);
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 
 		view = new ObjectModelView();
 		FXUtils.setAnchorPane(view, 10, 10, 20, 0);

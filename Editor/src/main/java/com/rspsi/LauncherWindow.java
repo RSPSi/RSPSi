@@ -2,8 +2,16 @@ package com.rspsi;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.rspsi.util.FXUtils;
+import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
 import com.google.common.io.Files;
@@ -23,19 +31,27 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+@Slf4j
+@Getter
 public class LauncherWindow extends Application {
+
+	@Getter
+	private static LauncherWindow singleton;
+
+	private Stage primaryStage;
 	
 	private LauncherController controller;
 	private List<String> oldCachePaths;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		singleton = this;
+		this.primaryStage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loadscreen.fxml"));
 		controller = new LauncherController();
 		loader.setController(controller);
 		Parent content = loader.load();
 		Scene scene = new Scene(content);
-		
 
 		scene.setFill(Color.TRANSPARENT);
 		
@@ -43,8 +59,11 @@ public class LauncherWindow extends Application {
 		primaryStage.initStyle(StageStyle.TRANSPARENT);
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
+
 		primaryStage.show();
 		primaryStage.sizeToScene();
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		
 		Settings.loadSettings();
 		
@@ -125,8 +144,12 @@ public class LauncherWindow extends Application {
 			Settings.properties.put("lastCacheLocation", cacheLoc);
 			primaryStage.hide();
 			MainWindow window = new MainWindow();
-			window.start(new Stage());
+			Stage otherStage = new Stage();
+			otherStage.setX(primaryStage.getX());
+			otherStage.setY(primaryStage.getY());
+			window.start(otherStage);
 		});
+
 		
 		populatePlugins();
 		WindowControls controls = WindowControls.addWindowControlsFixed(primaryStage, controller.getTopBar(), controller.getControlBox());

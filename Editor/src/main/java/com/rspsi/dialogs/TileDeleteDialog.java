@@ -5,6 +5,7 @@ import com.jagex.map.SceneGraph;
 import com.rspsi.controls.WindowControls;
 import com.rspsi.misc.DeleteOptions;
 
+import com.rspsi.util.FXUtils;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -124,6 +125,8 @@ public class TileDeleteDialog extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setAlwaysOnTop(true);
 
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		
 		// primaryStage.show();
 		WindowControls.addUtilityWindowControls(primaryStage, titleBar, controlBox);

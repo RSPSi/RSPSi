@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 import com.rspsi.resources.ResourceLoader;
+import com.rspsi.util.FXUtils;
 import com.rspsi.util.FilterMode;
 import com.rspsi.util.RetentionFileChooser;
 
@@ -40,6 +41,8 @@ public class SelectPackWindow extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
+		primaryStage.centerOnScreen();
+		FXUtils.centerStage(primaryStage);
 		primaryStage.setAlwaysOnTop(true);
 		
 		Consumer<TextField> finishBrowse = textField -> {

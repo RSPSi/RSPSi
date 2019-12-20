@@ -1,5 +1,6 @@
 package com.rspsi.controls;
 
+import com.rspsi.util.FXUtils;
 import org.displee.utilities.GZIPUtils;
 
 import java.io.File;
@@ -73,6 +74,8 @@ public class RemappingTool extends Application {
 		primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 
 		primaryStage.setAlwaysOnTop(true);
+		FXUtils.centerStage(primaryStage);
+		primaryStage.centerOnScreen();
 		
 		Consumer<TextField> finishBrowse = textField -> {
 			File f = RetentionFileChooser.showOpenDialog(stage, FilterMode.JSON);

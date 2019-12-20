@@ -3,11 +3,36 @@ package com.rspsi.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sun.javafx.tk.Toolkit;
+import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FXUtils {
+
+	private static Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+	private static ObservableList<Screen> screens = Screen.getScreens();
+	public static void centerStage(Stage primaryStage){
+
+		log.info("{}", System.getProperty("os.name"));
+		if(OSUtil.isUnix() && screens.size() > 1){
+			Rectangle2D rec = screens.get(1).getVisualBounds();
+			log.info("Screen: {} | {} ", Toolkit.getToolkit().getPrimaryScreen(), screens);
+			// upper left corner of the extended screen
+			double offsetX = rec.getMinX();
+			double offsetY = rec.getMinY();
+			// set relative to this screen
+			primaryStage.setX(primaryScreenBounds.getMinX() + offsetX);
+			primaryStage.setY(primaryScreenBounds.getMinY() + offsetY);
+		}
+
+	}
 
 	public static void fillAnchorPane(Node node) {
 		AnchorPane.setLeftAnchor(node, 0.0);
