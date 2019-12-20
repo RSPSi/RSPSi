@@ -368,6 +368,8 @@ public final class ObjectDefinition {
 		description = null;
 		originalColours = null;
 		replacementColours = null;
+		retextureToFind = null;
+		textureToReplace = null;
 		width = 1;
 		length = 1;
 		solid = true;
