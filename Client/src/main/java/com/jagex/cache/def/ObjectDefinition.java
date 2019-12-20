@@ -28,11 +28,11 @@ public final class ObjectDefinition {
 	public static boolean lowMemory;
 	public static FixedLongKeyMap<Mesh> models = new FixedLongKeyMap<Mesh>(500);
 	private static Mesh[] parts = new Mesh[4];
-	
+
 
 	public static void dispose() {
-		baseModels = null;
-		models = null;
+		baseModels.clear();
+		models.clear();
 	}
 	
 	private Sprite mapFunctionSprite, mapSceneSprite;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
@@ -156,6 +157,9 @@
                            <padding>
                               <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                            </padding>
+                           <children>
+                              <JFXButton fx:id="returnToLauncher" alignment="CENTER" contentDisplay="TEXT_ONLY" layoutX="400.0" layoutY="498.0" prefHeight="40.0" ripplerFill="#080606" style="-fx-font-size: 1.5em;" text="Return to launcher window" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                           </children>
                         </AnchorPane>
                         <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="37.0" style="-fx-background-color: #2b2b2b; -fx-border-width: 1 0 0 0;" VBox.vgrow="NEVER">
                            <children>

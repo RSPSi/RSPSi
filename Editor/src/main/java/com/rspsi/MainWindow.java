@@ -248,10 +248,16 @@ public class MainWindow extends Application {
 			primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
 			primaryStage.show();
 
+			FXUtils.centerStage(primaryStage);
+			primaryStage.centerOnScreen();
 			controller.onLoad(this);
 
 			boolean shutdownCorrectly = Settings.getSetting("shutdown", false);
 			Settings.clearSetting("shutdown");
+
+			int renderDistance = Settings.getSetting("renderDistance", Options.renderDistance.get());
+
+			Options.renderDistance.set(renderDistance);
 
 			boolean loadAutosave = false;
 			File autosavePath = Paths.get(System.getProperty("user.home"), ".rspsi", "autosave").toFile();
@@ -367,6 +373,12 @@ public class MainWindow extends Application {
 
 			controller.getDeleteSelectedTilesBtn().setOnAction(evt -> TileDeleteDialog.instance.show());
 
+			RenderDistanceDialog renderDistanceDialog = new RenderDistanceDialog();
+			renderDistanceDialog.start(new Stage());
+			controller.getChangeViewDist().setOnAction(evt -> {
+				renderDistanceDialog.show();
+			});
+
 			controller.getAddObjectToSwatchBtn().setOnAction(evt ->{
 				
 				if(!clientInstance.sceneGraph.selectedObjects.isEmpty()) {
@@ -472,8 +484,22 @@ public class MainWindow extends Application {
 
 			clientInstance.visible = true;
 
-			controller.getGamePane().getChildren().add(gamePane);
+			controller.getGamePane().getChildren().add(0, gamePane);
 			controller.getMapPane().getChildren().add(new CanvasPane(clientInstance.mapCanvas));
+			clientInstance.errorDisplayed.addListener((observable, oldValue, newValue) -> controller.getReturnToLauncher().setVisible(newValue.booleanValue()));
+			controller.getReturnToLauncher().setOnAction(evt -> {
+				LauncherWindow.getSingleton().getPrimaryStage().show();
+				singleton = null;
+				if (clientInstance != null) {
+					try {
+						clientInstance.exit();
+					} catch(Exception ex) {
+						ex.printStackTrace();
+
+					}
+				}
+				primaryStage.close();
+			});
 			ContextMenu menu = new ContextMenu();
 			menu.autoHideProperty().set(true);
 			MenuItem item = new MenuItem("Save to file");
@@ -532,11 +558,14 @@ public class MainWindow extends Application {
 					try {
 						clientInstance.exit();
 					} catch(Exception ex) {
+						ex.printStackTrace();
 
 					}
 				}
-				Platform.exit();
-				System.exit(0);
+				if(singleton != null) {
+					Platform.exit();
+					System.exit(0);
+				}
 			});
 
 			ChangeListenerUtil.addListener(() -> {

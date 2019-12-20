@@ -1,5 +1,6 @@
 package com.jagex;
 
+import com.jagex.map.SceneGraph;
 import com.jagex.map.tile.SceneTile;
 import org.displee.cache.index.archive.Archive;
 import org.displee.utilities.GZIPUtils;
@@ -276,10 +277,10 @@ public final class Client implements Runnable {
 			this.orderedChunks = reverse;
 		}*/
 
-	private boolean errorDisplayed;
+	public BooleanProperty errorDisplayed = new SimpleBooleanProperty(false);
 	
 	public final void displayErrorMessage() {
-		errorDisplayed = true;
+		errorDisplayed.set(true);
 		GraphicsContext context = gameCanvas.getGraphicsContext2D();
 	//	Graphics graphics = gameCanvas.getGraphics();
 		context.setFill(Color.BLACK);
@@ -315,7 +316,7 @@ public final class Client implements Runnable {
 	private String errorMessage = "";
 	public boolean visible = true;
 	public final void draw() {
-		if(errorDisplayed)
+		if(errorDisplayed.get())
 			return;
 		if (gameAlreadyLoaded || error || unableToLoad) {
 			Platform.runLater(this::displayErrorMessage);
@@ -330,14 +331,14 @@ public final class Client implements Runnable {
 
 	}
 
-	public final void drawChatMessages() {
-	}
-
-	public final void drawDialogueBox() {
-	}
-
 	public int getPlane() {
 		return Options.currentHeight.get();
+	}
+
+	public void moveCamera(int worldX, int worldY) {
+		this.xCameraPos = worldX * 128;
+		this.yCameraPos = worldY * 128;
+		this.cameraMoved = true;
 	}
 
 	public static enum LoadState {
@@ -998,45 +999,41 @@ public final class Client implements Runnable {
 			}
 			if(this.getCurrentChunk() != null) {
 				Chunk chunk = this.getCurrentChunk();
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "WorldX: " + (chunk.regionX * 64) + " WorldY: " + (chunk.regionY * 64), c, k, i1);
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "WorldX: " + (chunk.regionX * 64) + " WorldY: " + (chunk.regionY * 64), c, k, i1);
 			}
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Fps: " + fps, c, k, i1);
-			k += 15;
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Fps: " + fps, c, k, i1);
 			Runtime runtime = Runtime.getRuntime();
 			int memory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024);
 			i1 = 0xffff00;
-			if (memory > 0x2000000 && lowMemory) {
-				i1 = 0xff0000;
-			}
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Mem: " + memory / 1024 + "MB", c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Chunk map files:  "  + getCurrentChunk().tileMapName + " " + getCurrentChunk().objectMapName + " ", c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Mouse: " + mouseEventX + "," + mouseEventY + "", c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Mouse Tile: " + SceneGraph.hoveredTileX + "," + SceneGraph.hoveredTileY + "", c, k,
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Mem: " + memory / 1024 + "MB", c, k, 0xffff00);
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Chunk map files:  "  + getCurrentChunk().tileMapName + " " + getCurrentChunk().objectMapName + " ", c, k, 0xffff00);
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Mouse: " + mouseEventX + "," + mouseEventY + "", c, k, 0xffff00);
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Mouse Tile: " + sceneGraph.hoveredTileX + "," + sceneGraph.hoveredTileY + "", c, k,
 					0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Height: " + Options.currentHeight.get() + " Pos:" + xCameraPos / 128 + ","
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Height: " + Options.currentHeight.get() + " Pos:" + xCameraPos / 128 + ","
 					+ yCameraPos / 128 + "," + zCameraPos + "", c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Camera: " + xCameraCurve + "," + yCameraCurve + "," + cameraRoll + "," + cameraYaw + "",
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Camera: " + xCameraCurve + "," + yCameraCurve + "," + cameraRoll + "," + cameraYaw + "",
 					c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Tool: " + Options.currentTool.get().name() + "", c, k, 0xffff00);
-			k += 15;
-			TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Hover UID: " + hoveredUID + "", c, k, 0xffff00);
-			k += 15;
-			if(sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY] != null) {
-				SceneTile tile = sceneGraph.tiles[Options.currentHeight.get()][SceneGraph.hoveredTileX][SceneGraph.hoveredTileY];
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Simple Data: " + (tile.simple != null ? tile.simple.toString() : "") , c, k, 0xffff00);
-				k += 15;
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Shaped Data: "+ (tile.shape != null ? tile.shape.toString() : "null"), c, k, 0xffff00);
-				k += 15;
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Tool: " + Options.currentTool.get().name() + "", c, k, 0xffff00);
+
+			k += TextRenderUtils.renderLeft(gameImageBuffer, "Hover UID: " + hoveredUID + "", c, k, 0xffff00);
+
+			if(sceneGraph.tiles[Options.currentHeight.get()][sceneGraph.hoveredTileX][sceneGraph.hoveredTileY] != null) {
+				SceneTile tile = sceneGraph.tiles[Options.currentHeight.get()][sceneGraph.hoveredTileX][sceneGraph.hoveredTileY];
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "Simple Data: " + (tile.simple != null ? tile.simple.toString() : "") , c, k, 0xffff00);
+
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "Shaped Data: "+ (tile.shape != null ? tile.shape.toString() : "null"), c, k, 0xffff00);
+
 			}
-			
-			
+
+
 			if (hoveredUID != null) {
 				ObjectKey key = hoveredUID;
 				int id = key.getId();
@@ -1047,14 +1044,13 @@ public final class Client implements Runnable {
 				int x = key.getX();
 				ObjectDefinition def = ObjectDefinitionLoader.lookup(id);
 				c += 10;
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Name: " + def.getName(), c, k, 0xffff00);
-				k += 15;
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "ID: " + id + "", c, k, 0xffff00);
-				k += 15;
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Type: " + type + " | Rot: " + orientation, c, k, 0xffff00);
-				k += 15;
-				TextRenderUtils.renderLeft(gameImageBuffer.getGraphics(), "Pos: " + x + ", " + y, c, k,  0xffff00);
-				k += 15;
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "Name: " + def.getName(), c, k, 0xffff00);
+
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "ID: " + id + "", c, k, 0xffff00);
+
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "Type: " + type + " | Rot: " + orientation, c, k, 0xffff00);
+
+				k += TextRenderUtils.renderLeft(gameImageBuffer, "Pos: " + x + ", " + y, c, k,  0xffff00);
 			}
 
 		}
@@ -1522,14 +1518,15 @@ public final class Client implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		gameImageBuffer = null;
+		gameLoaded.set(false);
 		mapScenes = null;
 		mapFunctions = null;
-		settings = null;
-		method118();
-		ObjectDefinition.dispose();
+		reset();
+		hoveredUID = null;
+		runLater.clear();
 		MeshLoader.getSingleton().dispose();
-		
+		method118();
+		singleton = null;
 	}
 
 	public final int tileHeight(int x, int y, int z) {
@@ -1566,6 +1563,8 @@ public final class Client implements Runnable {
 				}
 				Client.getSingleton().sceneGraph.tileQueue.clear();
 				Client.getSingleton().mapRegion.updateTiles();
+
+				SceneGraph.minimapUpdate = true;
 				System.out.println("UPDATED TILES");
 		});
 	}
@@ -1743,7 +1742,7 @@ public final class Client implements Runnable {
 
 	public void keyInputLoop() {
 		if (loadState == LoadState.ACTIVE) {
-			int speedMultiplier = SceneGraph.shiftDown ? 10 : SceneGraph.ctrlDown ? 12 : 11;
+			int speedMultiplier = sceneGraph.shiftDown ? 10 : sceneGraph.ctrlDown ? 12 : 11;
 			handleKeyInputs(speedMultiplier);
 			
 
@@ -1754,14 +1753,6 @@ public final class Client implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public boolean isDebug() {
-		return debug;
-	}
-
-	public boolean isPaintBlack() {
-		return paintBlack;
 	}
 
 	public final int nextPressedKey() {
@@ -1847,11 +1838,11 @@ public final class Client implements Runnable {
 				delay = minimumSleepTime;
 			}
 
-			/*try {
-				//Thread.sleep(delay);
+			try {
+				Thread.sleep(delay);
 			} catch (InterruptedException _ex) {
 				exceptions++;
-			}*/
+			}
 
 			//for (; cycle < 256; cycle += ratio) {
 				lastMetaModifier = metaModifierPressed;

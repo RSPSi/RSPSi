@@ -35,6 +35,7 @@ public class MeshLoader {
 
 	public void dispose() {
 		loadedMeshes.clear();
+		singleton = null;
 	}
 	
 	@Subscribe(threadMode = ThreadMode.ASYNC)
