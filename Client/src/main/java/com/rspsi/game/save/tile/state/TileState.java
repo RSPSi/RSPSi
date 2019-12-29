@@ -3,6 +3,10 @@ package com.rspsi.game.save.tile.state;
 import com.jagex.util.ObjectKey;
 
 public abstract class TileState {
+
+	private TileState(){
+
+	}
 	
 	protected int x, y, z;
 	
