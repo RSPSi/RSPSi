@@ -84,6 +84,9 @@ public class GenerateNewMapWindow extends Application {
 		widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1));
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1));
 
+
+		FXUtils.addSpinnerFocusListeners(widthSpinner, lengthSpinner);
+
 		waterDistanceMax.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 128, 0));
 		waterDistanceMin.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 128, 0));
 
