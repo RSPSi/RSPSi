@@ -56,7 +56,9 @@ public class PickHashWindow extends Application {
 
 		widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
-	
+
+		FXUtils.addSpinnerFocusListeners(widthSpinner, lengthSpinner);
+
 		okButton.setOnAction(evt -> {
 			primaryStage.hide();
 			okClicked = true;

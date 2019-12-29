@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
 import com.google.common.collect.Maps;
@@ -28,6 +29,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+@Slf4j
 public class SelectFilesWindow extends Application {
 
 	private Stage stage;
@@ -65,43 +67,65 @@ public class SelectFilesWindow extends Application {
 		};
 	
 		widthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
-	
+			log.info("Width resize from {} to {}", oldVal, newVal);
 				if(oldVal < newVal) {//Increase
-					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getRowCount(gridPane), newVal - 1, false);
-					
-					gridPane.addColumn(newVal - 1, nodes.toArray(new SelectFilesNode[nodes.size()]));
 
+					int diff = newVal - oldVal;
+					for(int index = 0;index<diff;index++){
+						int fIndex = oldVal + index;
+						List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getRowCount(gridPane), fIndex, false);
+						gridPane.addColumn(fIndex, nodes.toArray(new SelectFilesNode[nodes.size()]));
+						log.info("Added column {}", fIndex);
+					}
 				} else if(oldVal > newVal) {
-					gridPane.getChildrenUnmodifiable()
-					.stream()
-					.filter(node -> node instanceof SelectFilesNode)
-					.filter(node -> GridPane.getColumnIndex(node) == oldVal - 1)
-					.map(node -> (SelectFilesNode) node)
-					.forEach(cacheNode);
-					FXUtils.deleteColumn(gridPane, oldVal - 1);
+					int diff = oldVal - newVal;
+					for(int index = 0;index<diff;index++){
+						int fIndex = oldVal - index - 1;
+						gridPane.getChildrenUnmodifiable()
+								.stream()
+								.filter(node -> node instanceof SelectFilesNode)
+								.filter(node -> GridPane.getColumnIndex(node) == fIndex)
+								.map(node -> (SelectFilesNode) node)
+								.forEach(cacheNode);
+						FXUtils.deleteColumn(gridPane, fIndex);
+						log.info("Deleted column {}", fIndex);
+					}
 				}
 
 				stage.sizeToScene();
 		});
 		
 		lengthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
-	
-				if(oldVal < newVal) {//Increase
-					List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getColumnCount(gridPane), newVal - 1, true);
-					gridPane.addRow(newVal - 1, nodes.toArray(new SelectFilesNode[nodes.size()]));
 
+			log.info("Length resize from {} to {}", oldVal, newVal);
+				if(oldVal < newVal) {//Increase
+					int diff = newVal - oldVal;
+					for(int index = 0;index<diff;index++){
+						int fIndex = oldVal + index;
+						List<SelectFilesNode> nodes = generateSelectNodes(FXUtils.getColumnCount(gridPane), fIndex, true);
+						gridPane.addRow(fIndex, nodes.toArray(new SelectFilesNode[nodes.size()]));
+						log.info("Added row {}", fIndex);
+					}
 				} else if(oldVal > newVal) {
-					gridPane.getChildrenUnmodifiable()
-					.stream()
-					.filter(node -> node instanceof SelectFilesNode)
-					.filter(node -> GridPane.getRowIndex(node) == oldVal - 1)
-					.map(node -> (SelectFilesNode) node)
-					.forEach(cacheNode);
-					FXUtils.deleteRow(gridPane, oldVal - 1);
+					int diff = oldVal - newVal;
+					for(int index = 0;index<diff;index++){
+						int fIndex = oldVal - index - 1;
+						gridPane.getChildrenUnmodifiable()
+						.stream()
+						.filter(node -> node instanceof SelectFilesNode)
+						.filter(node -> GridPane.getRowIndex(node) == fIndex)
+						.map(node -> (SelectFilesNode) node)
+						.forEach(cacheNode);
+						FXUtils.deleteRow(gridPane, fIndex);
+						log.info("Deleted row {}", fIndex);
+					}
 				}
 			stage.sizeToScene();
 		
 		});
+
+
+		FXUtils.addSpinnerFocusListeners(widthSpinner, lengthSpinner);
 		
 		try {
 			gridPane.add(new SelectFilesNode(stage), 0, 0);

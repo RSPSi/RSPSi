@@ -2,15 +2,20 @@ package com.rspsi.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.sun.javafx.tk.Toolkit;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -119,5 +124,16 @@ public class FXUtils {
 	    // remove nodes from row
 	    grid.getChildren().removeAll(deleteNodes);
 	}
+
+	public static void addSpinnerFocusListeners(Spinner<?>... spinners){
+		for(Spinner<?> spinner : spinners){
+			TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+			spinner.getEditor().setTextFormatter(formatter);
+			spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+
+		}
+	}
+
+
 
 }
