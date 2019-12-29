@@ -1,8 +1,10 @@
 package com.rspsi.game.save.tile.state;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ImportTileState extends TileState {
 	
 	

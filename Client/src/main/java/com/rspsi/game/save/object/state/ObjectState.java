@@ -4,8 +4,10 @@ import com.jagex.Client;
 import com.jagex.util.ObjectKey;
 import com.rspsi.game.save.tile.state.TileState;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ObjectState extends TileState {
 
 	/**
