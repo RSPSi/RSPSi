@@ -421,9 +421,15 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 
 		Buffer buffer = new Buffer(config.readFile("loc.dat"));
 		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer streamIdx667;
+		try {
+			buffer667 = new Buffer(sound.readFile("loc2.dat"));
+			streamIdx667 = new Buffer(sound.readFile("loc2.idx"));
+		} catch (Exception ex){
+			buffer667 = new Buffer(config.readFile("loc2.dat"));
+			streamIdx667 = new Buffer(config.readFile("loc2.idx"));
 
-		buffer667 = new Buffer(sound.readFile("loc2.dat"));
-		Buffer streamIdx667 = new Buffer(sound.readFile("loc2.idx"));
+		}
 		try {
 
 
