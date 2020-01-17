@@ -64,7 +64,9 @@ public class PickCoordinatesWindow extends Application {
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 
 		FXUtils.addSpinnerFocusListeners(widthSpinner, lengthSpinner);
-
+		primaryStage.setOnShown(evt -> {
+			xCoordinate.requestFocus();
+		});
 		okButton.setOnAction(evt -> {
 			primaryStage.hide();
 			okClicked = true;
@@ -77,7 +79,6 @@ public class PickCoordinatesWindow extends Application {
 	
 	public void show() {
 		reset();
-		xCoordinate.requestFocus();
 		stage.sizeToScene();
 		stage.showAndWait();
 		if(!okClicked)
