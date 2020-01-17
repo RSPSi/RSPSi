@@ -446,6 +446,7 @@ public final class Client implements Runnable {
 		gameImageBuffer.initializeRasterizer();
 		GameRasterizer.getInstance().setBounds(0, 0, w, h);
 		GameRasterizer.getInstance().useViewport();
+		gameImageBuffer.getGraphics().setFont(jetBrainsMono);
 		
 		if(sceneGraph != null)
 			sceneGraph.method310(500, 800, w, h, ai);
@@ -1247,7 +1248,7 @@ public final class Client implements Runnable {
 						fullMapCanvas.getGraphicsContext2D().setStroke(Color.BLACK);
 
 						fullMapCanvas.getGraphicsContext2D().setFill(Color.YELLOW);
-						fullMapCanvas.getGraphicsContext2D().setFont(javafx.scene.text.Font.font("Arial", FontWeight.BOLD, 14));
+						fullMapCanvas.getGraphicsContext2D().setFont(javafx.scene.text.Font.font("JetBrains Mono", FontWeight.BOLD, 14));
 						fullMapCanvas.getGraphicsContext2D().strokeText(chunk.tileMapName, xPos + 256 - 51, yPos + 21);
 						fullMapCanvas.getGraphicsContext2D().strokeText(chunk.objectMapName, xPos + 256 - 51, yPos + 38);
 						fullMapCanvas.getGraphicsContext2D().fillText(chunk.tileMapName, xPos + 256 - 51, yPos + 21);
@@ -1731,7 +1732,7 @@ public final class Client implements Runnable {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
 			robotoFont = new RSFont(new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB).createGraphics(),
 					font.deriveFont(12.0f), true);
-			jetBrainsMono = font.deriveFont(16.0f);
+			jetBrainsMono = font.deriveFont(12.0f);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
