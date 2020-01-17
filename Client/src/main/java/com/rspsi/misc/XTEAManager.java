@@ -30,12 +30,14 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Kyle Friz
  * 
  * @since Jun 30, 2015
  */
+@Slf4j
 public final class XTEAManager {
 
 	@Getter
@@ -77,7 +79,14 @@ public final class XTEAManager {
                             maps.put(entry.getRegion(), entry.getKeys());
                       }
                   } catch(Exception ex) {
-                	  ex.printStackTrace();
+                	  log.info("Failed to parse XTEAs in standard format, falling back to key/value pairs");
+
+	                  try (Reader reader = new FileReader(file)) {
+	                  	Map<Integer, int[]> keyPairMap = gson.fromJson(reader, new TypeToken<Map<Integer, int[]>>(){}.getType());
+	                  	keyPairMap.forEach(maps::put);
+	                  } catch (Exception ex2){
+	                  	ex2.printStackTrace();
+	                  }
                   }
                   
             } catch (Exception e) {
