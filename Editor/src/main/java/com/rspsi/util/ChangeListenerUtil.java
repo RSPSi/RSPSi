@@ -1,6 +1,7 @@
 package com.rspsi.util;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import org.apache.commons.compress.utils.Lists;
 
@@ -58,6 +59,11 @@ public class ChangeListenerUtil {
 	public static void addListener(Runnable r, ReadOnlyIntegerProperty... nodes) {
 		for(ReadOnlyIntegerProperty node : nodes)
 			node.addListener((observable, oldVal, newVal) -> r.run());
+	}
+
+	public static void addListener(BiConsumer<Integer, Integer> consumer, ReadOnlyIntegerProperty... nodes) {
+		for(ReadOnlyIntegerProperty node : nodes)
+			node.addListener((observable, oldVal, newVal) -> consumer.accept(oldVal.intValue(), newVal.intValue()));
 	}
 	
 	public static void addListener(Runnable r, ReadOnlyDoubleProperty... nodes) {

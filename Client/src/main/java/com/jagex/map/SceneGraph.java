@@ -11,9 +11,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.jagex.draw.raster.GameRaster;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.major.map.RenderFlags;
@@ -2031,7 +2031,12 @@ public class SceneGraph {
 								}
 
 
-							}, null, null);
+							},
+							(absX, absY) -> {
+							//	if(Options.brushSize.get() == 1 || absX == hoveredTileX - Options.brushSize.get() && absY == hoveredTileY - Options.brushSize.get()){
+							//		this.addTemporaryTile(plane, absX, absY, 3, 3, -1, GameRasterizer.getInstance().getFuchsia(), 62000);
+							//	}
+							}, null);
 
 					if (!ctrlDown && Config.HEIGHT_SMOOTHING) {
 						brushSize -= 1;
@@ -4935,8 +4940,38 @@ public class SceneGraph {
 		Options.currentTool.set(currentTool);
 	}
 
-	public Stream<SceneTile> nonNullStream() {
-		return Stream.of(tiles).filter(Objects::nonNull).flatMap(Arrays::stream).filter(Objects::nonNull).flatMap(Arrays::stream).filter(Objects::nonNull);
+
+	public Stream<SceneTile> nonNullStream(int z) {
+		return Stream.of(tiles[z]).filter(Objects::nonNull).flatMap(Stream::of);
 	}
 
+	public Stream<SceneTile> nonNullStream() {
+		return IntStream.range(0, 4).boxed().flatMap(this::nonNullStream);
+	}
+
+	public SceneTile getTileOrDefault(int x, int y, int z, Function<Location, SceneTile> defaultProvider){
+		SceneTile tile = tiles[z][x][y];
+		if(tile == null)
+			tile = defaultProvider.apply(Location.of(x, y, z));
+		return tile;
+	}
+
+	private SceneTile createNewSceneTile(Location location){
+		return new SceneTile(location.getX(), location.getY(), location.getZ());
+	}
+	public void removeAndReplace(DefaultWorldObject object){
+		SceneTile tile = getTileOrDefault(object.getX(), object.getY(), object.getPlane(), this::createNewSceneTile);
+		if(tile.contains(object.getKey())){
+			tile.removeByUID(object.getKey());
+
+		}
+
+	}
+
+	public void rotateSelectedObjects(int rotateDir) {
+		log.info("Requested to rotate object {}", rotateDir);
+		if(!selectedObjects.isEmpty()){
+			selectedObjects.stream().sorted().forEach(this::removeAndReplace);
+		}
+	}
 }
