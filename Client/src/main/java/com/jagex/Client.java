@@ -5,9 +5,7 @@ import com.jagex.map.tile.SceneTile;
 import org.displee.cache.index.archive.Archive;
 import org.displee.utilities.GZIPUtils;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +81,8 @@ public final class Client implements Runnable {
 
 
 	public RSFont robotoFont;
+	public Font jetBrainsMono;
+
 	public SceneGraph sceneGraph;
 	
 	public boolean cameraMoved = true;
@@ -135,6 +135,7 @@ public final class Client implements Runnable {
 	
 
 	public static Client initialize(int width, int height) {
+
 
 		clientLoaded = false;
 
@@ -291,7 +292,7 @@ public final class Client implements Runnable {
 
 		if (error) {
 			aBoolean831 = false;
-			context.setFont(javafx.scene.text.Font.font("Helvetica", 16));
+			context.setFont(javafx.scene.text.Font.font("JetBrains Mono", 16));
 			context.setFill(Color.YELLOW);
 			context.setTextAlign(TextAlignment.CENTER);
 			context.setTextBaseline(VPos.CENTER);
@@ -305,7 +306,7 @@ public final class Client implements Runnable {
 
 		if (unableToLoad) {
 			aBoolean831 = false;
-			context.setFont(javafx.scene.text.Font.font("Helvetica", 20));
+			context.setFont(javafx.scene.text.Font.font("JetBrains Mono", 20));
 			context.setFill(Color.WHITE);
 			context.setTextAlign(TextAlignment.CENTER);
 			context.setTextBaseline(VPos.CENTER);
@@ -1614,8 +1615,7 @@ public final class Client implements Runnable {
 		}
 		gameImageBuffer.initializeRasterizer();
 		gameImageBuffer.clear(0);
-		Font helvetica1 = new Font("Helvetica", 1, 11);
-		FontMetrics font = graphics.getFontMetrics(helvetica1);
+		FontMetrics font = graphics.getFontMetrics(jetBrainsMono);
 		if (paintBlack) {
 			graphics.setColor(java.awt.Color.black);
 			graphics.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -1628,7 +1628,7 @@ public final class Client implements Runnable {
 		graphics.fillRect(canvasWidth / 2 - 150, y + 2, x * 3, 31);
 		graphics.setColor(java.awt.Color.black);
 		graphics.fillRect(canvasWidth / 2 - 150 + x * 3, y + 2, 300 - x * 3, 31);
-		graphics.setFont(helvetica1);
+		graphics.setFont(jetBrainsMono);
 		graphics.setColor(java.awt.Color.white);
 		graphics.drawString(string, (canvasWidth - font.stringWidth(string)) / 2, y + 22);
 		
@@ -1720,10 +1720,18 @@ public final class Client implements Runnable {
 		gameCanvas = new DisplayCanvas(canvasWidth, canvasHeight);
 		mapCanvas = new DisplayCanvas(canvasWidth, canvasHeight, false);
 
-		try (InputStream stream = Client.class.getResourceAsStream("/font/Roboto-Regular.ttf")) {
+		try (InputStream stream = Client.class.getResourceAsStream("/font/JetBrainsMono-Regular.ttf")) {
+
+			javafx.scene.text.Font.loadFont(stream, -1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try (InputStream stream = Client.class.getResourceAsStream("/font/JetBrainsMono-Regular.ttf")) {
+
 			Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
 			robotoFont = new RSFont(new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB).createGraphics(),
 					font.deriveFont(12.0f), true);
+			jetBrainsMono = font.deriveFont(16.0f);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

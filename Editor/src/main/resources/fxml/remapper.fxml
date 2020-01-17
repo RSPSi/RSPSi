@@ -17,7 +17,7 @@
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" text="This tool allows you to fix maps that were made for OSRS 179 rev and lower, that now need updating to work with 180+ data. It looks for .pack, .dat and .gz in the selected folder and remaps the object ids." wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font size="10.0" />
+                        <Font name="JetBrains Mono Regular" size="10.0" />
                      </font>
                   </Label>
                </children>
@@ -28,12 +28,12 @@
                      <children>
                         <TextField fx:id="mapFolderText" editable="false" focusTraversable="false" promptText="Maps Folder" HBox.hgrow="ALWAYS">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </TextField>
                         <Button fx:id="mapsFolderBrowse" mnemonicParsing="false" text="Browse">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </Button>
                      </children>
@@ -42,12 +42,12 @@
                      <children>
                         <TextField fx:id="jsonFileText" editable="false" focusTraversable="false" promptText="Remap JSON file" HBox.hgrow="ALWAYS">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </TextField>
                         <Button fx:id="jsonBrowse" mnemonicParsing="false" text="Browse">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </Button>
                      </children>

@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Roboto';
-    src: url('../font/Roboto-Regular.ttf');
+    font-family: 'JetBrains Mono';
+    src: url('../font/JetBrainsMono-Regular.ttf');
 }
 .scroll-pane .scroll-bar:vertical {
     -fx-unit-increment: 10 ;
@@ -16,7 +16,7 @@
     -fx-faint-focus-color: #b8340022;
     -fx-accent: rgb(134, 16, 0);
     -fx-base: #4a4a4a;
-    -fx-font-family: Roboto;
+    -fx-font-family: 'JetBrains Mono' !important;
     -fx-font-size: 11px;
 }
 

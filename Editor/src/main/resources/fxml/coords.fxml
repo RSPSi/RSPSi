@@ -14,8 +14,8 @@
    <children>
       <HBox alignment="CENTER_LEFT" spacing="9.0">
          <children>
-            <TextField promptText="X Coordinate" fx:id="xCoordinate" />
-            <TextField fx:id="yCoordinate" promptText="Y Coordinate" />
+            <TextField prefWidth="120.0" promptText="X Coordinate" fx:id="xCoordinate" />
+            <TextField fx:id="yCoordinate" prefWidth="120.0" promptText="Y Coordinate" />
          </children>
          <padding>
             <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
@@ -30,7 +30,7 @@
             <Spinner fx:id="widthSpinner" editable="true" maxWidth="70.0" />
             <Label text="Length">
                <font>
-                  <Font size="11.0" />
+                  <Font name="JetBrains Mono Regular" size="11.0" />
                </font>
             </Label>
             <Spinner fx:id="lengthSpinner" editable="true" maxWidth="70.0" HBox.hgrow="NEVER" />

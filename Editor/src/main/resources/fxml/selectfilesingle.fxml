@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="67.0" minWidth="189.0" spacing="7.0" stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" minHeight="67.0" minWidth="189.0" spacing="7.0" stylesheets="@../css/modena_dark.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER_LEFT" spacing="4.0">
+      <HBox alignment="CENTER_LEFT" spacing="4.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextField fx:id="landscapeText" editable="false" focusTraversable="false" promptText="Landscape File" HBox.hgrow="ALWAYS">
+            <TextField fx:id="landscapeText" editable="false" focusTraversable="false" prefWidth="190.0" promptText="Landscape File" HBox.hgrow="ALWAYS">
                <font>
-                  <Font size="10.0" />
+                  <Font name="JetBrains Mono Regular" size="10.0" />
                </font>
             </TextField>
             <Button fx:id="landscapeBrowse" mnemonicParsing="false" text="Browse">
                <font>
-                  <Font size="10.0" />
+                  <Font name="JetBrains Mono Regular" size="10.0" />
                </font>
             </Button>
          </children>
@@ -27,12 +27,12 @@
          <children>
             <TextField fx:id="objectText" editable="false" promptText="Object File" HBox.hgrow="ALWAYS">
                <font>
-                  <Font size="10.0" />
+                  <Font name="JetBrains Mono Regular" size="10.0" />
                </font>
             </TextField>
             <Button fx:id="objectBrowse" mnemonicParsing="false" text="Browse">
                <font>
-                  <Font size="10.0" />
+                  <Font name="JetBrains Mono Regular" size="10.0" />
                </font>
             </Button>
          </children>

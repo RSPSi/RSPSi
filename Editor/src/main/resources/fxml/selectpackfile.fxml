@@ -26,12 +26,12 @@
                      <children>
                         <TextField fx:id="landscapeText" editable="false" focusTraversable="false" promptText=".PACK File" HBox.hgrow="ALWAYS">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </TextField>
                         <Button fx:id="landscapeBrowse" mnemonicParsing="false" text="Browse">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                         </Button>
                      </children>

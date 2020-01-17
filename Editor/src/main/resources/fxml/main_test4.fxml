@@ -35,7 +35,7 @@
 
 <StackPane alignment="TOP_LEFT" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox id="main-pane" fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1108.0" style="-fx-background-color: #3c3c3c;" styleClass="root">
+      <VBox id="main-pane" fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1250.0" style="-fx-background-color: #3c3c3c;" styleClass="root">
         <children>
             <HBox VBox.vgrow="ALWAYS">
                <children>
@@ -52,7 +52,7 @@
                                     </ImageView>
                                     <ToggleButton fx:id="selectTileBtn" accessibleHelp="Select Tiles" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="true" text="S_T">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <toggleGroup>
                                           <ToggleGroup fx:id="toolGroup" />
@@ -60,79 +60,79 @@
                                        <tooltip>
                                           <Tooltip text="Select Tile">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="selectObjectBtn" accessibleHelp="Select Objects" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="S_O" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Select Object">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="deleteObjectBtn" accessibleHelp="Delete Objects" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="D_O" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Delete Object">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="heightModifyBtn" accessibleHelp="Modify Heights" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="M_H" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Modify Height">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="paintOverlayBtn" accessibleHelp="Paint Overlays" focusTraversable="false" layoutX="23.0" layoutY="193.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="P_O" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Paint Overlays">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="paintUnderlayBtn" accessibleHelp="Paint Underlays" focusTraversable="false" layoutX="23.0" layoutY="235.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="P_U" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Paint Underlays">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
                                     </ToggleButton>
                                     <ToggleButton fx:id="setFlagBtn" accessibleHelp="Set Flags" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="S_F" toggleGroup="$toolGroup">
                                        <font>
-                                          <Font size="8.0" />
+                                          <Font name="JetBrains Mono Regular" size="8.0" />
                                        </font>
                                        <tooltip>
                                           <Tooltip text="Set Tile Flags">
                                              <font>
-                                                <Font size="13.0" />
+                                                <Font name="JetBrains Mono Regular" size="13.0" />
                                              </font>
                                           </Tooltip>
                                        </tooltip>
@@ -148,7 +148,7 @@
                   </HBox>
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox alignment="TOP_CENTER" minHeight="-Infinity" prefHeight="36.0" style="-fx-background-radius: 6;">
+                        <HBox alignment="TOP_CENTER" minHeight="-Infinity" prefHeight="41.0" style="-fx-background-radius: 6;">
                            <padding>
                               <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                            </padding>
@@ -161,86 +161,95 @@
                               <JFXButton fx:id="returnToLauncher" alignment="CENTER" contentDisplay="TEXT_ONLY" layoutX="400.0" layoutY="498.0" prefHeight="40.0" ripplerFill="#080606" style="-fx-font-size: 1.5em;" text="Return to launcher window" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                            </children>
                         </AnchorPane>
-                        <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="37.0" style="-fx-background-color: #2b2b2b; -fx-border-width: 1 0 0 0;" VBox.vgrow="NEVER">
+                        <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="43.0" style="-fx-background-color: #2b2b2b; -fx-border-width: 1 0 0 0;" VBox.vgrow="NEVER">
                            <children>
-                            <HBox id="HBox" alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+                            <HBox id="HBox" alignment="CENTER" spacing="4.0" HBox.hgrow="ALWAYS">
                               <children>
-                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Brush Size">
+                                    <Label id="MainStatus" focusTraversable="false" layoutX="64.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Brush">
                                        <font>
-                                          <Font size="9.0" fx:id="x32" />
+                                          <Font name="JetBrains Mono Regular" size="9.0" fx:id="x321" />
                                        </font>
                                        <textFill>
-                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x42" />
+                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x421" />
                                        </textFill>
                                     </Label>
-                                    <Button fx:id="decreaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" focusTraversable="false" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="-">
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets right="-6.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Slider fx:id="brushSizeSlider" blockIncrement="1.0" focusTraversable="false" majorTickUnit="1.0" max="15.0" maxWidth="90.0" minorTickCount="0" snapToTicks="true">
-                                       <tooltip>
-                                          <Tooltip fx:id="brushSizeTooltip" />
-                                       </tooltip>
-                                       <contextMenu>
-                                          <ContextMenu>
-                                             <items>
-                                                <MenuItem fx:id="setTileHeightMenuItem1" mnemonicParsing="false" text="Set brush size" />
-                                             </items>
-                                          </ContextMenu>
-                                       </contextMenu>
-                                    </Slider>
-                                    <Button fx:id="increaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" focusTraversable="false" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="+">
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets left="-10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Brush Type">
-                                       <font>
-                                          <Font size="9.0" fx:id="x311" />
-                                       </font>
-                                       <textFill>
-                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x411" />
-                                       </textFill>
-                                    </Label>
-                                    <ComboBox fx:id="brushTypeSelection" focusTraversable="false" />
+                                    <HBox alignment="CENTER" spacing="5.0" style="-fx-border-width: 0.5; -fx-border-color: #1b1b1b; -fx-border-radius: 2;">
+                                       <children>
+                                          <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Size">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="9.0" fx:id="x32" />
+                                             </font>
+                                             <textFill>
+                                                <Color blue="0.625" green="0.625" red="0.625" fx:id="x42" />
+                                             </textFill>
+                                          </Label>
+                                          <Button fx:id="decreaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" focusTraversable="false" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="-">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="10.0" />
+                                             </font>
+                                          </Button>
+                                          <Slider fx:id="brushSizeSlider" blockIncrement="1.0" focusTraversable="false" majorTickUnit="1.0" max="15.0" maxWidth="60.0" minorTickCount="0" snapToTicks="true">
+                                             <tooltip>
+                                                <Tooltip fx:id="brushSizeTooltip" />
+                                             </tooltip>
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                   <items>
+                                                      <MenuItem fx:id="setTileHeightMenuItem1" mnemonicParsing="false" text="Set brush size" />
+                                                   </items>
+                                                </ContextMenu>
+                                             </contextMenu>
+                                          </Slider>
+                                          <Button fx:id="increaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" focusTraversable="false" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="+">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="10.0" />
+                                             </font>
+                                          </Button>
+                                          <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Shape">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="9.0" fx:id="x311" />
+                                             </font>
+                                             <textFill>
+                                                <Color blue="0.625" green="0.625" red="0.625" fx:id="x411" />
+                                             </textFill>
+                                          </Label>
+                                          <ComboBox fx:id="brushTypeSelection" focusTraversable="false" />
+                                       </children>
+                                       <padding>
+                                          <Insets left="3.0" right="3.0" />
+                                       </padding>
+                                    </HBox>
                                     <Separator focusTraversable="false" orientation="VERTICAL">
                                        <HBox.margin>
-                                          <Insets left="10.0" right="10.0" />
+                                          <Insets left="5.0" right="5.0" />
                                        </HBox.margin>
                                     </Separator>
                                 <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Tile Height" HBox.hgrow="ALWAYS">
                                   <font>
-                                    <Font size="9.0" fx:id="x3" />
+                                    <Font name="JetBrains Mono Regular" size="9.0" fx:id="x3" />
                                   </font>
                                   <textFill>
                                     <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
                                   </textFill>
                                 </Label>
-                                    <VBox>
+                                    <VBox spacing="1.0">
                                        <children>
                                           <Slider fx:id="heightLevelSlider" blockIncrement="8.0" focusTraversable="false" majorTickUnit="8.0" max="2048.0" minorTickCount="1" snapToTicks="true" value="400.0" />
                                           <HBox alignment="CENTER" spacing="3.0" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <TextField fx:id="tileHeightTextBox" alignment="CENTER" prefHeight="18.0" prefWidth="53.0" text="400" HBox.hgrow="NEVER">
                                                    <font>
-                                                      <Font size="8.0" />
+                                                      <Font name="JetBrains Mono Regular" size="8.0" />
                                                    </font>
                                                 </TextField>
                                                 <Button fx:id="tileHeightTextButton" alignment="CENTER" contentDisplay="TEXT_ONLY" mnemonicParsing="false" prefWidth="35.0" styleClass="height-button" text="SET" HBox.hgrow="ALWAYS">
                                                    <font>
-                                                      <Font size="9.0" />
+                                                      <Font name="JetBrains Mono Regular" size="9.0" />
                                                    </font>
                                                 </Button>
                                                 <JFXCheckBox fx:id="absoluteHeightCheck" alignment="CENTER" checkedColor="#f0524d43" contentDisplay="CENTER" graphicTextGap="0.0" styleClass="scaled-check" text="Absolute">
                                                    <font>
-                                                      <Font size="9.0" />
+                                                      <Font name="JetBrains Mono Regular" size="9.0" />
                                                    </font>
                                                 </JFXCheckBox>
                                              </children>
@@ -250,33 +259,43 @@
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <Separator focusTraversable="false" orientation="VERTICAL" />
-                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Object Filter">
-                                       <font>
-                                          <Font size="9.0" fx:id="x31" />
-                                       </font>
-                                       <textFill>
-                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x41" />
-                                       </textFill>
-                                    </Label>
-                                    <ComboBox fx:id="objectSelectionType" focusTraversable="false">
+                                    <Separator focusTraversable="false" orientation="VERTICAL">
                                        <HBox.margin>
-                                          <Insets bottom="3.0" top="3.0" />
-                                       </HBox.margin>
-                                    </ComboBox>
-                                    <Separator focusTraversable="false" orientation="VERTICAL" />
-                                    <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Height Level">
-                                       <font>
-                                          <Font size="9.0" fx:id="x312" />
-                                       </font>
-                                       <textFill>
-                                          <Color blue="0.625" green="0.625" red="0.625" fx:id="x412" />
-                                       </textFill>
-                                    </Label>
-                                    <Spinner fx:id="currentHeightSpinner" focusTraversable="false" maxWidth="55.0" />
+                                          <Insets left="5.0" right="5.0" />
+                                       </HBox.margin></Separator>
+                                    <HBox alignment="CENTER" spacing="5.0">
+                                       <children>
+                                          <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Obj Filter">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="9.0" fx:id="x31" />
+                                             </font>
+                                             <textFill>
+                                                <Color blue="0.625" green="0.625" red="0.625" fx:id="x41" />
+                                             </textFill>
+                                          </Label>
+                                          <ComboBox fx:id="objectSelectionType" focusTraversable="false" />
+                                       </children>
+                                    </HBox>
+                                    <Separator focusTraversable="false" orientation="VERTICAL">
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </HBox.margin></Separator>
+                                    <HBox alignment="CENTER" spacing="5.0">
+                                       <children>
+                                          <Label id="MainStatus" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Z Pos">
+                                             <font>
+                                                <Font name="JetBrains Mono Regular" size="9.0" fx:id="x312" />
+                                             </font>
+                                             <textFill>
+                                                <Color blue="0.625" green="0.625" red="0.625" fx:id="x412" />
+                                             </textFill>
+                                          </Label>
+                                          <Spinner fx:id="currentHeightSpinner" focusTraversable="false" maxWidth="55.0" />
+                                       </children>
+                                    </HBox>
                               </children>
                               <padding>
-                                <Insets left="13.0" right="3.0" />
+                                <Insets left="3.0" right="3.0" />
                               </padding>
                             </HBox>
                            </children>
@@ -288,7 +307,7 @@
                   </VBox>
                   <VBox minWidth="274.0" HBox.hgrow="NEVER">
                      <children>
-                        <HBox alignment="TOP_RIGHT" minHeight="-Infinity" prefHeight="36.0" style="-fx-background-radius: 6;">
+                        <HBox alignment="TOP_RIGHT" minHeight="-Infinity" prefHeight="41.0" style="-fx-background-radius: 6;">
                            <padding>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
                            </padding>
@@ -322,27 +341,27 @@
                                                                <children>
                                                                   <JFXCheckBox fx:id="unwalkableCheck" checkedColor="#f0544c" layoutX="10.0" layoutY="144.0" text="Unwalkable Flag (1)">
                                                                      <font>
-                                                                        <Font size="11.0" />
+                                                                        <Font name="JetBrains Mono Regular" size="11.0" />
                                                                      </font>
                                                                   </JFXCheckBox>
                                                                   <JFXCheckBox fx:id="bridgeCheck" checkedColor="#f0544c" layoutX="10.0" layoutY="172.0" text="Bridge Flag (2)">
                                                                      <font>
-                                                                        <Font size="11.0" />
+                                                                        <Font name="JetBrains Mono Regular" size="11.0" />
                                                                      </font>
                                                                   </JFXCheckBox>
                                                                   <JFXCheckBox fx:id="forceLowestCheck" checkedColor="#f0544c" layoutX="10.0" layoutY="36.0" text="Remove Roof Flag (4)">
                                                                      <font>
-                                                                        <Font size="11.0" />
+                                                                        <Font name="JetBrains Mono Regular" size="11.0" />
                                                                      </font>
                                                                   </JFXCheckBox>
                                                                   <JFXCheckBox fx:id="drawOnLowerZCheck" checkedColor="#f0544c" layoutX="10.0" layoutY="172.0" text="Render on Z - 1 (8)">
                                                                      <font>
-                                                                        <Font size="11.0" />
+                                                                        <Font name="JetBrains Mono Regular" size="11.0" />
                                                                      </font>
                                                                   </JFXCheckBox>
                                                                   <JFXCheckBox fx:id="disableRenderCheck" checkedColor="#f0544c" layoutX="10.0" layoutY="172.0" text="Disable render on map Flag (16)">
                                                                      <font>
-                                                                        <Font size="11.0" />
+                                                                        <Font name="JetBrains Mono Regular" size="11.0" />
                                                                      </font>
                                                                   </JFXCheckBox>
                                                                </children>
@@ -372,12 +391,12 @@
             <Insets />
          </opaqueInsets>
       </VBox>
-      <HBox fx:id="grabBar" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="36.0">
+      <HBox fx:id="grabBar" fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="41.0">
          <padding>
             <Insets left="55.0" />
          </padding>
          <children>
-            <HBox alignment="TOP_CENTER" minWidth="36.0" prefHeight="35.0" style="-fx-background-color: #3c3c3c;">
+            <HBox alignment="CENTER" minWidth="308.0" prefHeight="41.0" style="-fx-background-color: #3c3c3c;">
                <padding>
                   <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                </padding>
@@ -534,7 +553,7 @@
                   <Insets top="1.0" />
                </HBox.margin>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="36.0" style="-fx-background-radius: 6;" HBox.hgrow="ALWAYS">
+            <HBox alignment="TOP_RIGHT" minHeight="-Infinity" prefHeight="41.0" style="-fx-background-radius: 6;" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" />
                </padding>

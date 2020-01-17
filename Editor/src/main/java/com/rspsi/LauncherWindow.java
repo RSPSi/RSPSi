@@ -153,7 +153,7 @@ public class LauncherWindow extends Application {
 		
 		populatePlugins();
 		WindowControls controls = WindowControls.addWindowControlsFixed(primaryStage, controller.getTopBar(), controller.getControlBox());
-	
+		primaryStage.sizeToScene();
 
 	}
 	

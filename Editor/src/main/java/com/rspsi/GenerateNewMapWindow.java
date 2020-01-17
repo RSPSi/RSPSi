@@ -213,6 +213,7 @@ public class GenerateNewMapWindow extends Application {
 		});
 
 
+		primaryStage.sizeToScene();
 	}
 	
 	private void setWaterEdges() {

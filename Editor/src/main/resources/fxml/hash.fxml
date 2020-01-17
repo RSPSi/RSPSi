@@ -26,7 +26,7 @@
             <Spinner fx:id="widthSpinner" editable="true" maxWidth="70.0" />
             <Label text="Length">
                <font>
-                  <Font size="11.0" />
+                  <Font name="JetBrains Mono Regular" size="11.0" />
                </font>
             </Label>
             <Spinner fx:id="lengthSpinner" editable="true" maxWidth="70.0" HBox.hgrow="NEVER" />

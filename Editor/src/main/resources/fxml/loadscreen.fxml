@@ -50,9 +50,9 @@
                         <ComboBox fx:id="cacheLocation" editable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <Button fx:id="browseButton" minWidth="53.0" mnemonicParsing="false" text="Browse...">
+                  <Button fx:id="browseButton" minWidth="53.0" mnemonicParsing="false" text="Browse">
                      <font>
-                        <Font size="10.0" />
+                        <Font name="JetBrains Mono Regular" size="10.0" />
                      </font>
                   </Button>
                </children>

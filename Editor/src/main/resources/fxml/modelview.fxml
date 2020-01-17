@@ -55,12 +55,12 @@
                            <children>
                               <TextField fx:id="searchBox" prefHeight="26.0" prefWidth="160.0" promptText="Enter name..." HBox.hgrow="ALWAYS">
                                  <font>
-                                    <Font size="11.0" />
+                                    <Font name="JetBrains Mono Regular" size="11.0" />
                                  </font>
                               </TextField>
                               <Button fx:id="searchButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Search" HBox.hgrow="NEVER">
                                  <font>
-                                    <Font size="10.0" />
+                                    <Font name="JetBrains Mono Regular" size="10.0" />
                                  </font>
                               </Button>
                            </children>

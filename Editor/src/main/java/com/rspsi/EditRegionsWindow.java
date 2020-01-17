@@ -64,6 +64,7 @@ public class EditRegionsWindow extends Application {
 			reset();
 			primaryStage.hide();
 		});
+		primaryStage.sizeToScene();
 	}
 	
 	public void show(RegionView view) {

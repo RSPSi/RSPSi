@@ -44,7 +44,7 @@
                <children>
                   <Button fx:id="saveBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="35.0" text="S">
                      <font>
-                        <Font size="10.0" />
+                        <Font name="JetBrains Mono Regular" size="10.0" />
                      </font>
                      <tooltip>
                         <Tooltip text="Save Swatch" />
@@ -52,7 +52,7 @@
                   </Button>
                   <Button fx:id="loadBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="35.0" text="L">
                      <font>
-                        <Font size="10.0" />
+                        <Font name="JetBrains Mono Regular" size="10.0" />
                      </font>
                      <tooltip>
                         <Tooltip text="Load Swatch" />

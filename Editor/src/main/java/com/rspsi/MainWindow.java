@@ -569,7 +569,10 @@ public class MainWindow extends Application {
 				}
 			});
 
-			ChangeListenerUtil.addListener(() -> {
+			ChangeListenerUtil.addListener((oldVal, newVal) -> {
+				if(Options.currentTool.get() == ToolType.SELECT_OBJECT){
+					clientInstance.sceneGraph.rotateSelectedObjects(oldVal - newVal);
+				}
 				SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.forceMouseInTile());
 			}, Options.rotation);
 
@@ -714,6 +717,7 @@ public class MainWindow extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		primaryStage.sizeToScene();
 	}
 	
 	private static ScheduledExecutorService service = Executors.newScheduledThreadPool(4);

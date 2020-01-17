@@ -64,6 +64,7 @@ public class ContactMeWindow extends Application {
 				e.printStackTrace();
 			}
 		});
+		primaryStage.sizeToScene();
 	}
 	
 	public static boolean openWebpage(URI uri) {

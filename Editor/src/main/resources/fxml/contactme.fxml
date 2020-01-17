@@ -14,12 +14,12 @@
          <children>
             <Label text="Discord:">
                <font>
-                  <Font size="16.0" />
+                  <Font name="JetBrains Mono Regular" size="16.0" />
                </font>
             </Label>
             <TextField alignment="CENTER" editable="false" prefHeight="30.0" prefWidth="103.0" style="-fx-background-color: transparent;" text="RSPSi#4213">
                <font>
-                  <Font size="14.0" />
+                  <Font name="JetBrains Mono Regular" size="14.0" />
                </font>
             </TextField>
          </children>
@@ -28,7 +28,7 @@
          <children>
             <Hyperlink fx:id="visitSiteLink" text="Visit our website">
                <font>
-                  <Font size="17.0" />
+                  <Font name="JetBrains Mono Regular" size="17.0" />
                </font>
             </Hyperlink>
          </children>
@@ -37,7 +37,7 @@
          <children>
             <Hyperlink fx:id="pmLink" text="PM me on Rune-Server">
                <font>
-                  <Font size="17.0" />
+                  <Font name="JetBrains Mono Regular" size="17.0" />
                </font>
             </Hyperlink>
          </children>

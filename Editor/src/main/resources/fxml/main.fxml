@@ -192,7 +192,7 @@
                      <children>
                         <ToggleButton fx:id="selectTileBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" selected="true" text="S_T">
                            <font>
-                              <Font size="9.0" />
+                              <Font name="JetBrains Mono Regular" size="9.0" />
                            </font>
                            <toggleGroup>
                               <ToggleGroup fx:id="toolGroup" />
@@ -200,55 +200,55 @@
                            <tooltip>
                               <Tooltip text="Select Tile">
                                  <font>
-                                    <Font size="13.0" />
+                                    <Font name="JetBrains Mono Regular" size="13.0" />
                                  </font>
                               </Tooltip>
                            </tooltip>
                         </ToggleButton>
                         <ToggleButton fx:id="selectObjectBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="S_O" toggleGroup="$toolGroup">
                            <font>
-                              <Font size="9.0" />
+                              <Font name="JetBrains Mono Regular" size="9.0" />
                            </font>
                            <tooltip>
                               <Tooltip text="Select Object">
                                  <font>
-                                    <Font size="13.0" />
+                                    <Font name="JetBrains Mono Regular" size="13.0" />
                                  </font>
                               </Tooltip>
                            </tooltip>
                         </ToggleButton>
                         <ToggleButton fx:id="deleteObjectBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="D_O" toggleGroup="$toolGroup">
                            <font>
-                              <Font size="9.0" />
+                              <Font name="JetBrains Mono Regular" size="9.0" />
                            </font>
                            <tooltip>
                               <Tooltip text="Delete Object">
                                  <font>
-                                    <Font size="13.0" />
+                                    <Font name="JetBrains Mono Regular" size="13.0" />
                                  </font>
                               </Tooltip>
                            </tooltip>
                         </ToggleButton>
                         <ToggleButton fx:id="heightModifyBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="H_M" toggleGroup="$toolGroup">
                            <font>
-                              <Font size="9.0" />
+                              <Font name="JetBrains Mono Regular" size="9.0" />
                            </font>
                            <tooltip>
                               <Tooltip text="Modify Height">
                                  <font>
-                                    <Font size="13.0" />
+                                    <Font name="JetBrains Mono Regular" size="13.0" />
                                  </font>
                               </Tooltip>
                            </tooltip>
                         </ToggleButton>
                         <ToggleButton fx:id="setFlagBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="S_F" toggleGroup="$toolGroup">
                            <font>
-                              <Font size="9.0" />
+                              <Font name="JetBrains Mono Regular" size="9.0" />
                            </font>
                            <tooltip>
                               <Tooltip text="Set Tile Flags">
                                  <font>
-                                    <Font size="13.0" />
+                                    <Font name="JetBrains Mono Regular" size="13.0" />
                                  </font>
                               </Tooltip>
                            </tooltip>
@@ -290,7 +290,7 @@
                   <children>
                         <Label id="MainStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Brush Size">
                            <font>
-                              <Font size="11.0" fx:id="x32" />
+                              <Font name="JetBrains Mono Regular" size="11.0" fx:id="x32" />
                            </font>
                            <textFill>
                               <Color blue="0.625" green="0.625" red="0.625" fx:id="x42" />
@@ -298,7 +298,7 @@
                         </Label>
                         <Button fx:id="decreaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="-">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                            <HBox.margin>
                               <Insets right="-6.0" />
@@ -310,7 +310,7 @@
                            </tooltip></Slider>
                         <Button fx:id="increaseBrushSizeBtn" alignment="CENTER" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" maxHeight="23.0" maxWidth="14.0" mnemonicParsing="false" text="+">
                            <font>
-                              <Font size="10.0" />
+                              <Font name="JetBrains Mono Regular" size="10.0" />
                            </font>
                            <HBox.margin>
                               <Insets left="-10.0" />
@@ -318,7 +318,7 @@
                         </Button>
                         <Label id="MainStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Brush Type">
                            <font>
-                              <Font size="11.0" fx:id="x311" />
+                              <Font name="JetBrains Mono Regular" size="11.0" fx:id="x311" />
                            </font>
                            <textFill>
                               <Color blue="0.625" green="0.625" red="0.625" fx:id="x411" />
@@ -332,7 +332,7 @@
                         </Separator>
                     <Label id="MainStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Tile Height" HBox.hgrow="ALWAYS">
                       <font>
-                        <Font size="11.0" fx:id="x3" />
+                        <Font name="JetBrains Mono Regular" size="11.0" fx:id="x3" />
                       </font>
                       <textFill>
                         <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
@@ -352,7 +352,7 @@
                         <Separator orientation="VERTICAL" />
                         <Label id="MainStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Object Selection Type">
                            <font>
-                              <Font size="11.0" fx:id="x31" />
+                              <Font name="JetBrains Mono Regular" size="11.0" fx:id="x31" />
                            </font>
                            <textFill>
                               <Color blue="0.625" green="0.625" red="0.625" fx:id="x41" />
@@ -366,7 +366,7 @@
                         <Separator orientation="VERTICAL" />
                         <Label id="MainStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Height Level">
                            <font>
-                              <Font size="11.0" fx:id="x312" />
+                              <Font name="JetBrains Mono Regular" size="11.0" fx:id="x312" />
                            </font>
                            <textFill>
                               <Color blue="0.625" green="0.625" red="0.625" fx:id="x412" />
