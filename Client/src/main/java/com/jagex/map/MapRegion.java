@@ -885,7 +885,7 @@ public final class MapRegion {
 									 * }
 									 */
 
-									if ((overlayFloorId - 1) == 54) {
+									/*if ((overlayFloorId - 1) == 54) {
 										overlayRgbColour = 0x8B8B83;
 										overlayHslColour = -2;
 									}
@@ -896,7 +896,7 @@ public final class MapRegion {
 									} else if (overlayHslColour == 6363) { // river bank (brown shit) 508
 										overlayRgbColour = 0x483B21;
 										overlayHslColour = ColourUtils.toHsl(25, 146, 24);
-									} /*
+									}
 										 * else if((overlayFloorId-1) == 54){ overlayRgbColour =
 										 * overlayFloor.getColour(); overlayHslColour = -2; overlayTextureId = -1; }
 										 */
