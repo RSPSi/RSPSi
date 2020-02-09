@@ -25,10 +25,10 @@ public class FXUtils {
 	private static ObservableList<Screen> screens = Screen.getScreens();
 	public static void centerStage(Stage primaryStage){
 
-		log.info("{}", System.getProperty("os.name"));
+		//log.info("{}", System.getProperty("os.name"));
 		if(OSUtil.isUnix() && screens.size() > 1){
 			Rectangle2D rec = screens.get(1).getVisualBounds();
-			log.info("Screen: {} | {} ", Toolkit.getToolkit().getPrimaryScreen(), screens);
+			//log.info("Screen: {} | {} ", Toolkit.getToolkit().getPrimaryScreen(), screens);
 			// upper left corner of the extended screen
 			double offsetX = rec.getMinX();
 			double offsetY = rec.getMinY();
