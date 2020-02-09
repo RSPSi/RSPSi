@@ -289,7 +289,7 @@ public final class Buffer {
 		return readUShort() - 0x8000;
 	}
 	
-	public int readUSmart2() {
+	public int readUSmartInt() {
 		int val = 0;
 		int lastVal = 0;
 		while((lastVal = readUSmart()) == 32767) {
@@ -412,6 +412,14 @@ public final class Buffer {
 			this.writeByte(value);
 		} else {
 			this.writeShort(0x8000 | value);
+		}
+	}
+
+	public void writeUSmartInt(int value) {
+		if (value > Short.MAX_VALUE) {
+			this.writeInt(value);
+		} else {
+			this.writeUSmart(value);
 		}
 	}
 

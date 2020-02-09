@@ -1,14 +1,12 @@
 package com.jagex.map;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import com.jagex.Client;
 import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.RSAreaLoader;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 
 import com.jagex.cache.def.Floor;
 import com.jagex.cache.def.ObjectDefinition;
@@ -26,7 +24,6 @@ import com.jagex.map.tile.TileUtils;
 import com.jagex.net.ResourceProvider;
 import com.jagex.util.ColourUtils;
 import com.jagex.util.Constants;
-import com.jagex.util.MapObjectData;
 import com.jagex.util.ObjectKey;
 import com.rspsi.options.Options;
 
@@ -113,7 +110,7 @@ public final class MapRegion {
 	public static void loadObjects(Buffer buffer, ResourceProvider provider) {
 		int id = -1;
 		do {
-			int offset = buffer.readUSmart2();
+			int offset = buffer.readUSmartInt();
 			if (offset == 0) {
 				break;
 			}
@@ -149,7 +146,7 @@ public final class MapRegion {
 		int id = -1;
 
 		while (true) {
-			int offset = buffer.readUSmart2();
+			int offset = buffer.readUSmartInt();
 			if (offset == 0)
 				return ready;
 
@@ -199,7 +196,7 @@ public final class MapRegion {
 		int id = -1;
 
 		while (true) {
-			int offset = buffer.readUSmart2();
+			int offset = buffer.readUSmartInt();
 			if (offset == 0)
 				return ready;
 
@@ -332,7 +329,7 @@ public final class MapRegion {
 			Buffer buffer = new Buffer(data);
 			int id = -1;
 			do {
-				int idOffset = buffer.readUSmart2();
+				int idOffset = buffer.readUSmartInt();
 				if (idOffset == 0) {
 					break decoding;
 				}
@@ -341,7 +338,7 @@ public final class MapRegion {
 				int config = 0;
 
 				do {
-					int offset = buffer.readUSmart();
+					int offset = buffer.readUSmartInt();
 					if (offset == 0) {
 						break;
 					}
@@ -433,7 +430,7 @@ public final class MapRegion {
 			int id = -1;
 
 			do {
-				int idOffset = buffer.readUSmart2();
+				int idOffset = buffer.readUSmartInt();
 				if (idOffset == 0) {
 					break decoding;
 				}
@@ -442,7 +439,7 @@ public final class MapRegion {
 				int position = 0;
 
 				do {
-					int offset = buffer.readUSmart();
+					int offset = buffer.readUSmartInt();
 					if (offset == 0) {
 						break;
 					}

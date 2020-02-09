@@ -4523,7 +4523,7 @@ public class SceneGraph {
 				System.out.println("WARNING: 0 objects for id " + objectId);
 			int newObj = objectId - lastObjectId;
 
-			buff.writeUSmart(newObj);
+			buff.writeUSmartInt(newObj);
 			group.sort();
 			int previousLocHash = 0;
 			for (DefaultWorldObject obj : group.getObjects()) {
@@ -4532,9 +4532,9 @@ public class SceneGraph {
 
 				int newLocHash = locHash - previousLocHash + 1;
 				if (previousLocHash != locHash) {
-					buff.writeUSmart(newLocHash);
+					buff.writeUSmartInt(newLocHash);
 				} else {
-					buff.writeUSmart(1);
+					buff.writeUSmartInt(1);
 				}
 				buff.writeByte(obj.getConfig());
 				previousLocHash = locHash;
@@ -4543,7 +4543,7 @@ public class SceneGraph {
 			lastObjectId = objectId;
 		}
 
-		buff.writeUSmart(0);
+		buff.writeUSmartInt(0);
 		byte[] data = Arrays.copyOf(buff.getPayload(), buff.getPosition());
 
 		return data;
