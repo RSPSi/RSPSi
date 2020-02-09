@@ -531,7 +531,11 @@ public final class Client implements Runnable {
 
 				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
 			} else {
-				mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
+				try {
+					mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
+				} catch (Exception e) {
+					mapScenes = new Sprite[0];
+				}
 				try {
 					int lastIdx = 0;
 
@@ -1516,19 +1520,19 @@ public final class Client implements Runnable {
 	public final void shutdown() {
 		try {
 			cache.close();
+			singleton = null;
+			mapScenes = null;
+			mapFunctions = null;
+			reset();
+			hoveredUID = null;
+			gameLoaded.set(false);
+			runLater.clear();
+			method118();
+			MeshLoader.getSingleton().dispose();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		gameLoaded.set(false);
-		mapScenes = null;
-		mapFunctions = null;
-		reset();
-		hoveredUID = null;
-		runLater.clear();
-		MeshLoader.getSingleton().dispose();
-		method118();
-		singleton = null;
 	}
 
 	public final int tileHeight(int x, int y, int z) {
