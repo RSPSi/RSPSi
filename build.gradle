@@ -10,12 +10,12 @@ plugins {
 
 
 wrapper {
-    gradleVersion = '5.5'
+    gradleVersion = '6.1'
 }
 
 
 group = 'RSPSi Editor'
-version = '1.16.0'
+version = '1.16.1'
 
 allprojects {
     repositories {
