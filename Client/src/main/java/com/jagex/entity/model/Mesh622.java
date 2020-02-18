@@ -361,15 +361,15 @@ public class Mesh622 extends Mesh {
             for (int i12 = 0; i12 < numTriangles; i12++)
                 facePriorities[i12] = i2;
         }
-        this.faceColourOrTextureId = faceColours2;
-        this.vertices = numVertices;
-        this.faces = numTriangles;
-        this.vertexX = vertexX;
-        this.vertexY = vertexY;
-        this.vertexZ = vertexZ;
-        faceIndexX = facePoint1;
-        faceIndexY = facePoint2;
-        faceIndexZ = facePoint3;
+        this.faceColours = faceColours2;
+        this.numVertices = numVertices;
+        this.numFaces = numTriangles;
+        this.verticesX = vertexX;
+        this.verticesY = vertexY;
+        this.verticesZ = vertexZ;
+        faceIndicesA = facePoint1;
+        faceIndicesB = facePoint2;
+        faceIndicesC = facePoint3;
         filterTriangles();
         scale2(4);
         convertTexturesTo317(textureIds, texTrianglesPoint1, texTrianglesPoint2, texTrianglesPoint3, false);

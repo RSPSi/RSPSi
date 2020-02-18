@@ -93,7 +93,7 @@ public final class AnimableObject extends Renderable {
 			return null;
 
 		int frame = graphic.getAnimation().getPrimaryFrame(elapsedFrames);
-		Mesh model = new Mesh(graphicModel, true, FrameLoader.isInvalid(frame), false);
+		Mesh model = new Mesh(graphicModel, true, FrameLoader.isInvalid(frame), false, true);
 
 		if (!transformationCompleted) {
 			model.prepareSkeleton();

@@ -85,42 +85,48 @@ public class Mesh317 extends Mesh {
 		header.setZDataOffset(offset);
 		offset += zDataOffset;
 		
-		vertices = header.getVertices();
-		faces = header.getFaceCount();
-		texturedFaces = header.getTexturedFaceCount();
-		vertexX = new int[vertices];
-		vertexY = new int[vertices];
-		vertexZ = new int[vertices];
-		faceIndexX = new int[faces];
-		faceIndexY = new int[faces];
-		faceIndexZ = new int[faces];
-		texturedFaceIndexX = new int[texturedFaces];
-		texturedFaceIndexY = new int[texturedFaces];
-		texturedFaceIndexZ = new int[texturedFaces];
+		numVertices = header.getVertices();
+		numFaces = header.getFaceCount();
+		numTextures = header.getTexturedFaceCount();
+		verticesX = new int[numVertices];
+		verticesY = new int[numVertices];
+		verticesZ = new int[numVertices];
+		faceIndicesA = new int[numFaces];
+		faceIndicesB = new int[numFaces];
+		faceIndicesC = new int[numFaces];
+
+		if(numTextures > 0){
+			textureRenderTypes = new byte[numTextures];
+			textureMappingP = new int[numTextures];
+			textureMappingM = new int[numTextures];
+			textureMappingN = new int[numTextures];
+		}
+		if(useTextures == 1){
+			faceTypes = new int[numFaces];
+			faceTextures = new int[numFaces];
+			texture_coordinates = new byte[numFaces];
+		}
 
 		if (header.getVertexBoneOffset() >= 0) {
-			vertexBones = new int[vertices];
+			vertexBones = new int[numVertices];
 		}
 
-		if (header.getTexturePointOffset() >= 0) {
-			faceTypes = new int[faces];
-		}
 
 		if (header.getFacePriorityOffset() >= 0) {
-			facePriorities = new int[faces];
+			facePriorities = new int[numFaces];
 		} else {
-			priority = -header.getFacePriorityOffset() - 1;
+			facePriority = -header.getFacePriorityOffset() - 1;
 		}
 
 		if (header.getFaceAlphaOffset() >= 0) {
-			faceAlphas = new int[faces];
+			faceAlphas = new int[numFaces];
 		}
 
 		if (header.getFaceBoneOffset() >= 0) {
-			faceSkin = new int[faces];
+			faceSkin = new int[numFaces];
 		}
 
-		faceColourOrTextureId = new int[faces];
+		faceColours = new int[numFaces];
 		Buffer directions = new Buffer(header.getData());
 		directions.setPosition(header.getVertexDirectionOffset());
 
@@ -140,7 +146,7 @@ public class Mesh317 extends Mesh {
 		int baseY = 0;
 		int baseZ = 0;
 
-		for (int vertex = 0; vertex < vertices; vertex++) {
+		for (int vertex = 0; vertex < numVertices; vertex++) {
 			int mask = directions.readUByte();
 			int x = 0;
 			if ((mask & 1) != 0) {
@@ -157,12 +163,12 @@ public class Mesh317 extends Mesh {
 				z = verticesZ.readSmart();
 			}
 
-			vertexX[vertex] = baseX + x;
-			vertexY[vertex] = baseY + y;
-			vertexZ[vertex] = baseZ + z;
-			baseX = vertexX[vertex];
-			baseY = vertexY[vertex];
-			baseZ = vertexZ[vertex];
+			this.verticesX[vertex] = baseX + x;
+			this.verticesY[vertex] = baseY + y;
+			this.verticesZ[vertex] = baseZ + z;
+			baseX = this.verticesX[vertex];
+			baseY = this.verticesY[vertex];
+			baseZ = this.verticesZ[vertex];
 
 			if (vertexBones != null) {
 				vertexBones[vertex] = bones.readUByte();
@@ -183,10 +189,19 @@ public class Mesh317 extends Mesh {
 
 		bones.setPosition(header.getFaceBoneOffset());
 
-		for (int face = 0; face < faces; face++) {
-			faceColourOrTextureId[face] = colours.readUShort();
-			if (faceTypes != null) {
-				faceTypes[face] = points.readUByte();
+		for (int face = 0; face < numFaces; face++) {
+			faceColours[face] = colours.readUShort();
+			if (useTextures == 1) {
+				int type = points.readUByte();
+				faceTypes[face] = type;
+				if((type & 2) == 2){
+					this.texture_coordinates[face] = (byte)(type >> 2);
+					this.faceTextures[face] = this.faceColours[face];
+					this.faceColours[face] = 127;
+				} else {
+					this.faceTextures[face] = -1;
+					this.texture_coordinates[face] = -1;
+				}
 			}
 			if (facePriorities != null) {
 				facePriorities[face] = priorities.readUByte();
@@ -210,7 +225,7 @@ public class Mesh317 extends Mesh {
 		int faceZ = 0;
 		offset = 0;
 
-		for (int vertex = 0; vertex < faces; vertex++) {
+		for (int vertex = 0; vertex < numFaces; vertex++) {
 			int type = types.readUByte();
 
 			if (type == 1) {
@@ -221,25 +236,25 @@ public class Mesh317 extends Mesh {
 				faceZ = faceData.readSmart() + offset;
 				offset = faceZ;
 
-				faceIndexX[vertex] = faceX;
-				faceIndexY[vertex] = faceY;
-				faceIndexZ[vertex] = faceZ;
+				faceIndicesA[vertex] = faceX;
+				faceIndicesB[vertex] = faceY;
+				faceIndicesC[vertex] = faceZ;
 			} else if (type == 2) {
 				faceY = faceZ;
 				faceZ = faceData.readSmart() + offset;
 				offset = faceZ;
 
-				faceIndexX[vertex] = faceX;
-				faceIndexY[vertex] = faceY;
-				faceIndexZ[vertex] = faceZ;
+				faceIndicesA[vertex] = faceX;
+				faceIndicesB[vertex] = faceY;
+				faceIndicesC[vertex] = faceZ;
 			} else if (type == 3) {
 				faceX = faceZ;
 				faceZ = faceData.readSmart() + offset;
 				offset = faceZ;
 
-				faceIndexX[vertex] = faceX;
-				faceIndexY[vertex] = faceY;
-				faceIndexZ[vertex] = faceZ;
+				faceIndicesA[vertex] = faceX;
+				faceIndicesB[vertex] = faceY;
+				faceIndicesC[vertex] = faceZ;
 			} else if (type == 4) {
 				int temp = faceX;
 				faceX = faceY;
@@ -248,19 +263,39 @@ public class Mesh317 extends Mesh {
 				faceZ = faceData.readSmart() + offset;
 				offset = faceZ;
 
-				faceIndexX[vertex] = faceX;
-				faceIndexY[vertex] = faceY;
-				faceIndexZ[vertex] = faceZ;
+				faceIndicesA[vertex] = faceX;
+				faceIndicesB[vertex] = faceY;
+				faceIndicesC[vertex] = faceZ;
 			}
 		}
 
 		Buffer maps = directions;
 		maps.setPosition(header.getUvMapFaceOffset());
 
-		for (int index = 0; index < texturedFaces; index++) {
-			texturedFaceIndexX[index] = maps.readUShort();
-			texturedFaceIndexY[index] = maps.readUShort();
-			texturedFaceIndexZ[index] = maps.readUShort();
+		for (int index = 0; index < numTextures; index++) {
+			textureRenderTypes[index] = 0;
+			textureMappingP[index] = maps.readUShort();
+			textureMappingM[index] = maps.readUShort();
+			textureMappingN[index] = maps.readUShort();
+		}
+
+		if(this.texture_coordinates != null) {
+			boolean var46 = false;
+
+			for(int var43 = 0; var43 < numFaces; ++var43) {
+				int var44 = this.texture_coordinates[var43] & 255;
+				if(var44 != 255) {
+					if(this.faceIndicesA[var43] == (this.textureMappingP[var44] & '\uffff') && this.faceIndicesB[var43] == (this.textureMappingM[var44] & '\uffff') && this.faceIndicesC[var43] == (this.textureMappingN[var44] & '\uffff')) {
+						this.texture_coordinates[var43] = -1;
+					} else {
+						var46 = true;
+					}
+				}
+			}
+
+			if(!var46) {
+				this.texture_coordinates = null;
+			}
 		}
 
 	}

@@ -129,7 +129,6 @@ public final class ObjectDefinition {
 				if (base == null) {
 					base = MeshLoader.getSingleton().lookup(id & 0xffff);
 					if (base == null) {
-						System.out.println("failed lookup id " + id);
 						return null;
 					}
 					base = base.copy();
@@ -180,7 +179,6 @@ public final class ObjectDefinition {
 				base = MeshLoader.getSingleton().lookup(id & 0xffff);
 
 				if (base == null) {
-					System.out.println("BASE NULL FOR ID " + id);
 					return null;
 				}
 
@@ -199,7 +197,7 @@ public final class ObjectDefinition {
 		boolean translate = translateX != 0 || translateY != 0 || translateZ != 0;
 
 		Mesh model = new Mesh(base, originalColours == null, FrameLoader.isInvalid(frame),
-				orientation == 0 && frame == -1 && !scale && !translate);
+				orientation == 0 && frame == -1 && !scale && !translate, retextureToFind == null);
 		if (frame != -1) {
 			model.prepareSkeleton();
 			model.apply(frame);
@@ -237,7 +235,7 @@ public final class ObjectDefinition {
 			model.translate(translateX, translateY, translateZ);
 		}
 
-		model.light(64 + ambientLighting, 768 + lightDiffusion * 5, -50, -10, -50, !delayShading);
+		model.light(64 + ambientLighting, 768 + lightDiffusion * 25, -50, -10, -50, !delayShading);
 		if (supportItems == 1) {
 			model.anInt1654 = model.getModelHeight();
 		}
@@ -259,13 +257,13 @@ public final class ObjectDefinition {
 
 		if (contouredGround) {
 			int y = (aY + bY + cY + dY) / 4;
-			for (int vertex = 0; vertex < model.vertices; vertex++) {
-				int x = model.vertexX[vertex];
-				int z = model.vertexZ[vertex];
+			for (int vertex = 0; vertex < model.numVertices; vertex++) {
+				int x = model.verticesX[vertex];
+				int z = model.verticesZ[vertex];
 				int l2 = aY + (bY - aY) * (x + 64) / 128;
 				int i3 = dY + (cY - dY) * (x + 64) / 128;
 				int j3 = l2 + (i3 - l2) * (z + 64) / 128;
-				model.vertexY[vertex] += j3 - y;
+				model.verticesY[vertex] += j3 - y;
 			}
 
 			model.computeSphericalBounds();

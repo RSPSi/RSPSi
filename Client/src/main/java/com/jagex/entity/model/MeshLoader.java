@@ -3,8 +3,11 @@ package com.jagex.entity.model;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.rspsi.cache.CacheFileType;
+import lombok.extern.slf4j.Slf4j;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -14,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.jagex.net.ResourceProvider;
 import com.jagex.net.ResourceResponse;
 
+@Slf4j
 public class MeshLoader {
 	
 	public MeshLoader(ResourceProvider provider) throws Exception {
@@ -34,7 +38,7 @@ public class MeshLoader {
 	}
 
 	public void dispose() {
-		loadedMeshes.clear();
+		clearAll();
 		singleton = null;
 	}
 	
@@ -49,9 +53,9 @@ public class MeshLoader {
 		MeshRevision revision = MeshUtils.getRevision(data);
 		switch(revision) {
 		case REVISION_525:
+			case REVISION_622:
 			return new Mesh525(data);
-		case REVISION_622:
-			return new Mesh622(data);
+			//return new Mesh622(data);
 		case REVISION_317:
 		default:
 			return new Mesh317(data);
@@ -65,12 +69,12 @@ public class MeshLoader {
 		Mesh mesh = null;
 		try {
 			switch (revision) {
+				case REVISION_622:
 				case REVISION_525:
 					mesh = new Mesh525(data);
 					break;
-				case REVISION_622:
-					mesh = new Mesh622(data);
-					break;
+					//mesh = new Mesh622(data);
+				//	break;
 
 				default:
 				case REVISION_317:
@@ -81,8 +85,11 @@ public class MeshLoader {
 		} catch(Exception ex){
 			ex.printStackTrace();
 		}
-		
+		mesh.id = id;
+		mesh.revision = revision;
+
 		loadedMeshes.put(id, mesh);
+
 		awaitingLoad.remove(Integer.valueOf(id));
 		
 		return mesh;
@@ -118,5 +125,10 @@ public class MeshLoader {
 		return singleton;
 	}
 
-	private static MeshLoader singleton; 
+	private static MeshLoader singleton;
+
+	public void clearAll() {
+		loadedMeshes.clear();
+		awaitingLoad.clear();
+	}
 }

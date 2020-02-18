@@ -2292,37 +2292,37 @@ public class SceneGraph {
 	private void mergeNormals(Mesh first, Mesh second, int dx, int dy, int dz, boolean flag) {
 		anInt488++;
 		int count = 0;
-		int[] secondX = second.vertexX;
-		int secondVertices = second.vertices;
+		int[] secondX = second.verticesX;
+		int secondVertices = second.numVertices;
 
-		for (int vertexA = 0; vertexA < first.vertices; vertexA++) {
+		for (int vertexA = 0; vertexA < first.numVertices; vertexA++) {
 			VertexNormal parentNormalA = first.getNormal(vertexA);
 			VertexNormal normalA = first.normals[vertexA];
 
-			if (normalA.getFaceCount() != 0) {
-				int y = first.vertexY[vertexA] - dy;
+			if (normalA.getMagnitude() != 0) {
+				int y = first.verticesY[vertexA] - dy;
 				if (y <= second.minimumY) {
-					int x = first.vertexX[vertexA] - dx;
+					int x = first.verticesX[vertexA] - dx;
 
 					if (x >= second.minimumX && x <= second.maximumX) {
-						int z = first.vertexZ[vertexA] - dz;
+						int z = first.verticesZ[vertexA] - dz;
 
 						if (z >= second.minimumZ && z <= second.maximumZ) {
 							for (int vertexB = 0; vertexB < secondVertices; vertexB++) {
 								VertexNormal parentNormalB = second.getNormal(vertexB);
 								VertexNormal normalB = second.normals[vertexB];
 
-								if (x == secondX[vertexB] && z == second.vertexZ[vertexB]
-										&& y == second.vertexY[vertexB] && normalB.getFaceCount() != 0) {
+								if (x == secondX[vertexB] && z == second.verticesZ[vertexB]
+										&& y == second.verticesY[vertexB] && normalB.getMagnitude() != 0) {
 									parentNormalA.setX(parentNormalA.getX() + normalB.getX());
 									parentNormalA.setY(parentNormalA.getY() + normalB.getY());
 									parentNormalA.setZ(parentNormalA.getZ() + normalB.getZ());
-									parentNormalA.setFaceCount(parentNormalA.getFaceCount() + normalB.getFaceCount());
+									parentNormalA.setMagnitude(parentNormalA.getMagnitude() + normalB.getMagnitude());
 
 									parentNormalB.setX(parentNormalB.getX() + normalA.getX());
 									parentNormalB.setY(parentNormalB.getY() + normalA.getY());
 									parentNormalB.setZ(parentNormalB.getZ() + normalA.getZ());
-									parentNormalB.setFaceCount(parentNormalB.getFaceCount() + normalA.getFaceCount());
+									parentNormalB.setMagnitude(parentNormalB.getMagnitude() + normalA.getMagnitude());
 
 									count++;
 									anIntArray486[vertexA] = anInt488;
@@ -2338,16 +2338,16 @@ public class SceneGraph {
 		if (count < 3 || !flag)
 			return;
 
-		for (int k1 = 0; k1 < first.faces; k1++) {
-			if (anIntArray486[first.faceIndexX[k1]] == anInt488 && anIntArray486[first.faceIndexY[k1]] == anInt488
-					&& anIntArray486[first.faceIndexZ[k1]] == anInt488) {
+		for (int k1 = 0; k1 < first.numFaces; k1++) {
+			if (anIntArray486[first.faceIndicesA[k1]] == anInt488 && anIntArray486[first.faceIndicesB[k1]] == anInt488
+					&& anIntArray486[first.faceIndicesC[k1]] == anInt488) {
 				first.faceTypes[k1] = -1;
 			}
 		}
 
-		for (int l1 = 0; l1 < second.faces; l1++) {
-			if (anIntArray487[second.faceIndexX[l1]] == anInt488 && anIntArray487[second.faceIndexY[l1]] == anInt488
-					&& anIntArray487[second.faceIndexZ[l1]] == anInt488) {
+		for (int l1 = 0; l1 < second.numFaces; l1++) {
+			if (anIntArray487[second.faceIndicesA[l1]] == anInt488 && anIntArray487[second.faceIndicesB[l1]] == anInt488
+					&& anIntArray487[second.faceIndicesC[l1]] == anInt488) {
 				second.faceTypes[l1] = -1;
 			}
 		}

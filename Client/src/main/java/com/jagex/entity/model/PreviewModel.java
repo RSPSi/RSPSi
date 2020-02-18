@@ -18,27 +18,31 @@ public class PreviewModel extends Mesh {
 		shadedFaceColoursY = copyArray(model.shadedFaceColoursY);
 		shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
 		faceAlphas = copyArray(model.faceAlphas);
-		 this.faceColourOrTextureId = copyArray(model.faceColourOrTextureId);
-		faceGroups = (model.faceGroups);
+		faceColours = copyArray(model.faceColours);
+		faceTextures = copyArray(model.faceTextures);
+		texture_coordinates = copyArray(model.texture_coordinates);
+		textureRenderTypes = copyArray(model.textureRenderTypes);
+		faceGroups = copyArray(model.faceGroups);
 		facePriorities = copyArray(model.facePriorities);
-		faces = (model.faces);
+		numFaces = (model.numFaces);
 		faceSkin = copyArray(model.faceSkin);
-		faceIndexX = copyArray(model.faceIndexX);
-		faceIndexY = copyArray(model.faceIndexY);
-		faceIndexZ = copyArray(model.faceIndexZ);
+		faceIndicesA = copyArray(model.faceIndicesA);
+		faceIndicesB = copyArray(model.faceIndicesB);
+		faceIndicesC = copyArray(model.faceIndicesC);
 		normals = (model.normals);
-		priority = (model.priority);
-		texturedFaces = (model.texturedFaces);
-		texturedFaceIndexX = copyArray(model.texturedFaceIndexX);
-		texturedFaceIndexY = copyArray(model.texturedFaceIndexY);
-		texturedFaceIndexZ = copyArray(model.texturedFaceIndexZ);
+		facePriority = (model.facePriority);
+		numTextures = model.numTextures;
+		textureMappingP = copyArray(model.textureMappingP);
+		textureMappingM = copyArray(model.textureMappingM);
+		textureMappingN = copyArray(model.textureMappingN);
 		faceTypes = copyArray(model.faceTypes);
-		vertexGroups = (model.vertexGroups);
+		vertexGroups = copyArray(model.vertexGroups);
 		vertexBones = copyArray(model.vertexBones);
-		vertexX = copyArray(model.vertexX);
-		vertexY = copyArray(model.vertexY);
-		vertexZ = copyArray(model.vertexZ);
-		vertices = (model.vertices);
+		verticesX = copyArray(model.verticesX);
+		verticesY = copyArray(model.verticesY);
+		verticesZ = copyArray(model.verticesZ);
+		numVertices = model.numVertices;
+		
 	}
 	
 	@Override

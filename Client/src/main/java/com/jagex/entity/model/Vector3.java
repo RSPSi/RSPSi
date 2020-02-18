@@ -2,13 +2,13 @@ package com.jagex.entity.model;
 
 import javafx.geometry.Point3D;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
-public class VertexNormal {
+public class Vector3 {
 
 	// Class33
-
-	public int magnitude;
 
 	public int x;
 	public int y;
@@ -18,13 +18,5 @@ public class VertexNormal {
 		return new Point3D(x, y, z);
 	}
 
-	public VertexNormal(){
 
-	}
-	public VertexNormal(VertexNormal var1) {
-		this.x = var1.x;
-		this.y = var1.y;
-		this.z = var1.z;
-		this.magnitude = var1.magnitude;
-	}
 }

@@ -17,7 +17,7 @@ public final class Buffer {
 
 	private int bitPosition;
 	private byte[] payload;
-	private int position;
+	public int position;
 
 	/**
 	 * Creates the buffer with the specified payload.
@@ -261,6 +261,11 @@ public final class Buffer {
 
 	public int readUByte() {
 		return payload[position++] & 0xff;
+	}
+
+	public final int getULEShort() {
+		this.position += 2;
+		return (this.payload[-2 + this.position] << 8 & 65280) - -(this.payload[-1 + this.position] & 255);
 	}
 
 	public int readUByteA() {
