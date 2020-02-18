@@ -170,7 +170,7 @@ public class LauncherWindow extends Application {
 		controller.getCacheLocation().getItems().addAll(oldCachePaths);
 	}
 	
-	private void populatePlugins() {
+	public void populatePlugins() {
 		controller.getEnabledPlugins().getItems().clear();
 		controller.getDisabledPlugins().getItems().clear();
 		

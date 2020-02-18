@@ -321,6 +321,8 @@ public class MainController {
 
 	@FXML
 	private MenuItem reloadSwatchesBtn;
+	@FXML
+	private MenuItem reloadModelsBtn;
 
 	@FXML
 	private MenuItem fixHeightsBtn;

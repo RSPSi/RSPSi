@@ -2,6 +2,7 @@ package org.displee.cache.index;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import org.displee.CacheLibrary;
 import org.displee.CacheLibraryMode;
@@ -718,6 +719,9 @@ public class ReferenceTable implements Container {
 		return archive;
 	}
 
+	public int getLastArchiveId(){
+		return IntStream.of(archiveIds).max().orElse(-1);
+	}
 	/**
 	 * Check if this index needs to be updated.
 	 * @return {@code needUpdate}

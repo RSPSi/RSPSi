@@ -1,6 +1,10 @@
 package com.rspsi.resources;
 
+import com.google.common.collect.Lists;
 import javafx.scene.image.Image;
+
+import java.util.Collection;
+import java.util.List;
 
 public class ResourceLoader {
 	
@@ -35,7 +39,9 @@ public class ResourceLoader {
 	public Image getLogo128() {
 		return logo128;
 	}
-	
-	
 
+
+	public List<Image> getIcons() {
+		return Lists.newArrayList(logo16, logo32, logo64, logo128);
+	}
 }

@@ -242,7 +242,8 @@ public class MainWindow extends Application {
 			primaryStage.setTitle("RSPSi Map Editor 1.16.1");
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setScene(scene);
-			primaryStage.getIcons().add(ResourceLoader.getSingleton().getLogo64());
+			primaryStage.getIcons().addAll(ResourceLoader.getSingleton().getIcons());
+
 			primaryStage.show();
 
 			FXUtils.centerStage(primaryStage);
@@ -338,6 +339,7 @@ public class MainWindow extends Application {
 				underlaySwatch.clear();
 				fillSwatches();
 			});
+			controller.getReloadModelsBtn().setOnAction(evt -> MeshLoader.getSingleton().clearAll());
 			controller.getCopySelectedTilesBtn().setOnAction(evt -> {
 				if(Options.currentTool.get() == ToolType.SELECT_OBJECT) {
 					SceneGraph.onCycleEnd.add(() -> {
@@ -490,6 +492,7 @@ public class MainWindow extends Application {
 			clientInstance.errorDisplayed.addListener((observable, oldValue, newValue) -> controller.getReturnToLauncher().setVisible(newValue.booleanValue()));
 			controller.getReturnToLauncher().setOnAction(evt -> {
 				LauncherWindow.getSingleton().getPrimaryStage().show();
+				LauncherWindow.getSingleton().populatePlugins();
 				singleton = null;
 				if (clientInstance != null) {
 					try {

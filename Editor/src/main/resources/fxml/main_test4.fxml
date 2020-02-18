@@ -305,14 +305,14 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox minWidth="274.0" HBox.hgrow="NEVER">
+                  <VBox minWidth="300.0" HBox.hgrow="NEVER">
                      <children>
                         <HBox alignment="TOP_RIGHT" minHeight="-Infinity" prefHeight="41.0" style="-fx-background-radius: 6;">
                            <padding>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
                            </padding>
                         </HBox>
-                        <TabPane fx:id="toolsTabPane" focusTraversable="false" maxWidth="280.0" nodeOrientation="LEFT_TO_RIGHT" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="100.0" tabMaxWidth="300.0" VBox.vgrow="ALWAYS">
+                        <TabPane fx:id="toolsTabPane" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="100.0" tabMaxWidth="300.0" VBox.vgrow="ALWAYS">
                            <tabs>
                               <Tab closable="false" text="Misc">
                                 <content>
@@ -534,7 +534,8 @@
                               <MenuItem fx:id="showObjectViewBtn" mnemonicParsing="false" text="Show object view" />
                               <MenuItem fx:id="showRemapperBtn" mnemonicParsing="false" text="Show remapper" />
                               <SeparatorMenuItem mnemonicParsing="false" />
-                            <MenuItem fx:id="reloadSwatchesBtn" mnemonicParsing="false" text="Reload swatches" />
+                              <MenuItem fx:id="reloadSwatchesBtn" mnemonicParsing="false" text="Reload swatches" />
+                              <MenuItem fx:id="reloadModelsBtn" mnemonicParsing="false" text="Reload models" />
                           </items>
                         </Menu>
                     <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">

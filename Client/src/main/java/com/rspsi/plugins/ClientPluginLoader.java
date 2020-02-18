@@ -46,7 +46,7 @@ public class ClientPluginLoader {
 			}
 		}
 		
-        URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls.toArray(new URL[]{}), Thread.currentThread().getContextClassLoader());
+        URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), Thread.currentThread().getContextClassLoader());
 
         serviceLoader = ServiceLoader.load(ClientPlugin.class, urlClassLoader);
         forEach(plugin -> {

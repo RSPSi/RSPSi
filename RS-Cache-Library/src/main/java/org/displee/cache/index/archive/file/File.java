@@ -1,11 +1,13 @@
 package org.displee.cache.index.archive.file;
 
+import lombok.ToString;
 import org.displee.cache.index.archive.Archive;
 
 /**
  * A class that represents the a single file inside an {@link Archive}.
  * @author Displee
  */
+@ToString
 public class File {
 
 	/**
@@ -114,11 +116,6 @@ public class File {
 	 */
 	public String getInfo() {
 		return "File[id=" + id + ", name=" + name + "]";
-	}
-	
-	@Override
-	public String toString() {
-		return "File " + id;
 	}
 
 }
