@@ -550,13 +550,17 @@ public class SceneGraph {
 
 
 		if (!temporary) {
-			if (currentState.isPresent() && currentState.get().getType() == StateChangeType.OBJECT_SPAWN) {
-				for (int x = minX; x < minX + deltaX; x++) {
-					for (int y = minY; y < minY + deltaY; y++) {
+			if (currentState.isPresent()) {
+				TileChange change = currentState.get();
+				StateChangeType type = change.getType();
+				if(type == StateChangeType.OBJECT_SPAWN) {
+					for (int x = minX; x < minX + deltaX; x++) {
+						for (int y = minY; y < minY + deltaY; y++) {
 
-						ObjectState state = new ObjectState(x, y, plane);
-						state.setKey(key);
-						((SpawnObject) currentState.get()).preserveTileState(state);
+							ObjectState state = new ObjectState(x, y, plane);
+							state.setKey(key);
+							((SpawnObject) change).preserveTileState(state);
+						}
 					}
 				}
 			}
