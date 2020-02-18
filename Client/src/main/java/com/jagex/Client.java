@@ -481,34 +481,17 @@ public final class Client implements Runnable {
 
 
 
-			drawLoadingText(65, "Loading plugins...");
-			
-			ClientPluginLoader.forEach(plugin -> {
-				try {
-					plugin.onGameLoaded(this);
-				} catch (Exception e) {
-					e.printStackTrace();
-					error = true;
-					errorMessage = "The selected plugin was unable to load";
-				}
-			});
-			
-			if(!errorMessage.isEmpty())
-				throw new IllegalStateException(errorMessage);
-			
-
-
 
 			if(cache.getIndexedFileSystem().is317()) {
 
 				Archive graphics = cache.createArchive(4, "2d graphics");
-				
-			
+
+
 				Sprite[] scenes = new Sprite[1000];
 				Sprite[] functions = new Sprite[1000];
 				int lastIdx = 0;
 				try {
-					
+
 					for (int scene = 0; scene < 93; scene++) {
 						scenes[scene] = new Sprite(graphics, "mapscene", scene);
 						lastIdx = scene;
@@ -517,9 +500,9 @@ public final class Client implements Runnable {
 					//ex.printStackTrace();
 				}
 				mapScenes = Arrays.copyOf(scenes, lastIdx + 1);
-				
+
 				lastIdx = 0;
-	
+
 				try {
 					for (int function = 0; function < functions.length; function++) {
 						functions[function] = new Sprite(graphics, "mapfunction", function);
@@ -556,6 +539,23 @@ public final class Client implements Runnable {
 					mapFunctions = new Sprite[0];
 				}
 			}
+
+			drawLoadingText(65, "Loading plugins...");
+			
+			ClientPluginLoader.forEach(plugin -> {
+				try {
+					plugin.onGameLoaded(this);
+				} catch (Exception e) {
+					e.printStackTrace();
+					error = true;
+					errorMessage = "The selected plugin was unable to load";
+				}
+			});
+			
+			if(!errorMessage.isEmpty())
+				throw new IllegalStateException(errorMessage);
+			
+
 
 			log.info("Loaded {} map functions.", mapFunctions.length);
 			log.info("Loaded {} map scenes.", mapScenes.length);
