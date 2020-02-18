@@ -3,6 +3,7 @@ package plugin.loader;
 import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.io.Buffer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.displee.cache.index.Index;
 import org.displee.cache.index.archive.Archive;
@@ -12,7 +13,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
-//Checked
+@Slf4j
 public class VarbitLoaderOSRS extends VariableBitLoader{
 
 	private int count;
@@ -38,12 +39,13 @@ public class VarbitLoaderOSRS extends VariableBitLoader{
 
 	public void decodeVarbits(Index index) {
 		List<VariableBits> varbits = Lists.newArrayList();
-		int size = (index.getLastArchive().getId() * 127 + index.getLastArchive().getLastFile().getId());
+		int size = (index.getLastArchiveId() * 127) + index.getArchive(index.getLastArchiveId()).getHighestId();
+		bits = new VariableBits[size];
 		for (int id = 0; id < size; id++) {
-			File file = index.getArchive(id >>> 1416501898).getFile(id & 0x3ff);
+			VariableBits varbit = new VariableBits();
+			File file = index.getArchive(id >>> 10).getFile(id & 1023);
 			if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
 				ByteBuffer buff = ByteBuffer.wrap(file.getData());
-				VariableBits varbit = new VariableBits();
 				try {
 					while (true) {
 						int opcode = buff.get() & 0xff;
@@ -61,11 +63,12 @@ public class VarbitLoaderOSRS extends VariableBitLoader{
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				varbits.add(varbit);
 			}
+			bits[id] = varbit;
+
 		}
-		bits = varbits.toArray(new VariableBits[0]);
 		this.count = bits.length;
+		log.info("Loaded {} varbits", this.count);
 	}
 
 	@Override

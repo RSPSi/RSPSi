@@ -1,6 +1,8 @@
 package plugin;
 
+import com.google.common.reflect.ClassPath;
 import com.jagex.Client;
+import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.loader.anim.FrameLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
 import com.jagex.cache.loader.config.RSAreaLoader;
@@ -8,12 +10,20 @@ import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.cache.loader.textures.TextureLoader;
+import com.jagex.draw.textures.SpriteTexture;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.plugins.ClientPlugin;
 import org.displee.cache.index.Index;
 import plugin.loader.*;
+import plugin.loader.texture.*;
 public class Plugin530 implements ClientPlugin {
+
+	//This is needed so the ServiceLoader impl will load them
+	private void touchAdditionalClasses(Class... classes){
+		for(Class clazz : classes)
+			clazz.isArray();
+	}
 
 	private AnimationFrameLoader frameLoader;
 	private FloorDefLoader floorLoader;
@@ -24,10 +34,10 @@ public class Plugin530 implements ClientPlugin {
 	private MapIndexLoaderOSRS mapIndexLoader;
 	private TextureLoaderOSRS textureLoader;
 	private AnimationSkinLoader skeletonLoader;
-	private RSAreaLoaderOSRS areaLoader;
 	
 	@Override
 	public void initializePlugin() {
+		touchAdditionalClasses(MapSceneLoader.class, MapSceneLoader.MapScene.class, NewTexture.class, SpriteTextureOperation.class, TextureDefinition.class, TextureOperation.class);
 		objLoader = new ObjectDefLoader();
 		floorLoader = new FloorDefLoader();
 		frameLoader = new AnimationFrameLoader();
@@ -38,7 +48,6 @@ public class Plugin530 implements ClientPlugin {
 		skeletonLoader = new AnimationSkinLoader();
 		graphicLoader = new SpotAnimationLoader();
 		varbitLoader = new VarbitLoaderOSRS();
-		areaLoader = new RSAreaLoaderOSRS();
 		
 		MapIndexLoader.instance = mapIndexLoader;
 		GraphicLoader.instance = graphicLoader;
@@ -49,7 +58,6 @@ public class Plugin530 implements ClientPlugin {
 		com.jagex.cache.loader.anim.FrameBaseLoader.instance = skeletonLoader;
 		TextureLoader.instance = textureLoader;
 		com.jagex.cache.loader.anim.AnimationDefinitionLoader.instance = animDefLoader;
-		RSAreaLoader.instance = areaLoader;
 	}
 
 	@Override
@@ -67,7 +75,8 @@ public class Plugin530 implements ClientPlugin {
 //		animDefLoader.init(configIndex.getArchive(12));
 //		graphicLoader.init(configIndex.getArchive(13));
 
-		areaLoader.init(configIndex.getArchive(35));
+		MapSceneLoader mapSceneLoader = new MapSceneLoader();
+		mapSceneLoader.init(client, configIndex.getArchive(34), client.getCache().readFile(CacheFileType.SPRITE));
 
 //		Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 //		skeletonLoader.init(skeletonIndex);
@@ -76,7 +85,7 @@ public class Plugin530 implements ClientPlugin {
 		mapIndexLoader.init(mapIndex);
 
 
-		textureLoader.init(client.getCache().getIndexedFileSystem().getIndex(9));
+		textureLoader.init(client.getCache().getIndexedFileSystem().getIndex(9), client.getCache().getIndexedFileSystem().getIndex(8));
 
 	}
 
