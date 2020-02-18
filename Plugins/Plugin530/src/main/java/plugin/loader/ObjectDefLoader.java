@@ -299,7 +299,7 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 		if (def.getVarbit() != -1) {
 			VariableBits bits = VariableBitLoader.lookup(def.getVarbit());
 			if(bits == null){
-				log.info("varbit {} was null!", def.getVarbit());
+				//log.info("  varbit {} was null!", def.getVarbit());
 				return null;
 			}
 			int variable = bits.getSetting();
