@@ -5,14 +5,21 @@ import com.jagex.map.SceneGraph;
 import com.rspsi.MainWindow;
 import com.rspsi.dialogs.TileDeleteDialog;
 import com.rspsi.misc.ToolType;
+import com.rspsi.options.KeyBindings;
+import com.rspsi.options.KeyCombination;
 import com.rspsi.options.KeyboardState;
 import com.rspsi.options.Options;
 
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class GameKeyListener implements EventHandler<InputEvent> {
@@ -28,11 +35,10 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 		// System.out.println(event.getEventType().getName());
 		if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED) {
 			KeyEvent keyEvent = (KeyEvent) event;
+
 			
 			if(keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
 				KeyboardState.onKeyDown(keyEvent.getCode());
-			} else {
-				KeyboardState.onKeyUp(keyEvent.getCode());
 			}
 			
 			if (keyEvent.getCode() == KeyCode.W) {
@@ -90,38 +96,25 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 				SceneGraph.redo();
 				
 				event.consume();
-			} 
-
-			if (keyEvent.getCode() == KeyCode.E && event.getEventType() == KeyEvent.KEY_RELEASED) {
-				Options.rotation.set((Options.rotation.get() + 1) & 3);
-				
-				event.consume();
-				
-				// Client.scene.resetTiles(SceneGraph.hoveredTileX, SceneGraph.hoveredTileY,
-				// SceneGraph.activePlane);
-				// Client.scene.addTemporaryObject(SceneGraph.hoveredTileX,
-				// SceneGraph.hoveredTileY, SceneGraph.activePlane);
-			} else if (keyEvent.getCode() == KeyCode.Q && event.getEventType() == KeyEvent.KEY_RELEASED) {
-				Options.rotation.set((Options.rotation.get() - 1) & 3);
-				
-				event.consume();
-				// Client.scene.resetTiles(SceneGraph.hoveredTileX, SceneGraph.hoveredTileY,
-				// SceneGraph.activePlane);
-				// Client.scene.addTemporaryObject(SceneGraph.hoveredTileX,
-				// SceneGraph.hoveredTileY, SceneGraph.activePlane);
-			} 
-			
-			if (keyEvent.getCode() == KeyCode.SHIFT) {
-				SceneGraph.shiftDown = event.getEventType() == KeyEvent.KEY_PRESSED;
-			} 
-
-			if (keyEvent.getCode() == KeyCode.CONTROL) {
-				SceneGraph.ctrlDown = event.getEventType() == KeyEvent.KEY_PRESSED;
-			} 
-
-			if (keyEvent.getCode() == KeyCode.ALT) {
-				SceneGraph.altDown = event.getEventType() == KeyEvent.KEY_PRESSED;
 			}
+
+
+			List<KeyCombination> comboActions = KeyBindings.matchedCombination((EventType<KeyEvent>) event.getEventType());
+
+			comboActions.forEach(keyCombination -> {
+				log.info("Found {}", keyCombination.requiredKeys().stream().map(String::valueOf).collect(Collectors.joining(",")));
+				keyCombination.onValid().ifPresent(consumer -> consumer.accept(keyEvent.getEventType()));
+				if (keyCombination.consumesEvent()) {
+					event.consume();
+				}
+			});
+				
+			if(keyEvent.getEventType() == KeyEvent.KEY_RELEASED){
+				KeyboardState.onKeyUp(keyEvent.getCode());
+			}
+
+			if(event.isConsumed())
+				return;
 
 			if(keyEvent.getCode().isDigitKey() && (keyEvent.getEventType() == KeyEvent.KEY_PRESSED || keyEvent.getEventType() == KeyEvent.KEY_TYPED)) {
 				log.info("Key event: {}", keyEvent.getEventType());

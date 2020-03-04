@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.rspsi.options.*;
+import javafx.scene.input.KeyCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.major.map.RenderFlags;
@@ -70,10 +72,6 @@ import com.rspsi.misc.Location;
 import com.rspsi.misc.TileArea;
 import com.rspsi.misc.ToolType;
 import com.rspsi.misc.Vector2;
-import com.rspsi.options.Config;
-import com.rspsi.options.KeyActions;
-import com.rspsi.options.KeyBindings;
-import com.rspsi.options.Options;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -1601,7 +1599,7 @@ public class SceneGraph {
 					} else if (clickStartX != -1) {
 
 						TileArea rect;
-						if (altDown) {
+						if (KeyboardState.isKeyPressed(KeyCode.ALT)) {
 							rect = new TileArea(clickStartX, clickStartY, tileX, tileY);
 						} else {
 							rect = new TileArea(clickStartX, clickStartY, tileX, tileY);
@@ -1982,18 +1980,18 @@ public class SceneGraph {
 								}
 
 								this.getMapRegion().manualTileHeight[plane][absX][absY] = 1;
-								if (SceneGraph.shiftDown && SceneGraph.altDown) {
+								if (KeyboardState.isKeyPressed(KeyCode.SHIFT) && KeyboardState.isKeyPressed(KeyCode.ALT)) {
 									this.getMapRegion().tileHeights[plane][absX][absY] = -Options.tileHeightLevel.get();
 									System.out.println("ABS");
-								} else if (SceneGraph.shiftDown) {
+								} else if (KeyboardState.isKeyPressed(KeyCode.SHIFT)) {
 									this.getMapRegion().tileHeights[plane][absX][absY] += Config.HEIGHT_ADJUST;
 									for (int z = plane + 1; z < 4; z++) {
 										this.getMapRegion().tileHeights[z][absX][absY] += Config.HEIGHT_ADJUST;
 									}
-								} else if (SceneGraph.altDown) {
+								} else if (KeyboardState.isKeyPressed(KeyCode.ALT)) {
 									this.getMapRegion().tileHeights[plane][absX][absY] = (plane > 0 ? !Options.absoluteHeightProperty.get() ? this.getMapRegion().tileHeights[plane - 1][absX][absY] : 0 : 0) - Options.tileHeightLevel.get();
 
-								} else if (SceneGraph.ctrlDown) {
+								} else if (KeyboardState.isKeyPressed(KeyCode.CONTROL)) {
 									int total = 0;
 									int count = 0;
 									for (int xMod = absX - 1; xMod <= absX + 1; xMod++)

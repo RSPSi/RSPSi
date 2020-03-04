@@ -12,13 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KeyboardState {
 	
-	private static List<KeyCode> currentlyDown = Lists.newCopyOnWriteArrayList();
+	private static List<KeyCode> currentlyDown = Lists.newArrayList();
 
 	public static void reset(){
 		log.info("Reset!");
-		SceneGraph.shiftDown = false;
-		SceneGraph.altDown = false;
-		SceneGraph.ctrlDown = false;
 		currentlyDown.clear();
 	}
 	public static void onKeyDown(KeyCode keyCode) {
@@ -31,15 +28,22 @@ public class KeyboardState {
 		currentlyDown.remove(keyCode);
 	}
 	
-	public static boolean isKeyDown(KeyCode keyCode) {
+	public static boolean isKeyPressed(KeyCode keyCode) {
 		return currentlyDown.contains(keyCode);
 	}
 
-	public static boolean onlyDown(List<KeyCode> list) {
+	public static boolean nonExclusivePressed(List<KeyCode> list){
+		log.info("Currently down: {} | attempting to find {}", currentlyDown, list);
 		if(currentlyDown.isEmpty())
 			return false;
-		currentlyDown.stream().filter(key -> !list.contains(key)).forEach(System.out::println);
-		return currentlyDown.containsAll(list) && currentlyDown.stream().filter(key -> !list.contains(key)).count() == 0;
+		return currentlyDown.containsAll(list);
+	}
+
+	public static boolean exclusivePressed(List<KeyCode> list) {
+		log.info("Currently down: {} | attempting to find {}", currentlyDown, list);
+		if(currentlyDown.isEmpty())
+			return false;
+		return currentlyDown.containsAll(list) && currentlyDown.size() == list.size();
 	}
 
 }

@@ -2,6 +2,8 @@ package com.jagex;
 
 import com.jagex.map.SceneGraph;
 import com.jagex.map.tile.SceneTile;
+import com.rspsi.options.KeyboardState;
+import javafx.scene.input.KeyCode;
 import org.displee.cache.index.archive.Archive;
 import org.displee.utilities.GZIPUtils;
 
@@ -30,7 +32,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.graphics.IndexedImage;
 import com.jagex.cache.graphics.Sprite;
 import com.jagex.cache.loader.anim.FrameLoader;
 import com.jagex.cache.loader.map.MapIndexLoader;
@@ -44,7 +45,6 @@ import com.jagex.entity.model.Mesh;
 import com.jagex.entity.model.MeshLoader;
 import com.jagex.entity.object.RenderableObject;
 import com.jagex.map.MapRegion;
-import com.jagex.map.SceneGraph;
 import com.jagex.net.ResourceProvider;
 import com.jagex.net.ResourceResponse;
 import com.jagex.util.Constants;
@@ -52,9 +52,7 @@ import com.jagex.util.ObjectKey;
 import com.jagex.util.TextRenderUtils;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.game.DisplayCanvas;
-import com.rspsi.misc.FixedIntegerKeyMap;
 import com.rspsi.misc.Vector2;
-import com.rspsi.options.Config;
 import com.rspsi.options.Options;
 import com.rspsi.plugins.ClientPluginLoader;
 
@@ -68,12 +66,10 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 
 
 @Slf4j
@@ -1755,7 +1751,7 @@ public final class Client implements Runnable {
 
 	public void keyInputLoop() {
 		if (loadState == LoadState.ACTIVE) {
-			int speedMultiplier = sceneGraph.shiftDown ? 10 : sceneGraph.ctrlDown ? 12 : 11;
+			int speedMultiplier = KeyboardState.isKeyPressed(KeyCode.SHIFT) ? 10 : KeyboardState.isKeyPressed(KeyCode.CONTROL) ? 12 : 11;
 			handleKeyInputs(speedMultiplier);
 			
 
