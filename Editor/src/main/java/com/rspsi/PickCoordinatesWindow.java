@@ -80,6 +80,7 @@ public class PickCoordinatesWindow extends Application {
 	public void show() {
 		reset();
 		stage.sizeToScene();
+		xCoordinate.requestFocus();
 		stage.showAndWait();
 		if(!okClicked)
 			reset();
