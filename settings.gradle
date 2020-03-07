@@ -34,4 +34,5 @@ include 'Plugins:PylosPKPlugin'
 include 'Plugins:OSVeldaharPlugin'
 include 'Plugins:ValiusPlugin'
 include 'Plugins:Plugin317530'
+include 'Plugins:ManicPlugin'
 
