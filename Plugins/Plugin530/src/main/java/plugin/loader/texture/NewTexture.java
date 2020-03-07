@@ -41,7 +41,7 @@ public class NewTexture {
 		int var14 = 0;
 
 		int var15;
-		for(var15 = 0; width > var15; ++var15) {
+		/*for(var15 = 0; width > var15; ++var15) {
 			if(var2) {
 				var14 = var15;
 			}
@@ -97,7 +97,7 @@ public class NewTexture {
 					var14 += height + -1;
 				}
 			}
-		}
+		}*/
 
 		for(var15 = 0; var15 < this.operations.length; ++var15) {
 			if(this.operations[var15] == null)
