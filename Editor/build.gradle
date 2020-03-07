@@ -26,7 +26,7 @@ dependencies  {
  	compile project(':Client')
 	// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
 	compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.15'
-	compile 'com.jfoenix:jfoenix:9.0.8'
+	compile 'com.jfoenix:jfoenix:8.0.9'
 
 
 }
