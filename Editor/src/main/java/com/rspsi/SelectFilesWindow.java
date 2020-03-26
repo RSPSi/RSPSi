@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
@@ -34,20 +36,20 @@ public class SelectFilesWindow extends Application {
 
 	private Stage stage;
 	private boolean okClicked;
-	
+
 	private Map<Location, SelectFilesNode> cachedNodes = Maps.newConcurrentMap();
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/selectfiles.fxml"));
-	
+
 		loader.setController(this);
 		Parent content = loader.load();
 		Scene scene = new Scene(content);
-		
-		
-		
+
+
+
 		primaryStage.setTitle("Please select files to load");
 		primaryStage.initStyle(StageStyle.UTILITY);
 		primaryStage.setScene(scene);
@@ -60,12 +62,12 @@ public class SelectFilesWindow extends Application {
 		widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		lengthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
 		RowConstraints defaultRow = new RowConstraints();
-		
+
 		Consumer<SelectFilesNode> cacheNode = (node) -> {
 			Location location = new Location(GridPane.getColumnIndex(node), GridPane.getRowIndex(node), 0);
 			cachedNodes.put(location, node);
 		};
-	
+
 		widthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
 			log.info("Width resize from {} to {}", oldVal, newVal);
 				if(oldVal < newVal) {//Increase
@@ -94,7 +96,7 @@ public class SelectFilesWindow extends Application {
 
 				stage.sizeToScene();
 		});
-		
+
 		lengthSpinner.getValueFactory().valueProperty().addListener((observable, oldVal, newVal) -> {
 
 			log.info("Length resize from {} to {}", oldVal, newVal);
@@ -121,19 +123,25 @@ public class SelectFilesWindow extends Application {
 					}
 				}
 			stage.sizeToScene();
-		
+
 		});
 
 
 		FXUtils.addSpinnerFocusListeners(widthSpinner, lengthSpinner);
-		
+
 		try {
 			gridPane.add(new SelectFilesNode(stage), 0, 0);
 		} catch(Exception ex) {
-			
+
 		}
 
-	
+        primaryStage.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                primaryStage.hide();
+                okClicked = true;
+            }
+        });
+
 		okButton.setOnAction(evt -> {
 			primaryStage.hide();
 			okClicked = true;
@@ -143,14 +151,14 @@ public class SelectFilesWindow extends Application {
 			primaryStage.hide();
 		});
 	}
-	
+
 	private List<SelectFilesNode> generateSelectNodes(int count, int index, boolean row) {
 
 		List<SelectFilesNode> nodes = Lists.newArrayList();
 		for(int i = 0;i<count;i++)
 			try {
 				Location location = new Location(row ? i : index, row ? index : i, 0);
-				
+
 				nodes.add(cachedNodes.getOrDefault(location, new SelectFilesNode(stage)));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -166,7 +174,7 @@ public class SelectFilesWindow extends Application {
 		if(!okClicked)
 			reset();
 	}
-	
+
 	public List<Chunk> prepareChunks(){
 		List<Chunk> chunks = Lists.newArrayList();
 
@@ -182,19 +190,19 @@ public class SelectFilesWindow extends Application {
 
 			chunk.offsetX = 64 * positionX;
 			chunk.offsetY = 64 * positionY;
-			
+
 			chunk.objectMapData = selectNode.getObjectMapData();
 			chunk.tileMapData = selectNode.getLandscapeMapData();
 			chunk.objectMapId = selectNode.tryGetObjectMapId(defaultObjId+=2);
 			chunk.tileMapId = selectNode.tryGetLandscapeMapId(defaultLandscapeId+=2);
 			chunks.add(chunk);
 		}
-		
-		
+
+
 		return chunks;
-		
+
 	}
-	
+
 	private List<SelectFilesNode> getSelectNodes(){
 		List<SelectFilesNode> nodes = Lists.newArrayList();
 		for(Node node : gridPane.getChildren()){
@@ -205,12 +213,16 @@ public class SelectFilesWindow extends Application {
 		}
 		return nodes;
 	}
-	
+
 	public void reset() {
 		cachedNodes.clear();
+		okClicked = false;
 	}
-	
+
 	public boolean valid() {
+	    if(!okClicked)
+	        return false;
+	    
 		boolean valid = true;
 		for(SelectFilesNode selectNode : getSelectNodes()){
 			if(!selectNode.valid()) {
@@ -229,9 +241,9 @@ public class SelectFilesWindow extends Application {
     @FXML
     private Spinner<Integer> lengthSpinner;
 
-	@FXML 
+	@FXML
 	private GridPane gridPane;
-	
+
     @FXML
     private Button okButton;
 
