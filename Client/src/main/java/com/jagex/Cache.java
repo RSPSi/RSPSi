@@ -48,7 +48,7 @@ public class Cache {
 	@Getter
 	private CacheLibrary indexedFileSystem;
 
-	private Index modelArchive, mapArchive, configArchive, skeletonArchive, skinArchive, spriteIndex, textureIndex, spotAnimIndex, varbitIndex, locIndex;
+	private Index modelArchive, mapArchive, configArchive, skeletonArchive, skinArchive, spriteIndex, textureIndex, spotAnimIndex, varbitIndex, locIndex, materialIndex;
 
 	public Cache(Path path) throws IOException {
 			log.info("Loading cache at {}", path);
@@ -80,6 +80,7 @@ public class Cache {
 				spotAnimIndex = indexedFileSystem.getIndex(21);
 				varbitIndex = indexedFileSystem.getIndex(22);
 				locIndex = indexedFileSystem.getIndex(16);
+				materialIndex = indexedFileSystem.getIndex(26);
 				log.info("Loaded cache in RS3 format!");
 			} else if(indexedFileSystem.isRS3()){
 				throw new UnsupportedOperationException("RS3 Cache not supported!");
@@ -130,6 +131,8 @@ public class Cache {
 					return varbitIndex;
 				case LOC:
 					return locIndex;
+				case MATERIAL:
+					return materialIndex;
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
