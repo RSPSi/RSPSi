@@ -4,6 +4,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 import com.jfoenix.controls.JFXButton;
+import com.rspsi.util.Settings;
+import javafx.scene.control.*;
 import org.major.map.RenderFlags;
 
 import com.google.common.primitives.Doubles;
@@ -31,24 +33,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -146,6 +130,12 @@ public class MainController {
 
 	@FXML
 	private CheckMenuItem showObjectsCheckItem;
+
+	@FXML
+	private CheckMenuItem rememberSize;
+
+	@FXML
+	private CheckMenuItem rememberLocation;
 
 	@FXML
 	private CheckMenuItem showOverlaysCheckItem;
@@ -534,13 +524,43 @@ public class MainController {
 
 		Options.showBlockedFlag.bindBidirectional(this.showBlockedFlag.selectedProperty());
 		Options.showBridgeFlag.bindBidirectional(this.showBridgeFlag.selectedProperty());
+
 		Options.showForceLowestPlaneFlag.bindBidirectional(this.showLowestFlag.selectedProperty());
 		Options.showDisableRenderFlag.bindBidirectional(this.showDisableFlag.selectedProperty());
 		Options.showLowerZFlag.bindBidirectional(this.showLowerZFlag.selectedProperty());
 
 		Options.showMinimapFunctionModels.bindBidirectional(this.showMapIconObjs.selectedProperty());
-
 		Options.loadAnimations.bindBidirectional(this.showAnimsMenuItem.selectedProperty());
+
+		boolean remeberSize = (Boolean) Settings.properties.getOrDefault("remember_size",true);
+		boolean remeberLocation = (Boolean) Settings.properties.getOrDefault("remember_location",false);
+
+		ChangeListenerUtil.addListener(() -> {
+			if(remeberSize == true) {
+				Settings.properties.put("remember_size", false);
+			} else {
+				Settings.properties.put("remember_size", true);
+			}
+			rememberSize.setSelected(remeberSize);
+			Settings.saveSettings();
+		}, Options.rememberEditorSize);
+
+		ChangeListenerUtil.addListener(() -> {
+			if(remeberLocation == true) {
+				Settings.properties.put("remember_location", false);
+			} else {
+				Settings.properties.put("remember_location", true);
+			}
+			rememberLocation.setSelected(remeberLocation);
+			Settings.saveSettings();
+		}, Options.rememberEditorLocation);
+
+		rememberSize.setSelected(remeberSize);
+		rememberLocation.setSelected(remeberLocation);
+
+		Options.rememberEditorSize.bindBidirectional(this.rememberSize.selectedProperty());
+		Options.rememberEditorLocation.bindBidirectional(this.rememberLocation.selectedProperty());
+
 
 		decreaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() - 1));
 		increaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() + 1));
@@ -657,6 +677,7 @@ public class MainController {
 				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedOverlays()));
 		this.setUnderlays.setOnAction(
 				evt -> SceneGraph.onCycleEnd.add(() -> Client.getSingleton().sceneGraph.setSelectedUnderlays()));
+
 
 	}
 

@@ -4,9 +4,14 @@ import com.rspsi.dialogs.RenderDistanceDialog;
 import com.rspsi.options.KeyboardState;
 import com.rspsi.util.*;
 import com.sun.javafx.stage.FocusUngrabEvent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.stage.WindowEvent;
 import org.displee.utilities.GZIPUtils;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -235,7 +240,9 @@ public class MainWindow extends Application {
 			controller = new MainController();
 			loader.setController(controller);
 			Parent content = loader.load();
-			scene = new Scene(content, 1240, 800);
+			double windowWidth = (Double) Settings.properties.getOrDefault("window_width",1240.0);
+			double windowHeight = (Double) Settings.properties.getOrDefault("window_height",800.0);
+			scene = new Scene(content,windowWidth,windowHeight);
 
 			scene.setFill(Color.TRANSPARENT);
 
@@ -244,10 +251,47 @@ public class MainWindow extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.getIcons().addAll(ResourceLoader.getSingleton().getIcons());
 
+			ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
+				if((boolean) Settings.properties.getOrDefault("remember_size",true) == true) {
+					Settings.properties.put("window_width", primaryStage.getWidth());
+					Settings.properties.put("window_height", primaryStage.getHeight());
+					Settings.saveSettings();
+				}
+			};
+
+			ChangeListener<Number> stageLocationListener = (observable, oldValue, newValue) -> {
+				if((boolean) Settings.properties.getOrDefault("remember_location",false) == true) {
+					Settings.properties.put("windowLocationWidth", primaryStage.getX());
+					Settings.properties.put("windowLocationHeight", primaryStage.getY());
+					Settings.saveSettings();
+				}
+			};
+
+			double windowLocationWidth = (Double) Settings.properties.getOrDefault("windowLocationWidth",0.0);
+			double windowLocationHeight = (Double) Settings.properties.getOrDefault("windowLocationHeight",0.0);
+
+			if(windowLocationWidth == 0.0 && windowLocationHeight == 0.0) {
+				primaryStage.centerOnScreen();
+			} else {
+				int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+				int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+				if (windowLocationWidth <= screenWidth && windowLocationHeight <= screenHeight) {
+					primaryStage.setX(windowLocationWidth);
+					primaryStage.setY(windowLocationHeight);
+				} else {
+					primaryStage.centerOnScreen();
+				}
+			}
+
+			primaryStage.widthProperty().addListener(stageSizeListener);
+			primaryStage.heightProperty().addListener(stageSizeListener);
+			primaryStage.xProperty().addListener(stageLocationListener);
+			primaryStage.yProperty().addListener(stageLocationListener);
+
 			primaryStage.show();
 
 			FXUtils.centerStage(primaryStage);
-			primaryStage.centerOnScreen();
+
 			controller.onLoad(this);
 
 			boolean shutdownCorrectly = Settings.getSetting("shutdown", false);
