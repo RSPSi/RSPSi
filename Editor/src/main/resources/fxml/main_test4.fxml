@@ -538,6 +538,12 @@
                               <MenuItem fx:id="reloadModelsBtn" mnemonicParsing="false" text="Reload models" />
                           </items>
                         </Menu>
+                      <Menu mnemonicParsing="false" text="Settings">
+                          <items>
+                              <CheckMenuItem fx:id="rememberSize" mnemonicParsing="false" text="Remember Editor Size" />
+                              <CheckMenuItem fx:id="rememberLocation" mnemonicParsing="false" text="Remember Editor Location" />
+                          </items>
+                      </Menu>
                     <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
                       <items>
                               <MenuItem fx:id="contactMeBtn" mnemonicParsing="false" text="Contact me" />

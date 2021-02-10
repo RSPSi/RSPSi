@@ -78,4 +78,7 @@ public class Options {
 	public static BooleanProperty showBorders = new SimpleBooleanProperty(false);
 	public static BooleanProperty showMapFileNames = new SimpleBooleanProperty(false);
 
+	public static BooleanProperty rememberEditorSize = new SimpleBooleanProperty(true);
+	public static BooleanProperty rememberEditorLocation = new SimpleBooleanProperty(false);
+
 }

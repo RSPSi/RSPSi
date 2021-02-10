@@ -23,7 +23,7 @@ public class Settings {
 	
 	public static Map<String, Object> properties = Maps.newConcurrentMap();
 	
-	private static void saveSettings() {
+	public static void saveSettings() {
 		Path rootDir = Paths.get(System.getProperty("user.home"), ".rspsi");
 		File f = new File(rootDir.toFile(), "settings.json");
 		if(!rootDir.toFile().exists())
@@ -108,6 +108,10 @@ public class Settings {
 		saveSettings();
 	}
 
+	public static void resetSettings() {
+		properties.clear();
+		saveSettings();
+	}
 
 	public static void clearSetting(String key) {
 		properties.remove(key);

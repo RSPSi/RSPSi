@@ -10,6 +10,7 @@ import com.rspsi.options.KeyCombination;
 import com.rspsi.options.KeyboardState;
 import com.rspsi.options.Options;
 
+import com.rspsi.util.Settings;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.input.InputEvent;
@@ -90,7 +91,12 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 				client.keyStatuses['p'] = event.getEventType() == KeyEvent.KEY_RELEASED ? 0 : 1;
 				
 				event.consume();
-			} 
+			}
+
+			if(keyEvent.isControlDown() && keyEvent.isAltDown() && keyEvent.getCode() == KeyCode.R) {
+				Settings.resetSettings();
+				System.exit(0);
+			}
 
 			if(keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.Y && event.getEventType() == KeyEvent.KEY_PRESSED) {
 				SceneGraph.redo();
@@ -112,6 +118,7 @@ public class GameKeyListener implements EventHandler<InputEvent> {
 			if(keyEvent.getEventType() == KeyEvent.KEY_RELEASED){
 				KeyboardState.onKeyUp(keyEvent.getCode());
 			}
+
 
 			if(event.isConsumed())
 				return;
