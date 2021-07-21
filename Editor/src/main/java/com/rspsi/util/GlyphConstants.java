@@ -1,9 +1,8 @@
 package com.rspsi.util;
 
+import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
-
-import javafx.scene.paint.Color;
 
 public class GlyphConstants {
 	public static final Glyph OPEN_FOLDER_GLYPH = FontAwesomeUtil.getFont()

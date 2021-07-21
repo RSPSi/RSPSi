@@ -1,23 +1,22 @@
 package plugin.loader;
 
 import com.google.common.collect.Maps;
-import com.jagex.Client;
-import com.jagex.cache.config.VariableBits;
-import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.io.Buffer;
-import com.jagex.util.ByteBufferUtils;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.config.VariableBits;
+import com.rspsi.jagex.cache.def.ObjectDefinition;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
+import com.rspsi.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-import org.displee.utilities.Miscellaneous;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 @Slf4j
 public class ObjectDefLoader extends ObjectDefinitionLoader {
@@ -37,13 +36,15 @@ public class ObjectDefLoader extends ObjectDefinitionLoader {
 	private int size;
 
 	public void decodeObjects(Index index) {
-		size = index.getLastArchive().getId() * 256 + index.getLastArchive().getLastFile().getId();
+		Archive highestArchive = ArchiveUtils.getHighestArchive(index);
+		File highestFile = ArchiveUtils.getHighestFile(highestArchive);
+		size = highestArchive.getId() * 256 + highestFile.getId();
 		for (int id = 0; id < size; id++) {
-			int archiveId = Miscellaneous.getConfigArchive(id, 8);
-			Archive archive = index.getArchive(archiveId);
+			int archiveId = id >> 8;
+			Archive archive = index.archive(archiveId);
 			if (Objects.nonNull(archive)) {
-				int fileId = Miscellaneous.getConfigFile(id, 8);
-				File file = archive.getFile(fileId);
+				int fileId = id & (1 << 8) - 1;
+				File file = archive.file(fileId);
 				if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
 					try {
 						ObjectDefinition def = decode(id, ByteBuffer.wrap(file.getData()));

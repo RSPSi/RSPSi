@@ -1,15 +1,14 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
-import java.util.Map;
 
-import com.google.common.collect.Maps;
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.floor.FloorType;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
 
 public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
 
@@ -28,8 +27,8 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
 	}
 	
 	public void initOverlays(Archive archive) {
-		this.overlays = new Floor[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
+		this.overlays = new Floor[ArchiveUtils.getHighestFile(archive).getId() + 1];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				Floor floor = decodeOverlay(ByteBuffer.wrap(file.getData()));
 				floor.generateHsl();
@@ -40,8 +39,8 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
 	}
 	
 	public void initUnderlays(Archive archive) {
-		this.underlays = new Floor[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
+		this.underlays = new Floor[ArchiveUtils.getHighestFile(archive).getId() + 1];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				Floor floor = decodeUnderlay(ByteBuffer.wrap(file.getData()));
 				floor.generateHsl();

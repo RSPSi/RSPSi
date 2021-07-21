@@ -5,12 +5,15 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.anim.Graphic;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.anim.Graphic;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.io.Buffer;
+
+;
 
 public class GraphicLoaderOSRS extends GraphicLoader {
     private Graphic[] graphics;
@@ -28,8 +31,8 @@ public class GraphicLoaderOSRS extends GraphicLoader {
     }
 
     public void init(Archive archive) {
-        this.graphics = new Graphic[archive.getHighestId() + 1];
-        File[] var2 = archive.getFiles();
+        this.graphics = new Graphic[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for(int var4 = 0; var4 < var3; ++var4) {

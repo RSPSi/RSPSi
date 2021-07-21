@@ -1,8 +1,7 @@
 package plugin.loader.texture;
 
-import com.jagex.draw.raster.GameRasterizer;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.Index;
+import com.rspsi.jagex.io.Buffer;
+import com.displee.cache.index.Index;
 
 
 public class NewTexture {
@@ -290,7 +289,7 @@ public class NewTexture {
 
 	public boolean spriteTextureExists() {
 		for(int var4 = 0; this.spriteGroup.length > var4; ++var4) {
-			if(spriteIndex.getArchive(this.spriteGroup[var4]) == null) {
+			if(spriteIndex.archive(this.spriteGroup[var4]) == null) {
 				return false;
 			}
 		}

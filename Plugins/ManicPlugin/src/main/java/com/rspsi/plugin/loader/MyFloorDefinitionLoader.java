@@ -1,12 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.floor.FloorType;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-
-import java.nio.ByteBuffer;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
+import com.rspsi.jagex.io.Buffer;
+import com.displee.cache.index.archive.Archive;
 
 public class MyFloorDefinitionLoader extends FloorDefinitionLoader {
 	
@@ -15,7 +13,7 @@ public class MyFloorDefinitionLoader extends FloorDefinitionLoader {
 
 	@Override
 	public void init(Archive archive) {
-		Buffer buffer = new Buffer(archive.readFile("flo.dat"));
+		Buffer buffer = new Buffer(archive.file("flo.dat").getData());
 		int underlayAmount = buffer.readUShort();
 		System.out.println("Underlay Floors Loaded: " + underlayAmount);
 		underlays = new Floor[underlayAmount];
@@ -24,7 +22,7 @@ public class MyFloorDefinitionLoader extends FloorDefinitionLoader {
 			underlays[i].generateHsl();
 		}
 
-		buffer = new Buffer(archive.readFile("flo.dat"));
+		buffer = new Buffer(archive.file("flo.dat").getData());
 		int overlayAmount = buffer.readUShort();
 		System.out.println("Underlay Floors Loaded: " + underlayAmount);
 		overlays = new Floor[underlayAmount];
@@ -33,7 +31,7 @@ public class MyFloorDefinitionLoader extends FloorDefinitionLoader {
 			overlays[i].generateHsl();
 		}
 
-		/*ByteBuffer overlayBuffer = ByteBuffer.wrap(archive.readFile("flo2.dat"));
+		/*ByteBuffer overlayBuffer = ByteBuffer.wrap(archive.file("flo2.dat").getData());
 		int overlayAmount = overlayBuffer.getShort();
 		System.out.println("Overlay Floors Loaded: " + overlayAmount);
 		overlays = new Floor[overlayAmount];

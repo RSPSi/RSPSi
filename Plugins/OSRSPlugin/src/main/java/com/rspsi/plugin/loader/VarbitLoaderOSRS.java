@@ -1,11 +1,12 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
-import com.jagex.cache.config.VariableBits;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.config.VariableBits;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class VarbitLoaderOSRS extends VariableBitLoader{
 
@@ -27,11 +28,11 @@ public class VarbitLoaderOSRS extends VariableBitLoader{
 
 	@Override
 	public void init(Archive archive) {
-		count = archive.getHighestId() + 1;
+		count = ArchiveUtils.getHighestFile(archive).getId() + 1;
 		bits = new VariableBits[count];
 		
 
-		for (File file : archive.getFiles()) {
+		for (File file : archive.files()) {
 			if(file != null && file.getData() != null)
 				bits[file.getId()] = decode(new Buffer(file.getData()));
 		}

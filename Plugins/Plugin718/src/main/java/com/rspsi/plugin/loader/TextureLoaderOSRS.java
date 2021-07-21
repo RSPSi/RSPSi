@@ -1,11 +1,9 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.Texture;
+import com.displee.cache.index.archive.Archive;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
 
 
 public class TextureLoaderOSRS extends TextureLoader {

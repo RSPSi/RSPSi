@@ -1,8 +1,8 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.anim.FrameBase;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.anim.FrameBase;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class FrameBaseLoader474 extends FrameBaseLoader {
 

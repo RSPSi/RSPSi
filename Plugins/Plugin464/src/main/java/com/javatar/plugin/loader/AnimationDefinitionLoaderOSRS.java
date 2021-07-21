@@ -5,11 +5,12 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.anim.Animation;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.anim.Animation;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     private int count;
@@ -19,8 +20,8 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        this.animations = new Animation[archive.getHighestId() + 1];
-        File[] var2 = archive.getFiles();
+        this.animations = new Animation[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for (int var4 = 0; var4 < var3; ++var4) {

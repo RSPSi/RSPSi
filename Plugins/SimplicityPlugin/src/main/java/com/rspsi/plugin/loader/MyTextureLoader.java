@@ -1,17 +1,18 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.Texture;
+import com.rspsi.jagex.cache.graphics.IndexedImage;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.PalettedTexture;
+import com.rspsi.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 
 public class MyTextureLoader extends TextureLoader {
 
-	private Texture[] textures = new Texture[50];
-	private boolean[] transparent = new boolean[50];
+
+	private Texture[] textures = new Texture[200];
+	private boolean[] transparent = new boolean[200];
 	private double brightness = 0.8;
 	private FixedHashMap<Integer, int[]> textureCache = new FixedHashMap<Integer, int[]>(20);
 
@@ -72,6 +73,7 @@ public class MyTextureLoader extends TextureLoader {
 			} catch (Exception _ex) {
 				_ex.printStackTrace();
 			}
+
 	}
 
 

@@ -1,7 +1,7 @@
 package com.rspsi.plugin;
 
-import com.rspsi.MainWindow;
-import com.rspsi.controllers.MainController;
+import com.rspsi.editor.MainWindow;
+import com.rspsi.editor.controllers.MainController;
 import com.rspsi.options.Options;
 import com.rspsi.plugins.ApplicationPlugin;
 

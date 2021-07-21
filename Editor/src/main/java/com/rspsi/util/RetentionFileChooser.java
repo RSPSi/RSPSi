@@ -1,13 +1,13 @@
 package com.rspsi.util;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class RetentionFileChooser {
 

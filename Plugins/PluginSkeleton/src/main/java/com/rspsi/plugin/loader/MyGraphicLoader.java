@@ -1,9 +1,9 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.anim.Graphic;
-import com.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.anim.Graphic;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
 
 
 public class MyGraphicLoader extends GraphicLoader {

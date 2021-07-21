@@ -5,18 +5,19 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.map.MapType;
-import com.jagex.io.Buffer;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.map.MapType;
+import com.rspsi.jagex.io.Buffer;
 import com.rspsi.misc.RegionData;
+import org.apache.commons.compress.utils.Lists;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
-import org.apache.commons.compress.utils.Lists;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
 
 public class MapIndexLoaderOSRS extends MapIndexLoader {
     private int[] mapHashes;
@@ -27,7 +28,7 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
     }
 
     public void init(Archive archive) {
-        byte[] indices = archive.readFile("map_index");
+        byte[] indices = archive.file("map_index").getData();
         Buffer buffer = new Buffer(indices);
         int count = buffer.readUShort();
         this.mapHashes = new int[count];
@@ -130,8 +131,8 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
         for(index = 0; index < 32768; ++index) {
             int x = index >> 8;
             int y = index & 255;
-            Archive map = mapIndex.getArchive("m" + x + "_" + y);
-            Archive land = mapIndex.getArchive("l" + x + "_" + y);
+            Archive map = mapIndex.archive("m" + x + "_" + y);
+            Archive land = mapIndex.archive("l" + x + "_" + y);
             RegionData data = new RegionData(index, map != null ? map.getId() : -1, land != null ? land.getId() : -1);
             if (data.getLoc() != -1 && data.getObj() != -1) {
                 regionData.add(data);

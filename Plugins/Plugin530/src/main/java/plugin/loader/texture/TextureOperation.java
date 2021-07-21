@@ -1,7 +1,7 @@
 package plugin.loader.texture;
 
 
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.io.Buffer;
 
 public class TextureOperation {
 

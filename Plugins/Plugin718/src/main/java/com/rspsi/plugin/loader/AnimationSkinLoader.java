@@ -1,10 +1,9 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.anim.FrameBase;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.anim.FrameBase;
+import com.rspsi.jagex.io.Buffer;
 
-public class AnimationSkinLoader extends com.jagex.cache.loader.anim.FrameBaseLoader {
+public class AnimationSkinLoader extends com.rspsi.jagex.cache.loader.anim.FrameBaseLoader {
 
 	@Override
 	public FrameBase decode(Buffer buffer) {

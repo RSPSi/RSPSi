@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.anim.Graphic;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.rspsi.jagex.cache.anim.Graphic;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.io.Buffer;
+import com.displee.cache.index.archive.Archive;
 
 
 public class MyGraphicLoader extends GraphicLoader {
@@ -27,7 +27,7 @@ public class MyGraphicLoader extends GraphicLoader {
 
 	@Override
 	public void init(Archive archive) {
-		Buffer buffer = new Buffer(archive.readFile("spotanim.dat"));
+		Buffer buffer = new Buffer(archive.file("spotanim.dat").getData());
 		count = buffer.readUShort();
 		if (graphics == null) {
 			graphics = new Graphic[count];

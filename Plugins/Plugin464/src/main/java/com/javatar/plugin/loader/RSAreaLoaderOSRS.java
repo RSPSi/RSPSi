@@ -5,13 +5,17 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.def.RSArea;
-import com.jagex.cache.loader.config.RSAreaLoader;
-import com.jagex.io.Buffer;
-import com.jagex.util.ByteBufferUtils;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.def.RSArea;
+import com.rspsi.jagex.cache.loader.config.RSAreaLoader;
+import com.rspsi.jagex.io.Buffer;
+import com.rspsi.jagex.util.ByteBufferUtils;
+
 import java.nio.ByteBuffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+
+;
 
 public class RSAreaLoaderOSRS extends RSAreaLoader {
     private RSArea[] areas;
@@ -28,8 +32,8 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
     }
 
     public void init(Archive archive) {
-        this.areas = new RSArea[archive.getHighestId() + 1];
-        File[] var2 = archive.getFiles();
+        this.areas = new RSArea[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for(int var4 = 0; var4 < var3; ++var4) {

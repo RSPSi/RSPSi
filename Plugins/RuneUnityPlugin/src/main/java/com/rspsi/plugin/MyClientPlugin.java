@@ -1,23 +1,23 @@
 package com.rspsi.plugin;
 
-import com.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
 import com.rspsi.plugin.loader.*;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.IOException;
 
-import com.jagex.Client;
-import com.jagex.cache.def.TextureDef;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.net.ResourceResponse;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.def.TextureDef;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.net.ResourceResponse;
+import com.rspsi.editor.cache.CacheFileType;
 import com.rspsi.options.Options;
 import com.rspsi.plugins.ClientPlugin;
 import com.rspsi.util.ChangeListenerUtil;
@@ -62,7 +62,7 @@ public class MyClientPlugin implements ClientPlugin {
 			ChangeListenerUtil.addListener(() -> {
 				FloorDefinitionLoader.instance.init(config);
 				textureLoader.clearCache();
-				client.getCurrentChunk().mapRegion.updateTiles();
+				client.mapRegion.updateTiles();
 			}, Options.hdTextures);
 			
 			AnimationDefinitionLoader.instance.init(config);

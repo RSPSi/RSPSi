@@ -1,24 +1,25 @@
 package com.rspsi.util;
 
-import java.awt.Robot;
+import javafx.application.Platform;
+import javafx.beans.property.Property;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
+
+import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.stage.Modality;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 
 public class FXDialogs {
 
@@ -30,6 +31,9 @@ public class FXDialogs {
 
 	public static final String CANCEL = "Cancel";
 
+	public static void showConfirm(Window parent, String title, String message, Property<Boolean> setReturnValue){
+		Platform.runLater( () -> setReturnValue.setValue(showConfirm(parent, title, message, "Yes", "No").equalsIgnoreCase("yes")));
+	}
 	public static String showConfirm(Window parent, String title, String message, String... options) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.initStyle(StageStyle.UTILITY);
@@ -38,6 +42,7 @@ public class FXDialogs {
 		alert.setContentText(message);
 		alert.initOwner(parent);
 		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 
 
 		// To make enter key press the actual focused button, not the first one. Just
@@ -82,6 +87,7 @@ public class FXDialogs {
 
 		alert.initOwner(parent);
 		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		alert.showAndWait();
 	}
 
@@ -94,6 +100,7 @@ public class FXDialogs {
 
 		alert.initOwner(parent);
 		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -130,6 +137,7 @@ public class FXDialogs {
 
 		alert.initOwner(parent);
 		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		alert.showAndWait();
 	}
 
@@ -159,6 +167,7 @@ public class FXDialogs {
 
 		alert.initOwner(parent);
 		alert.initModality(Modality.APPLICATION_MODAL);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		alert.showAndWait();
 	}
 

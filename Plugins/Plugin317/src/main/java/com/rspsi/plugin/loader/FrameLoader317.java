@@ -1,12 +1,12 @@
 package com.rspsi.plugin.loader;
 
-import org.major.cache.anim.FrameConstants;
+import com.rspsi.jagex.util.FrameConstants;
 
-import com.jagex.cache.anim.Frame;
-import com.jagex.cache.anim.FrameBase;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.anim.Frame;
+import com.rspsi.jagex.cache.anim.FrameBase;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class FrameLoader317 extends FrameLoader {
 

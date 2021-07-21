@@ -1,12 +1,11 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.anim.Animation;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
+import com.rspsi.jagex.cache.anim.Animation;
+import com.rspsi.jagex.io.Buffer;
 
 
-public class AnimationDefLoader extends com.jagex.cache.loader.anim.AnimationDefinitionLoader {
+public class AnimationDefLoader extends com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader {
 
 	private int count;
 	private Animation[] animations;

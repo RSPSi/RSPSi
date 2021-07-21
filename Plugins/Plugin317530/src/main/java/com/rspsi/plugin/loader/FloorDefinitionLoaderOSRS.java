@@ -1,12 +1,12 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.floor.FloorType;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
 
 public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
 
@@ -15,7 +15,7 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
 
 	@Override
 	public void init(Archive archive) {
-		ByteBuffer buffer = ByteBuffer.wrap(archive.readFile("flo.dat"));
+		ByteBuffer buffer = ByteBuffer.wrap(archive.file("flo.dat").getData());
 		int underlayAmount = buffer.getShort();
 		System.out.println("Underlay Floors Loaded: " + underlayAmount);
 		underlays = new Floor[underlayAmount];

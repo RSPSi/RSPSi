@@ -1,9 +1,9 @@
 package plugin.loader.texture;
 
-import com.jagex.Client;
-import com.jagex.cache.graphics.Sprite;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.Index;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.graphics.Sprite;
+import com.rspsi.jagex.io.Buffer;
+import com.displee.cache.index.Index;
 
 public class SpriteTextureOperation extends TextureOperation {
 

@@ -1,15 +1,12 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
-import java.util.List;
-
-import org.apache.commons.compress.utils.Lists;
-
-import com.jagex.cache.anim.Animation;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.anim.Animation;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 
@@ -19,8 +16,8 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 	
 	@Override
 	public void init(Archive archive) {
-		animations = new Animation[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
+		animations = new Animation[ArchiveUtils.getHighestFile(archive).getId() + 1];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				animations[file.getId()] = decode(new Buffer(file.getData()));
 			}

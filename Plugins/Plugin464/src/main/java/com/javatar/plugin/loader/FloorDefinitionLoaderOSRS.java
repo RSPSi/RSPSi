@@ -5,12 +5,16 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.floor.FloorType;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
+
 import java.nio.ByteBuffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+
+;
 
 public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     private Floor[] overlays;
@@ -26,8 +30,8 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     }
 
     public void initOverlays(Archive archive) {
-        this.overlays = new Floor[archive.getHighestId() + 1];
-        File[] var2 = archive.getFiles();
+        this.overlays = new Floor[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for(int var4 = 0; var4 < var3; ++var4) {
@@ -42,8 +46,8 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     }
 
     public void initUnderlays(Archive archive) {
-        this.underlays = new Floor[archive.getHighestId() + 1];
-        File[] var2 = archive.getFiles();
+        this.underlays = new Floor[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for(int var4 = 0; var4 < var3; ++var4) {

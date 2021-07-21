@@ -1,12 +1,13 @@
 package com.rspsi.util;
 
-import java.io.InputStream;
-
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
+import java.io.InputStream;
+
 public class FontAwesomeUtil {
+
 	
 	private static GlyphFont font;
 	

@@ -1,12 +1,13 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
-import com.jagex.cache.anim.Graphic;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.anim.Graphic;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class GraphicLoaderOSRS extends GraphicLoader {
 
@@ -29,10 +30,10 @@ public class GraphicLoaderOSRS extends GraphicLoader {
 	@Override
 	public void init(Archive archive) {
 		
-		graphics = new Graphic[archive.getHighestId() + 1];
+		graphics = new Graphic[ArchiveUtils.getHighestFile(archive).getId() + 1];
 		
 
-		for (File file : archive.getFiles()) {
+		for (File file : archive.files()) {
 			try {
 				graphics[file.getId()] = decode(new Buffer(file.getData()));
 				graphics[file.getId()].setId(file.getId());

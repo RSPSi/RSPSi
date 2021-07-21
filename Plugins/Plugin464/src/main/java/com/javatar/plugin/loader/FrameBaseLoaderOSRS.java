@@ -5,13 +5,14 @@
 
 package com.javatar.plugin.loader;
 
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 import com.google.common.collect.Maps;
-import com.jagex.cache.anim.FrameBase;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.anim.FrameBase;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.io.Buffer;
+
 import java.util.Map;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
 
 public class FrameBaseLoaderOSRS extends FrameBaseLoader {
     private Map<Integer, FrameBase> skeletons = Maps.newConcurrentMap();
@@ -51,13 +52,13 @@ public class FrameBaseLoaderOSRS extends FrameBaseLoader {
     }
 
     public void init(Index skeletonIndex) {
-        Archive[] var2 = skeletonIndex.getArchives();
+        Archive[] var2 = skeletonIndex.archives();
         int var3 = var2.length;
 
         for(int var4 = 0; var4 < var3; ++var4) {
             Archive archive = var2[var4];
             if (archive != null && archive.containsData()) {
-                FrameBase base = this.decode(new Buffer(archive.getFile(0).getData()));
+                FrameBase base = this.decode(new Buffer(archive.file(0).getData()));
                 this.skeletons.put(archive.getId(), base);
             }
         }

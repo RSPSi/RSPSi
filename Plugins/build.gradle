@@ -31,8 +31,12 @@ subprojects {
 
     }
 
+    repositories {
+        mavenCentral();
+    }
+
     dependencies {
-        compile project(':Editor')
+        implementation project(':Editor')
     }
 
 

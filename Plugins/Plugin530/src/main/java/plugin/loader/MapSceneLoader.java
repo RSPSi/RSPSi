@@ -1,12 +1,13 @@
 package plugin.loader;
 
-import com.jagex.Client;
-import com.jagex.cache.graphics.Sprite;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.graphics.Sprite;
+import com.rspsi.jagex.io.Buffer;
 import lombok.RequiredArgsConstructor;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
 
 import java.nio.ByteBuffer;
 
@@ -15,12 +16,12 @@ public class MapSceneLoader {
 	private Sprite[] mapScenes;
 
 	public void init(Client client, Archive archive, Index spriteIndex) {
-		mapScenes = new Sprite[archive.getHighestId()];
-		for(File file : archive.getFiles()) {
+		mapScenes = new Sprite[ArchiveUtils.getHighestFile(archive).getId()];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				MapScene mapScene = decode(file.getId(), new Buffer(file.getData()));
 				if(mapScene.spriteId != -1)
-				mapScenes[mapScene.id] = Sprite.decode(ByteBuffer.wrap(spriteIndex.getArchive(mapScene.spriteId).readFile(0)));
+				mapScenes[mapScene.id] = Sprite.decode(ByteBuffer.wrap(spriteIndex.archive(mapScene.spriteId).file(0).getData()));
 			}
 		}
 		client.mapScenes = this.mapScenes;

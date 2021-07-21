@@ -1,19 +1,21 @@
 package plugin.loader;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorType;
-import com.jagex.util.ByteBufferUtils;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
+import com.rspsi.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
-public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinitionLoader {
+public class FloorDefLoader extends com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader {
 
 	private Map<Integer, Floor> overlays = Maps.newConcurrentMap();
 	private Map<Integer, Floor> underlays = Maps.newConcurrentMap();
@@ -28,38 +30,31 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 
 	}
 
+
 	public void decodeUnderlays(Archive archive) {
-		for (int id : archive.getFileIds()) {
-			File underlay = archive.getFile(id);
+		List<Floor> floors = Lists.newArrayList();
+		for (File underlay : archive.files()) {
 			if (Objects.nonNull(underlay) && Objects.nonNull(underlay.getData())) {
-				try {
-					Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
-					floor.generateHsl();
-					underlays.put(id, floor);
-				} catch(Exception ex){
-					log.warn("Failed to load underlay {}, size: {}", id, underlay);
-				}
+				Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
+				floor.generateHsl();
+				floors.add(floor);
+				underlays.put(underlay.getId(), floor);
 			}
 		}
-		log.info("Loaded {} underlays | max id: {}", underlays.size(), underlays.keySet().stream().max(Integer::compareTo));
+		log.info("Loaded {} underlays", underlays.size());
 	}
 
 	public void decodeOverlays(Archive archive) {
-		for (int id : archive.getFileIds()) {
-			File overlay = archive.getFile(id);
+		List<Floor> floors = Lists.newArrayList();
+		for (File overlay : archive.files()) {
 			if (Objects.nonNull(overlay) && Objects.nonNull(overlay.getData())) {
-				try {
-					Floor floor = decodeOverlay(ByteBuffer.wrap(overlay.getData()));
-					floor.generateHsl();
-					overlays.put(id, floor);
-				} catch(Exception ex){
-					log.warn("Failed to load underlay {}, size: {}", id, overlay);
-				}
+				Floor floor = decodeOverlay(ByteBuffer.wrap(overlay.getData()));
+				floor.generateHsl();
+				floors.add(floor);
+				overlays.put(overlay.getId(), floor);
 			}
-
 		}
-
-		log.info("Loaded {} overlays", overlays.size(), overlays.keySet().stream().max(Integer::compareTo));
+		log.info("Loaded {} overlays", overlays.size());
 	}
 
 	public Floor decodeOverlay(ByteBuffer buffer) {

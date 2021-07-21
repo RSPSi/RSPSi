@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.def.ObjectDefinition;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.IOException;
 
@@ -419,16 +419,15 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	
 	public void init(Archive config, Archive sound) throws IOException {
 
-		Buffer buffer = new Buffer(config.readFile("loc.dat"));
-		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer buffer = new Buffer(config.file("loc.dat").getData());
+		Buffer index = new Buffer(config.file("loc.idx").getData());
 		Buffer streamIdx667;
 		try {
-			buffer667 = new Buffer(sound.readFile("loc2.dat"));
-			streamIdx667 = new Buffer(sound.readFile("loc2.idx"));
+			buffer667 = new Buffer(sound.file("loc2.dat").getData());
+			streamIdx667 = new Buffer(sound.file("loc2.idx").getData());
 		} catch (Exception ex){
-			buffer667 = new Buffer(config.readFile("loc2.dat"));
-			streamIdx667 = new Buffer(config.readFile("loc2.idx"));
-
+			buffer667 = new Buffer(config.file("loc2.dat").getData());
+			streamIdx667 = new Buffer(config.file("loc2.idx").getData());
 		}
 		try {
 

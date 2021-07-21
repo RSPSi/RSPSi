@@ -1,8 +1,8 @@
 package com.rspsi.plugin.loader;
 
 
-import com.jagex.cache.anim.Frame;
-import com.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.anim.Frame;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
 
 public class MyFrameLoader extends FrameLoader {
 

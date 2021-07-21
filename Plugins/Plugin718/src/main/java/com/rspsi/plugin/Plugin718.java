@@ -1,18 +1,17 @@
 package com.rspsi.plugin;
 
-import org.displee.CacheLibrary;
-import org.displee.cache.index.Index;
+import com.displee.cache.index.Index;
 
-import com.jagex.Client;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.config.RSAreaLoader;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.net.ResourceResponse;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.loader.config.RSAreaLoader;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.net.ResourceResponse;
+import com.rspsi.editor.cache.CacheFileType;
 import com.rspsi.plugin.loader.AnimationDefLoader;
 import com.rspsi.plugin.loader.FloorDefLoader;
 import com.rspsi.plugin.loader.AnimationSkinLoader;
@@ -58,10 +57,10 @@ public class Plugin718 implements ClientPlugin {
 		VariableBitLoader.instance = varbitLoader;
 		FrameLoader.instance = frameLoader;
 		ObjectDefinitionLoader.instance = objLoader;
-		com.jagex.cache.loader.floor.FloorDefinitionLoader.instance = floorLoader;
-		com.jagex.cache.loader.anim.FrameBaseLoader.instance = skeletonLoader;
+		com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader.instance = floorLoader;
+		com.rspsi.jagex.cache.loader.anim.FrameBaseLoader.instance = skeletonLoader;
 		TextureLoader.instance = textureLoader;
-		com.jagex.cache.loader.anim.AnimationDefinitionLoader.instance = animDefLoader;
+		com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader.instance = animDefLoader;
 		RSAreaLoader.instance = areaLoader;
 	}
 
@@ -72,15 +71,15 @@ public class Plugin718 implements ClientPlugin {
 
 		Index configIndex = client.getCache().readFile(CacheFileType.CONFIG);
 
-		floorLoader.decodeUnderlays(configIndex.getArchive(1));
-		floorLoader.decodeOverlays(configIndex.getArchive(4));
+		floorLoader.decodeUnderlays(configIndex.archive(1));
+		floorLoader.decodeOverlays(configIndex.archive(4));
 		varbitLoader.decodeVarbits(client.getCache().readFile(CacheFileType.VARBIT));
-		objLoader.decodeObjects(client.getCache().getIndexedFileSystem().getIndex(16));
+		objLoader.decodeObjects(client.getCache().getIndexedFileSystem().index(16));
 
-//		animDefLoader.init(configIndex.getArchive(12));
-//		graphicLoader.init(configIndex.getArchive(13));
+//		animDefLoader.init(configIndex.archive(12));
+//		graphicLoader.init(configIndex.archive(13));
 
-		areaLoader.init(configIndex.getArchive(35));
+		areaLoader.init(configIndex.archive(35));
 
 //		Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 //		skeletonLoader.init(skeletonIndex);

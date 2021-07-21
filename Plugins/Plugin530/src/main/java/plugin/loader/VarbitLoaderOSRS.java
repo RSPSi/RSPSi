@@ -1,13 +1,14 @@
 package plugin.loader;
 
-import com.jagex.cache.config.VariableBits;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.config.VariableBits;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.io.Buffer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -39,11 +40,13 @@ public class VarbitLoaderOSRS extends VariableBitLoader{
 
 	public void decodeVarbits(Index index) {
 		List<VariableBits> varbits = Lists.newArrayList();
-		int size = (index.getLastArchiveId() * 127) + index.getArchive(index.getLastArchiveId()).getHighestId();
+		Archive highestArchive = ArchiveUtils.getHighestArchive(index);
+		File highestFile = ArchiveUtils.getHighestFile(highestArchive);
+		int size = highestArchive.getId() * 127 + highestFile.getId();
 		bits = new VariableBits[size];
 		for (int id = 0; id < size; id++) {
 			VariableBits varbit = new VariableBits();
-			File file = index.getArchive(id >>> 10).getFile(id & 1023);
+			File file = index.archive(id >>> 10).file(id & 1023);
 			if (Objects.nonNull(file) && Objects.nonNull(file.getData())) {
 				ByteBuffer buff = ByteBuffer.wrap(file.getData());
 				try {

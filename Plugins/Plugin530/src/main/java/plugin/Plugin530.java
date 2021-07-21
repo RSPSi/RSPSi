@@ -1,20 +1,16 @@
 package plugin;
 
-import com.google.common.reflect.ClassPath;
-import com.jagex.Client;
-import com.jagex.cache.def.TextureDef;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.config.RSAreaLoader;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.SpriteTexture;
-import com.jagex.net.ResourceResponse;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.net.ResourceResponse;
+import com.rspsi.editor.cache.CacheFileType;
 import com.rspsi.plugins.ClientPlugin;
-import org.displee.cache.index.Index;
+import com.displee.cache.index.Index;
 import plugin.loader.*;
 import plugin.loader.texture.*;
 public class Plugin530 implements ClientPlugin {
@@ -54,10 +50,10 @@ public class Plugin530 implements ClientPlugin {
 		VariableBitLoader.instance = varbitLoader;
 		FrameLoader.instance = frameLoader;
 		ObjectDefinitionLoader.instance = objLoader;
-		com.jagex.cache.loader.floor.FloorDefinitionLoader.instance = floorLoader;
-		com.jagex.cache.loader.anim.FrameBaseLoader.instance = skeletonLoader;
+		com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader.instance = floorLoader;
+		com.rspsi.jagex.cache.loader.anim.FrameBaseLoader.instance = skeletonLoader;
 		TextureLoader.instance = textureLoader;
-		com.jagex.cache.loader.anim.AnimationDefinitionLoader.instance = animDefLoader;
+		com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader.instance = animDefLoader;
 	}
 
 	@Override
@@ -67,16 +63,16 @@ public class Plugin530 implements ClientPlugin {
 
 		Index configIndex = client.getCache().readFile(CacheFileType.CONFIG);
 
-		floorLoader.decodeUnderlays(configIndex.getArchive(1));
-		floorLoader.decodeOverlays(configIndex.getArchive(4));
-		varbitLoader.decodeVarbits(client.getCache().getIndexedFileSystem().getIndex(22));
-		objLoader.decodeObjects(client.getCache().getIndexedFileSystem().getIndex(16));
+		floorLoader.decodeUnderlays(configIndex.archive(1));
+		floorLoader.decodeOverlays(configIndex.archive(4));
+		varbitLoader.decodeVarbits(client.getCache().getIndexedFileSystem().index(22));
+		objLoader.decodeObjects(client.getCache().getIndexedFileSystem().index(16));
 
-//		animDefLoader.init(configIndex.getArchive(12));
-//		graphicLoader.init(configIndex.getArchive(13));
+//		animDefLoader.init(configIndex.archive(12));
+//		graphicLoader.init(configIndex.archive(13));
 
 		MapSceneLoader mapSceneLoader = new MapSceneLoader();
-		mapSceneLoader.init(client, configIndex.getArchive(34), client.getCache().readFile(CacheFileType.SPRITE));
+		mapSceneLoader.init(client, configIndex.archive(34), client.getCache().readFile(CacheFileType.SPRITE));
 
 //		Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 //		skeletonLoader.init(skeletonIndex);
@@ -85,7 +81,7 @@ public class Plugin530 implements ClientPlugin {
 		mapIndexLoader.init(mapIndex);
 
 
-		textureLoader.init(client.getCache().getIndexedFileSystem().getIndex(9), client.getCache().getIndexedFileSystem().getIndex(8));
+		textureLoader.init(client.getCache().getIndexedFileSystem().index(9), client.getCache().getIndexedFileSystem().index(8));
 
 	}
 

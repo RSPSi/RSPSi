@@ -1,9 +1,9 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.Texture;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.Texture;
 
 
 public class MyTextureLoader extends TextureLoader {

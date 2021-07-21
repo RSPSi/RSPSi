@@ -1,19 +1,19 @@
 package com.rspsi.plugin.loader;
 
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.def.TextureDef;
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.ARGBTexture;
-import com.jagex.draw.textures.AlphaPalettedTexture;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.RGBTexture;
-import com.jagex.draw.textures.Texture;
-import com.jagex.io.Buffer;
-import com.jagex.net.ResourceProvider;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.cache.def.TextureDef;
+import com.rspsi.jagex.cache.graphics.IndexedImage;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.ARGBTexture;
+import com.rspsi.jagex.draw.textures.AlphaPalettedTexture;
+import com.rspsi.jagex.draw.textures.PalettedTexture;
+import com.rspsi.jagex.draw.textures.RGBTexture;
+import com.rspsi.jagex.draw.textures.Texture;
+import com.rspsi.jagex.io.Buffer;
+import com.rspsi.jagex.net.ResourceProvider;
+import com.rspsi.editor.cache.CacheFileType;
 import com.rspsi.misc.FixedHashMap;
 import com.rspsi.options.Options;
 

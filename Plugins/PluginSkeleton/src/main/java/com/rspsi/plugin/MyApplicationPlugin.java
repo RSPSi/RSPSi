@@ -1,6 +1,6 @@
 package com.rspsi.plugin;
 
-import com.rspsi.MainWindow;
+import com.rspsi.editor.MainWindow;
 import com.rspsi.plugins.ApplicationPlugin;
 
 public class MyApplicationPlugin implements ApplicationPlugin {

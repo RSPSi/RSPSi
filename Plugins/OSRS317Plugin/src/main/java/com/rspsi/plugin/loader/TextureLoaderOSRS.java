@@ -1,13 +1,13 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.util.Arrays;
 
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.Texture;
+import com.rspsi.jagex.cache.graphics.IndexedImage;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.PalettedTexture;
+import com.rspsi.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
 
 public class TextureLoaderOSRS extends TextureLoader {
@@ -17,7 +17,7 @@ public class TextureLoaderOSRS extends TextureLoader {
 	private double brightness = 0.8;
 	private FixedHashMap<Integer, int[]> textureCache = new FixedHashMap<Integer, int[]>(20);
 	
-	
+
 	@Override
 	public Texture forId(int arg0) {
 		if(arg0 < 0 || arg0 > textures.length)

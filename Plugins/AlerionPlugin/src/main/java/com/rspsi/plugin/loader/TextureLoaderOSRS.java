@@ -5,13 +5,13 @@
 
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.Texture;
+import com.rspsi.jagex.cache.graphics.IndexedImage;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.PalettedTexture;
+import com.rspsi.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
 import java.util.Arrays;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class TextureLoaderOSRS extends TextureLoader {
     private Texture[] textures = new Texture[50];
@@ -58,9 +58,9 @@ public class TextureLoaderOSRS extends TextureLoader {
                     this.transparent[textureId] = true;
                 }
 
-                texels[16384 + l1] = k2 - (k2 >>> 3) & 16316671;
-                texels['耀' + l1] = k2 - (k2 >>> 2) & 16316671;
-                texels['쀀' + l1] = k2 - (k2 >>> 2) - (k2 >>> 3) & 16316671;
+                texels[16384 + l1] = k2 - (k2 >>> 3) & 0xf8f8ff;
+                texels[32768 + l1] = k2 - (k2 >>> 2) & 0xf8f8ff;
+                texels[49152 + l1] = k2 - (k2 >>> 2) - (k2 >>> 3) & 0xf8f8ff;
             }
 
             this.textureCache.put(textureId, texels);

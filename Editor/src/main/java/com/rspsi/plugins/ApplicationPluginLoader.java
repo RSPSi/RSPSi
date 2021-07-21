@@ -1,5 +1,8 @@
 package com.rspsi.plugins;
 
+import com.google.common.collect.Lists;
+import com.rspsi.editor.MainWindow;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -8,9 +11,6 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
-
-import com.google.common.collect.Lists;
-import com.rspsi.MainWindow;
 
 public class ApplicationPluginLoader {
 	

@@ -5,13 +5,13 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.Client;
-import com.jagex.cache.anim.Frame;
-import com.jagex.cache.anim.FrameBase;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.io.Buffer;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.editor.cache.CacheFileType;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.anim.Frame;
+import com.rspsi.jagex.cache.anim.FrameBase;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.io.Buffer;
 
 public class FrameLoaderOSRS extends FrameLoader {
     private Frame[][] frames;

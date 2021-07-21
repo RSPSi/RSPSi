@@ -1,25 +1,24 @@
 package com.rspsi.plugin;
 
-import com.jagex.entity.model.Mesh;
-import com.jagex.entity.model.MeshLoader;
-import com.jagex.entity.model.MeshRevision;
-import com.jagex.entity.model.MeshUtils;
-import com.jagex.io.Buffer;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.entity.model.MeshRevision;
+import com.rspsi.jagex.entity.model.MeshUtils;
+import com.rspsi.jagex.io.Buffer;
+import com.rspsi.editor.cache.CacheFileType;
+import com.rspsi.util.GZIPUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.Client;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.net.ResourceResponse;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.net.ResourceResponse;
 import com.rspsi.plugin.loader.AnimationDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.FloorDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.FrameBaseLoaderOSRS;
@@ -30,7 +29,6 @@ import com.rspsi.plugin.loader.ObjectDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
 import com.rspsi.plugins.ClientPlugin;
-import org.displee.utilities.GZIPUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -231,10 +229,10 @@ public class OSRSPlugin implements ClientPlugin {
 				try {
 					if (cacheFileType == CacheFileType.MODEL) {
 
-						byte[] data = client.getCache().readFile(CacheFileType.MODEL).getArchive(id).readFile(0);
+						byte[] data = client.getCache().readFile(CacheFileType.MODEL).archive(id).file(0).getData();
 
 						if (data != null) {
-							byte[] unzipped = GZIPUtils.unzip(data);
+							byte[] unzipped = GZIPUtils.decompress(data);
 							if (unzipped != null)
 								data = unzipped;
 							byte[] arrayCopy = Arrays.copyOf(data, data.length);

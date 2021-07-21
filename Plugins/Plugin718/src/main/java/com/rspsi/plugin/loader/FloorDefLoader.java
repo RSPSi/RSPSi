@@ -1,19 +1,19 @@
 package com.rspsi.plugin.loader;
 
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 import com.google.common.collect.Lists;
-import com.jagex.cache.def.Floor;
-import com.jagex.cache.loader.floor.FloorType;
-import com.jagex.util.ByteBufferUtils;
+import com.rspsi.jagex.cache.def.Floor;
+import com.rspsi.jagex.cache.loader.floor.FloorType;
+import com.rspsi.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinitionLoader {
+public class FloorDefLoader extends com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader {
 
 	private Floor[] overlays;
 	private Floor[] underlays;
@@ -29,10 +29,8 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeUnderlays(Archive archive) {
-		int size = archive.getLastFile().getId();
 		List<Floor> floors = Lists.newArrayList();
-		for (int id = 0; id < size; id++) {
-			File underlay = archive.getFile(id);
+		for (File underlay : archive.files()) {
 			if (Objects.nonNull(underlay) && Objects.nonNull(underlay.getData())) {
 				Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
 				floor.generateHsl();
@@ -44,10 +42,8 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeOverlays(Archive archive) {
-		int size = archive.getLastFile().getId();
 		List<Floor> floors = Lists.newArrayList();
-		for (int id = 0; id < size; id++) {
-			File overlays = archive.getFile(id);
+		for (File overlays : archive.files()) {
 			if (Objects.nonNull(overlays) && Objects.nonNull(overlays.getData())) {
 				Floor floor = decodeOverlay(ByteBuffer.wrap(overlays.getData()));
 				floor.generateHsl();

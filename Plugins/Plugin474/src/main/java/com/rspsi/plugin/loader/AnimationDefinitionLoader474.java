@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.anim.Animation;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.anim.Animation;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 
 
 public class AnimationDefinitionLoader474 extends AnimationDefinitionLoader {
@@ -15,7 +15,7 @@ public class AnimationDefinitionLoader474 extends AnimationDefinitionLoader {
 	
 	@Override
 	public void init(Archive archive) {
-		Buffer buffer = new Buffer(archive.readFile("seq.dat"));
+		Buffer buffer = new Buffer(archive.file("seq.dat").getData());
 		count = buffer.readUShort();
 
 		if (animations == null) {

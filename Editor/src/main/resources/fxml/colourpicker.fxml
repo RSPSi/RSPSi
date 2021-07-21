@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
@@ -41,13 +40,13 @@
                               <Insets />
                            </VBox.margin>
                            <children>
-                              <JFXTextField fx:id="jagHSL" editable="false" focusColor="#3275fa" labelFloat="true" promptText="JAG H, S, L" unFocusColor="#275fcf" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="jagHSL" editable="false" promptText="JAG H, S, L" HBox.hgrow="ALWAYS" />
                               <Button fx:id="pickerButton1" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0">
                            <children>
-                              <JFXTextField fx:id="colourIndex" editable="false" focusColor="#3275fa" labelFloat="true" promptText="Colour Index" unFocusColor="#275fcf" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="colourIndex" editable="false" promptText="Colour Index"  HBox.hgrow="ALWAYS" />
                               <Button fx:id="pickerButton2" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" />
                            </children>
                         </HBox>

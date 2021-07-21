@@ -1,13 +1,13 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.map.MapType;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.map.MapType;
+import com.rspsi.jagex.io.Buffer;
 
 public class MyMapIndexLoader extends MapIndexLoader {
 	
@@ -16,7 +16,7 @@ public class MyMapIndexLoader extends MapIndexLoader {
 
 	@Override
 	public void init(Archive archive) {
-		byte[] indices = archive.readFile("map_index");
+		byte[] indices = archive.file("map_index").getData();
 		Buffer buffer = new Buffer(indices);
 		int count = buffer.readUShort();
 		mapHashes = new int[count];

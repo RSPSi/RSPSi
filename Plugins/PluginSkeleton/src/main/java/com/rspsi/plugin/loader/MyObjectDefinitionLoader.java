@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.def.ObjectDefinition;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 
 
 public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {

@@ -1,21 +1,20 @@
 package com.rspsi.plugin;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
 
-import com.jagex.Client;
-import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
-import com.jagex.cache.loader.anim.FrameBaseLoader;
-import com.jagex.cache.loader.anim.FrameLoader;
-import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.config.RSAreaLoader;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.floor.FloorDefinitionLoader;
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.net.ResourceResponse;
-import com.rspsi.cache.CacheFileType;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.loader.anim.AnimationDefinitionLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameBaseLoader;
+import com.rspsi.jagex.cache.loader.anim.FrameLoader;
+import com.rspsi.jagex.cache.loader.anim.GraphicLoader;
+import com.rspsi.jagex.cache.loader.config.RSAreaLoader;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.floor.FloorDefinitionLoader;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.net.ResourceResponse;
+import com.rspsi.editor.cache.CacheFileType;
 import com.rspsi.plugin.loader.AnimationDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.FloorDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.FrameBaseLoaderOSRS;
@@ -74,14 +73,14 @@ public class Plugin414 implements ClientPlugin {
 			
 			Index configIndex = client.getCache().readFile(CacheFileType.CONFIG);
 
-			floorLoader.initOverlays(configIndex.getArchive(4));
-			floorLoader.initUnderlays(configIndex.getArchive(1));
+			floorLoader.initOverlays(configIndex.archive(4));
+			floorLoader.initUnderlays(configIndex.archive(1));
 			
-			objLoader.init(configIndex.getArchive(6));
-			animDefLoader.init(configIndex.getArchive(12));
-			graphicLoader.init(configIndex.getArchive(13));
-			varbitLoader.init(configIndex.getArchive(14));
-			areaLoader.init(configIndex.getArchive(35));
+			objLoader.init(configIndex.archive(6));
+			animDefLoader.init(configIndex.archive(12));
+			graphicLoader.init(configIndex.archive(13));
+			varbitLoader.init(configIndex.archive(14));
+			areaLoader.init(configIndex.archive(35));
 			
 			Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
 			skeletonLoader.init(skeletonIndex);
@@ -91,7 +90,7 @@ public class Plugin414 implements ClientPlugin {
 			
 			Index textureIndex = client.getCache().readFile(CacheFileType.TEXTURE);
 			Index spriteIndex = client.getCache().readFile(CacheFileType.SPRITE);
-			textureLoader.init(textureIndex.getArchive(0), spriteIndex);
+			textureLoader.init(textureIndex.archive(0), spriteIndex);
 			
 
 	}

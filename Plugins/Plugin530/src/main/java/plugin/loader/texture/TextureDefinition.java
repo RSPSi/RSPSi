@@ -1,14 +1,9 @@
 package plugin.loader.texture;
 
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.RGBTexture;
-import com.jagex.draw.textures.SpriteTexture;
-import com.jagex.draw.textures.Texture;
-import com.jagex.io.Buffer;
-import com.jagex.util.ColourUtils;
-import org.displee.cache.index.Index;
-import java.nio.ByteBuffer;
-import java.util.Objects;
+import com.rspsi.jagex.draw.textures.RGBTexture;
+import com.rspsi.jagex.draw.textures.Texture;
+import com.rspsi.jagex.io.Buffer;
+import com.rspsi.jagex.util.ColourUtils;
 
 public class TextureDefinition {
 

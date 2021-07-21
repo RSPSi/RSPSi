@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.loader.map.MapIndexLoader;
-import com.jagex.cache.loader.map.MapType;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.loader.map.MapIndexLoader;
+import com.rspsi.jagex.cache.loader.map.MapType;
+import com.rspsi.jagex.io.Buffer;
 
 
 public class MyMapIndexLoader extends MapIndexLoader {

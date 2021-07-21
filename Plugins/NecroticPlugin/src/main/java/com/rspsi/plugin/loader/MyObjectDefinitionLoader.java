@@ -1,10 +1,10 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
-import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.def.ObjectDefinition;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
 
 
@@ -420,11 +420,11 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	@Override
 	public void init(Archive config)  {
 
-		Buffer buffer = new Buffer(config.readFile("loc.dat"));
-		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer buffer = new Buffer(config.file("loc.dat").getData());
+		Buffer index = new Buffer(config.file("loc.idx").getData());
 
-		buffer667 = new Buffer(config.readFile("667loc.dat"));
-		Buffer streamIdx667 = new Buffer(config.readFile("667loc.idx"));
+		buffer667 = new Buffer(config.file("667loc.dat").getData());
+		Buffer streamIdx667 = new Buffer(config.file("667loc.idx").getData());
 		try {
 
 

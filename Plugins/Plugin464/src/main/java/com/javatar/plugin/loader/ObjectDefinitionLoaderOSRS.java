@@ -5,20 +5,24 @@
 
 package com.javatar.plugin.loader;
 
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 import com.google.common.collect.Maps;
-import com.jagex.Client;
-import com.jagex.cache.config.VariableBits;
-import com.jagex.cache.def.ObjectDefinition;
-import com.jagex.cache.def.RSArea;
-import com.jagex.cache.loader.config.VariableBitLoader;
-import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.Client;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.config.VariableBits;
+import com.rspsi.jagex.cache.def.ObjectDefinition;
+import com.rspsi.jagex.cache.def.RSArea;
+import com.rspsi.jagex.cache.loader.config.VariableBitLoader;
+import com.rspsi.jagex.cache.loader.object.ObjectDefinitionLoader;
+import com.rspsi.jagex.io.Buffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Objects;
+
+;
 
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     private static final Logger log = LoggerFactory.getLogger(ObjectDefinitionLoaderOSRS.class);
@@ -29,8 +33,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        this.count = archive.getHighestId() + 1;
-        File[] var2 = archive.getFiles();
+        this.count = ArchiveUtils.getHighestFile(archive).getId() + 1;
+        File[] var2 = archive.files();
         int var3 = var2.length;
 
         for (int var4 = 0; var4 < var3; ++var4) {
@@ -250,7 +254,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     }
 
     public void renameMapFunctions(RSAreaLoaderOSRS areaLoader) {
-        this.cache.values().stream().filter((objectDefinition) -> {
+        this.cache.values().stream().filter(Objects::nonNull).filter((objectDefinition) -> {
             return objectDefinition.getAreaId() != -1;
         }).forEach((objectDefinition) -> {
             RSArea area = areaLoader.forId(objectDefinition.getAreaId());

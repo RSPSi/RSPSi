@@ -5,18 +5,22 @@
 
 package com.javatar.plugin.loader;
 
-import com.jagex.cache.graphics.Sprite;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.SpriteTexture;
-import com.jagex.draw.textures.Texture;
-import com.jagex.io.Buffer;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.graphics.Sprite;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.SpriteTexture;
+import com.rspsi.jagex.draw.textures.Texture;
+import com.rspsi.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
-import java.nio.ByteBuffer;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+
+;
 
 public class TextureLoaderOSRS extends TextureLoader {
     private static final Logger log = LoggerFactory.getLogger(TextureLoaderOSRS.class);
@@ -60,8 +64,8 @@ public class TextureLoaderOSRS extends TextureLoader {
                 texels[y] &= 16316671;
                 x = texels[y];
                 texels[16384 + y] = x - (x >>> 3) & 16316671;
-                texels['耀' + y] = x - (x >>> 2) & 16316671;
-                texels['쀀' + y] = x - (x >>> 2) - (x >>> 3) & 16316671;
+                texels[32768 + y] = x - (x >>> 2) & 16316671;
+                texels[49152 + y] = x - (x >>> 2) - (x >>> 3) & 16316671;
             }
 
             this.textureCache.put(textureId, texels);
@@ -70,9 +74,9 @@ public class TextureLoaderOSRS extends TextureLoader {
     }
 
     public void init(Archive archive, Index spriteIndex) {
-        this.textures = new Texture[archive.getHighestId() + 1];
-        this.transparent = new boolean[archive.getHighestId() + 1];
-        File[] var3 = archive.getFiles();
+        this.textures = new Texture[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        this.transparent = new boolean[ArchiveUtils.getHighestFile(archive).getId() + 1];
+        File[] var3 = archive.files();
         int var4 = var3.length;
 
         for(int var5 = 0; var5 < var4; ++var5) {
@@ -88,7 +92,7 @@ public class TextureLoaderOSRS extends TextureLoader {
                     texIds[i] = buffer.readUShort();
                 }
 
-                Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.getArchive(texIds[0]).readFile(0)));
+                Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.archive(texIds[0]).file(0).getData()));
                 if (sprite.getWidth() != 128 || sprite.getHeight() != 128) {
                     sprite.resize(128, 128);
                 }

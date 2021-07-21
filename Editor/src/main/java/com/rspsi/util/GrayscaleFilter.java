@@ -1,8 +1,8 @@
 package com.rspsi.util;
 
-import java.awt.image.BufferedImage;
-
 import net.coobird.thumbnailator.filters.ImageFilter;
+
+import java.awt.image.BufferedImage;
 
 public class GrayscaleFilter implements ImageFilter {
 

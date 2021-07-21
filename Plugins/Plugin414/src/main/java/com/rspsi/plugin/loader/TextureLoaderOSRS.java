@@ -1,16 +1,17 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
 
-import com.jagex.cache.graphics.Sprite;
-import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.SpriteTexture;
-import com.jagex.draw.textures.Texture;
-import com.jagex.io.Buffer;
+import com.rspsi.jagex.cache.ArchiveUtils;
+import com.rspsi.jagex.cache.graphics.Sprite;
+import com.rspsi.jagex.cache.loader.textures.TextureLoader;
+import com.rspsi.jagex.draw.textures.SpriteTexture;
+import com.rspsi.jagex.draw.textures.Texture;
+import com.rspsi.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
 
 import lombok.extern.slf4j.Slf4j;
@@ -70,9 +71,9 @@ public class TextureLoaderOSRS extends TextureLoader {
 
 	
 	public void init(Archive archive, Index spriteIndex) {
-		textures = new Texture[archive.getHighestId() + 1];
-		transparent = new boolean[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
+		textures = new Texture[ArchiveUtils.getHighestFile(archive).getId() + 1];
+		transparent = new boolean[ArchiveUtils.getHighestFile(archive).getId() + 1];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				log.info("Loading texture {}", file.getId());
 				Buffer buffer = new Buffer(file.getData());
@@ -82,7 +83,7 @@ public class TextureLoaderOSRS extends TextureLoader {
 				for(int i = 0;i<count;i++) {
 					texIds[i] = buffer.readUShort();
 				}
-				Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.getArchive(texIds[0]).readFile(0)));
+				Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.archive(texIds[0]).file(0).getData()));
 				if(sprite.getWidth() != 128 || sprite.getHeight() != 128)
 					sprite.resize(128, 128);
 				Texture texture = new SpriteTexture(sprite);
