@@ -59,8 +59,8 @@ public class TextureLoaderOSRS extends TextureLoader {
                 }
 
                 texels[16384 + l1] = k2 - (k2 >>> 3) & 16316671;
-                texels['耀' + l1] = k2 - (k2 >>> 2) & 16316671;
-                texels['쀀' + l1] = k2 - (k2 >>> 2) - (k2 >>> 3) & 16316671;
+                texels[32768 + l1] = k2 - (k2 >>> 2) & 16316671;
+                texels[49152 + l1] = k2 - (k2 >>> 2) - (k2 >>> 3) & 16316671;
             }
 
             this.textureCache.put(textureId, texels);
