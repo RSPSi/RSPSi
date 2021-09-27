@@ -1,16 +1,14 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.stream.IntStream;
-
 import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.io.Buffer;
 import com.jagex.util.ByteBufferUtils;
+import org.displee.cache.index.archive.Archive;
+import org.displee.cache.index.archive.file.File;
+
+import java.nio.ByteBuffer;
+import java.util.stream.IntStream;
 
 public class RSAreaLoaderOSRS extends RSAreaLoader {
 
@@ -79,27 +77,29 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
 			} else if (opcode == 15) {
 				int size = buffer.get() & 0xFF;
 				int[] anIntArray1982 = new int[size * 2];
-
+				
 				for (int i = 0; i < size * 2; ++i) {
 					anIntArray1982[i] = buffer.getShort();
 				}
-
+				
 				buffer.getInt();
 				int size2 = buffer.get() & 0xFF;
 				int[] anIntArray1981 = new int[size2];
-
+				
 				for (int i = 0; i < anIntArray1981.length; ++i) {
 					anIntArray1981[i] = buffer.getInt();
 				}
-
+				
 				byte[] aByteArray1979 = new byte[size];
-
+				
 				for (int i = 0; i < size; ++i) {
 					aByteArray1979[i] = buffer.get();
 				}
 				area.setAnIntArray1982(anIntArray1982);
 				area.setAnIntArray1981(anIntArray1981);
 				area.setAByteArray1979(aByteArray1979);
+			} else if (opcode == 16) {
+			
 			} else if (opcode == 17) {
 				area.setAString1970(ByteBufferUtils.getOSRSString(buffer));
 			} else if (opcode == 18) {

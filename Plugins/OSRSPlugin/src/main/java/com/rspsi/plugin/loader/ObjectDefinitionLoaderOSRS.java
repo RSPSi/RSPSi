@@ -1,20 +1,18 @@
 package com.rspsi.plugin.loader;
 
-import com.jagex.cache.def.RSArea;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.jagex.Client;
 import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.def.ObjectDefinition;
+import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-
 import lombok.extern.slf4j.Slf4j;
+import org.displee.cache.index.archive.Archive;
+import org.displee.cache.index.archive.file.File;
+
+import java.util.Map;
 
 @Slf4j
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
@@ -155,6 +153,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				definition.setTextureToReplace(replacementTex);
 			} else if (opcode == 60) {
 				//definition.setMinimapFunction(buffer.readUShort());
+			} else if (opcode == 61) {
+				buffer.readUShort(); // category
 			} else if (opcode == 62) {
 				definition.setInverted(true);
 			} else if (opcode == 64) {
@@ -220,10 +220,11 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				int count = buffer.readUByte();
 				buffer.skip(2 * count);
 			} else if (opcode == 81) {
-				buffer.skip(1);//Clip type?
+				buffer.skip(1);//contouredGround * 256
 			} else if (opcode == 82) {
 				definition.setAreaId(buffer.readUShort());//AreaType
-
+			} else if (opcode == 89) {
+				// randomizeAnimStart = true;
 			} else if (opcode == 249) {
 				int var1 = buffer.readUByte();
 				for (int var2 = 0; var2 < var1; var2++) {
