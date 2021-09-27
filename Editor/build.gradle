@@ -22,13 +22,9 @@ run {
 }
 // In this section you declare the dependencies for your production and test code
 dependencies  {
-
- 	compile project(':Client')
-	// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
-	compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.15'
-	compile 'com.jfoenix:jfoenix:8.0.9'
-
-
+ 	implementation project(':Client')
+	implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.1.0'
+	implementation 'com.jfoenix:jfoenix:9.0.10'
 }
 
 mainClassName = 'com.rspsi.LauncherWindow'
