@@ -46,7 +46,7 @@ public class MyTextureLoader extends TextureLoader {
 
 			if (hdLoaded[id])
 				return hdTextures[id];
-			provider.requestgetFile(CacheFileType.TEXTURE, id);
+			provider.requestFile(CacheFileType.TEXTURE, id);
 			
 			return hdTextures[id];
 		} else {
