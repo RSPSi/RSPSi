@@ -1,5 +1,6 @@
 package com.jagex.cache.graphics;
 
+import com.displee.cache.index.archive.Archive;
 import com.google.common.collect.Lists;
 import com.jagex.draw.raster.GameRaster;
 import com.jagex.draw.raster.GameRasterizer;
@@ -7,7 +8,6 @@ import com.jagex.io.Buffer;
 import com.jagex.util.ColourUtils;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
-import org.displee.cache.index.archive.Archive;
 
 import javax.swing.*;
 import java.awt.*;
@@ -128,8 +128,8 @@ public final class IndexedImage extends GameRaster {
 	}
 
 	public IndexedImage(Archive archive, String name, int id) throws Exception {
-		Buffer image = new Buffer(archive.readFile(name + ".dat"));
-		Buffer meta = new Buffer(archive.readFile("index.dat"));
+		Buffer image = new Buffer(archive.file(name + ".dat"));
+		Buffer meta = new Buffer(archive.file("index.dat"));
 		
 
 		meta.setPosition(image.readUShort());

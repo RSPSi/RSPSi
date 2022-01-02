@@ -1,12 +1,10 @@
 package com.jagex;
 
+import com.displee.cache.index.archive.Archive;
 import com.jagex.map.SceneGraph;
 import com.jagex.map.tile.SceneTile;
 import com.rspsi.options.KeyboardState;
 import javafx.scene.input.KeyCode;
-import org.displee.cache.index.archive.Archive;
-import org.displee.utilities.GZIPUtils;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,6 +22,7 @@ import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 
+import org.displee.util.GZIPUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -511,7 +510,7 @@ public final class Client implements Runnable {
 				mapFunctions = Arrays.copyOf(functions, lastIdx + 1);
 			} else {
 				try {
-					mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.readFile(CacheFileType.SPRITE).getArchive("mapscene").readFile(0)));
+					mapScenes = Sprite.unpackAndDecode(ByteBuffer.wrap(cache.getFile(CacheFileType.SPRITE).archive("mapscene").file(0).getData()));
 				} catch (Exception e) {
 					mapScenes = new Sprite[0];
 				}

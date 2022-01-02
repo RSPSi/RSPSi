@@ -111,7 +111,7 @@ public class MeshLoader {
         if (!alreadyLoading) {
             awaitingLoad.add(id);
             System.out.println("Requested model " + id);
-            provider.requestgetFile(CacheFileType.MODEL, id);
+            provider.requestFile(CacheFileType.MODEL, id);
             return false;
         }
         return false;
@@ -125,7 +125,7 @@ public class MeshLoader {
     }
 
     public void requestMesh(int id) {
-        provider.requestgetFile(CacheFileType.MODEL, id);
+        provider.requestFile(CacheFileType.MODEL, id);
     }
 
 

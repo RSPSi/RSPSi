@@ -1,7 +1,7 @@
 package com.jagex.cache.def;
 
+import com.displee.cache.index.archive.Archive;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
 
 public final class TextureDef
 {
@@ -11,7 +11,7 @@ public final class TextureDef
 
 	public static void unpackConfig(Archive streamLoader)
 	{
-		Buffer buffer = new Buffer(streamLoader.readFile("textures.dat"));
+		Buffer buffer = new Buffer(streamLoader.file("textures.dat"));
 		int count = buffer.readUShort();
 		textures = new TextureDef[count];
 		for (int i = 0; i != count; ++i)

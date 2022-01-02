@@ -1,12 +1,11 @@
 package com.jagex.cache.graphics;
 
+import com.displee.cache.index.archive.Archive;
 import com.jagex.draw.raster.GameRaster;
 import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.io.Buffer;
 import com.jagex.util.ByteBufferUtils;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
 
 import javax.swing.*;
 import java.awt.*;
@@ -423,8 +422,8 @@ public final class Sprite extends GameRaster {
 	}
 	
 	public Sprite(Archive archive, String name, int id) {
-		Buffer sprite = new Buffer(archive.readFile(name + ".dat"));
-		Buffer meta = new Buffer(archive.readFile("index.dat"));
+		Buffer sprite = new Buffer(archive.file(name + ".dat"));
+		Buffer meta = new Buffer(archive.file("index.dat"));
 		if (sprite.getPayload() == null)
 			return;
 		meta.setPosition(sprite.readUShort());

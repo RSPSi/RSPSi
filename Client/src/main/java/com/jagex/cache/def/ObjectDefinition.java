@@ -1,6 +1,5 @@
 package com.jagex.cache.def;
 
-import org.displee.cache.index.Index;
 
 import java.util.Arrays;
 
@@ -36,10 +35,7 @@ public final class ObjectDefinition {
 	}
 	
 	private Sprite mapFunctionSprite, mapSceneSprite;
-	
-	public void generateSprites(Index spriteIndex) {
-		
-	}
+
 
 	private byte ambientLighting;
 	private int animation;
