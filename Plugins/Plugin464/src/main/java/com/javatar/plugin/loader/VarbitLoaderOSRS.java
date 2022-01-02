@@ -8,8 +8,8 @@ package com.javatar.plugin.loader;
 import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 public class VarbitLoaderOSRS extends VariableBitLoader {
     private int count;
@@ -27,7 +27,7 @@ public class VarbitLoaderOSRS extends VariableBitLoader {
     }
 
     public void init(Archive archive) {
-        this.count = archive.getHighestId() + 1;
+        this.count = highestId + 1;
         this.bits = new VariableBits[this.count];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;

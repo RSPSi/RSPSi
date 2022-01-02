@@ -24,7 +24,7 @@ public class MyFrameLoader extends FrameLoader {
 			int fileId = index >> 16;
 			index = index & 0xffff;
 			if (frames[fileId].length == 0) {
-				Client.getSingleton().getProvider().requestFile(CacheFileType.ANIMATION, fileId);
+				Client.getSingleton().getProvider().requestgetFile(CacheFileType.ANIMATION, fileId);
 				return null;
 			}
 			return frames[fileId][index];

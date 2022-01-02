@@ -1,6 +1,6 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Client;
 import com.jagex.cache.config.VariableBits;
@@ -27,8 +27,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 		} else {
 
 		}
-		data = new Buffer(archive.readFile("loc.dat"));
-		Buffer buffer = new Buffer(archive.readFile("loc.idx"));
+		data = new Buffer(archive.file("loc.dat"));
+		Buffer buffer = new Buffer(archive.file("loc.idx"));
 		count = buffer.readUShort();
 		System.out.println("Expected " + count + " ids");
 		indices = new int[count];

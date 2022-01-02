@@ -1,7 +1,6 @@
 package com.rspsi.controls;
 
 import com.rspsi.util.FXUtils;
-import org.displee.utilities.GZIPUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -52,6 +51,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.displee.util.GZIPUtils;
 
 public class RemappingTool extends Application {
 

@@ -13,8 +13,8 @@ import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        this.count = archive.getHighestId() + 1;
+        this.count = highestId + 1;
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 

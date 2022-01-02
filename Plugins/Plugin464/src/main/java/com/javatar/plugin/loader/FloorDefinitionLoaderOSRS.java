@@ -9,8 +9,8 @@ import com.jagex.cache.def.Floor;
 import com.jagex.cache.loader.floor.FloorDefinitionLoader;
 import com.jagex.cache.loader.floor.FloorType;
 import java.nio.ByteBuffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     private Floor[] overlays;
@@ -26,7 +26,7 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     }
 
     public void initOverlays(Archive archive) {
-        this.overlays = new Floor[archive.getHighestId() + 1];
+        this.overlays = new Floor[highestId + 1];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 
@@ -42,7 +42,7 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     }
 
     public void initUnderlays(Archive archive) {
-        this.underlays = new Floor[archive.getHighestId() + 1];
+        this.underlays = new Floor[highestId + 1];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 

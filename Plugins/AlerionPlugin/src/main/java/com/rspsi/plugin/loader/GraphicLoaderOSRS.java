@@ -9,7 +9,7 @@ import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class GraphicLoaderOSRS extends GraphicLoader {
     private Graphic[] graphics;
@@ -27,7 +27,7 @@ public class GraphicLoaderOSRS extends GraphicLoader {
     }
 
     public void init(Archive archive) {
-        Buffer buffer = new Buffer(archive.readFile("spotanim.dat"));
+        Buffer buffer = new Buffer(archive.file("spotanim.dat"));
         this.count = buffer.readUShort();
         if (this.graphics == null) {
             this.graphics = new Graphic[this.count];

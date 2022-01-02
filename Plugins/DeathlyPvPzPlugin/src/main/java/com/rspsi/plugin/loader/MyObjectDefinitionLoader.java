@@ -1,6 +1,6 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.File;
 import java.io.IOException;
@@ -423,8 +423,8 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	
 	public void init(Archive config, Archive sound) throws IOException {
 
-		Buffer buffer = new Buffer(config.readFile("loc.dat"));
-		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer buffer = new Buffer(config.file("loc.dat"));
+		Buffer index = new Buffer(config.file("loc.idx"));
 		
 		buffer667 = new Buffer(Files.readAllBytes(new File(Config.cacheLocation.get() + "667loc.dat").toPath()));
 		Buffer streamIdx667 = new Buffer(Files.readAllBytes(new File(Config.cacheLocation.get() + "667loc.idx").toPath()));

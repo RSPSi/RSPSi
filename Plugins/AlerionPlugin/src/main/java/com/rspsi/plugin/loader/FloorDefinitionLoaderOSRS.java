@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     private Floor[] overlays;
@@ -25,7 +25,7 @@ public class FloorDefinitionLoaderOSRS extends FloorDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        ByteBuffer buffer = ByteBuffer.wrap(archive.readFile("flo.dat"));
+        ByteBuffer buffer = ByteBuffer.wrap(archive.file("flo.dat").getData());
         int underlayAmount = buffer.getShort();
         System.out.println("Underlay Floors Loaded: " + underlayAmount);
         this.underlays = new Floor[underlayAmount];

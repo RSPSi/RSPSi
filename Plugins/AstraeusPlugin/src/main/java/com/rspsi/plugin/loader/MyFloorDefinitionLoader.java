@@ -1,6 +1,6 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 
@@ -15,7 +15,7 @@ public class MyFloorDefinitionLoader extends FloorDefinitionLoader {
 
 	@Override
 	public void init(Archive archive) {
-		ByteBuffer buffer = ByteBuffer.wrap(archive.readFile("flo.dat"));
+		ByteBuffer buffer = ByteBuffer.wrap(archive.file("flo.dat").getData());
 		int underlayAmount = buffer.getShort();
 		System.out.println("Underlay Floors Loaded: " + underlayAmount);
 		underlays = new Floor[underlayAmount];

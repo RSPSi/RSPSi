@@ -3,7 +3,7 @@ package plugin.loader;
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 
 public class AnimationDefLoader extends AnimationDefinitionLoader {

@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.apache.commons.compress.utils.Lists;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 
 public class MapIndexLoaderOSRS extends MapIndexLoader {
     private int[] mapHashes;
@@ -27,7 +27,7 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
     }
 
     public void init(Archive archive) {
-        byte[] indices = archive.readFile("map_index");
+        File indices = archive.file("map_index");
         Buffer buffer = new Buffer(indices);
         int count = buffer.readUShort();
         this.mapHashes = new int[count];

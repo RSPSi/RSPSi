@@ -1,15 +1,17 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.jagex.cache.def.RSArea;
 import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.io.Buffer;
 import com.jagex.util.ByteBufferUtils;
+import lombok.val;
 
 public class RSAreaLoaderOSRS extends RSAreaLoader {
 
@@ -37,8 +39,10 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
 			});
 			return;
 		}
-		areas = new RSArea[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
+
+		val highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
+		areas = new RSArea[highestId + 1];
+		for(File file : archive.files()) {
 			if(file != null && file.getData() != null) {
 				RSArea area = decode(file.getId(), ByteBuffer.wrap(file.getData()));
 				areas[file.getId()] = area;

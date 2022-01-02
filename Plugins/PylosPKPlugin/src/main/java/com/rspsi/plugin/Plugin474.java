@@ -1,6 +1,6 @@
 package com.rspsi.plugin;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;

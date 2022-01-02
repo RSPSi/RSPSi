@@ -1,6 +1,6 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.File;
 import java.io.IOException;

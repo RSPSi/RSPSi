@@ -5,7 +5,7 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.draw.textures.PalettedTexture;
 import com.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 
 public class MyTextureLoader extends TextureLoader {

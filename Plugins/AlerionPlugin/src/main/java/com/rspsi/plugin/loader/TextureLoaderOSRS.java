@@ -11,7 +11,7 @@ import com.jagex.draw.textures.PalettedTexture;
 import com.jagex.draw.textures.Texture;
 import com.rspsi.misc.FixedHashMap;
 import java.util.Arrays;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class TextureLoaderOSRS extends TextureLoader {
     private Texture[] textures = new Texture[50];

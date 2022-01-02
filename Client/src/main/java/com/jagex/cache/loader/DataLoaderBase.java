@@ -1,6 +1,6 @@
 package com.jagex.cache.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public interface DataLoaderBase<T> {
 

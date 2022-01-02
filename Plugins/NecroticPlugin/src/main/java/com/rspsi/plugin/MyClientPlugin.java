@@ -1,6 +1,6 @@
 package com.rspsi.plugin;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Cache;
 import com.jagex.Client;

@@ -3,7 +3,7 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 
 public class MyAnimationDefinitionLoader extends AnimationDefinitionLoader {
@@ -13,7 +13,7 @@ public class MyAnimationDefinitionLoader extends AnimationDefinitionLoader {
 	
 	@Override
 	public void init(Archive archive) {
-		Buffer buffer = new Buffer(archive.readFile("seq.dat"));
+		Buffer buffer = new Buffer(archive.file("seq.dat"));
 		count = buffer.readUShort();
 
 		if (animations == null) {

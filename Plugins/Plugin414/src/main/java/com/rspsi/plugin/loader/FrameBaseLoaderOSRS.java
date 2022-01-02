@@ -1,7 +1,7 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 
 import java.util.Map;
 
@@ -45,9 +45,9 @@ public class FrameBaseLoaderOSRS extends FrameBaseLoader {
 	}
 
 	public void init(Index skeletonIndex) {
-		for(Archive archive : skeletonIndex.getArchives()) {
+		for(Archive archive : skeletonIndex.archives()) {
 			if(archive != null && archive.containsData()) {
-				FrameBase base = decode(new Buffer(archive.getFile(0).getData()));
+				FrameBase base = decode(new Buffer(archive.file(0)));
 				skeletons.put(archive.getId(), base);
 			}
 		}

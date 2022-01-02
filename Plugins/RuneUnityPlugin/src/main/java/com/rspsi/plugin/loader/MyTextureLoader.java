@@ -1,7 +1,7 @@
 package com.rspsi.plugin.loader;
 
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.graphics.IndexedImage;
@@ -46,7 +46,7 @@ public class MyTextureLoader extends TextureLoader {
 
 			if (hdLoaded[id])
 				return hdTextures[id];
-			provider.requestFile(CacheFileType.TEXTURE, id);
+			provider.requestgetFile(CacheFileType.TEXTURE, id);
 			
 			return hdTextures[id];
 		} else {

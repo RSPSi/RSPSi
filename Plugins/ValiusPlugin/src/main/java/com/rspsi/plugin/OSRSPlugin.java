@@ -7,7 +7,7 @@ import com.jagex.entity.model.MeshUtils;
 import com.jagex.io.Buffer;
 import com.rspsi.cache.CacheFileType;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -30,7 +30,7 @@ import com.rspsi.plugin.loader.ObjectDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
 import com.rspsi.plugins.ClientPlugin;
-import org.displee.utilities.GZIPUtils;
+import org.displee.util.GZIPUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -231,7 +231,7 @@ public class OSRSPlugin implements ClientPlugin {
 				try {
 					if (cacheFileType == CacheFileType.MODEL) {
 
-						byte[] data = client.getCache().readFile(CacheFileType.MODEL).getArchive(id).readFile(0);
+						byte[] data = client.getCache().getFile(CacheFileType.MODEL).archive(id).file(0).getData();
 
 						if (data != null) {
 							byte[] unzipped = GZIPUtils.unzip(data);

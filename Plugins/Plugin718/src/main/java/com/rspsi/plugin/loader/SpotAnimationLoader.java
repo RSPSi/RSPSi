@@ -4,8 +4,8 @@ import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 
 //Checked
 public class SpotAnimationLoader extends GraphicLoader {
@@ -37,10 +37,6 @@ public class SpotAnimationLoader extends GraphicLoader {
 	}
 
 	public void decodeGraphics(Index index) {
-		int size = index.getLastArchive().getId() * 255 + index.getLastArchive().getLastFile().getId();
-		for (int id = 0; id < size; id++) {
-
-		}
 	}
 	
 	public Graphic decode(Buffer buffer) {

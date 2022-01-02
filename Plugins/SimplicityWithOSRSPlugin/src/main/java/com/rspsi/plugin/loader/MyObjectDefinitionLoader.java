@@ -5,7 +5,7 @@ import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
 import com.rspsi.options.Config;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.File;
 import java.io.IOException;
@@ -620,15 +620,15 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	
 	public void init(Archive config, Archive sound) throws IOException {
 
-		Buffer buffer = new Buffer(config.readFile("loc.dat"));
-		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer buffer = new Buffer(config.file("loc.dat"));
+		Buffer index = new Buffer(config.file("loc.idx"));
 		
-		buffer667 = new Buffer(config.readFile("loc2.dat"));
-		Buffer streamIdx667 = new Buffer(config.readFile("loc2.idx"));
+		buffer667 = new Buffer(config.file("loc2.dat"));
+		Buffer streamIdx667 = new Buffer(config.file("loc2.idx"));
 
 
-		osrsBuffer = new Buffer(config.readFile("loc3.dat"));
-		Buffer osrsIdx = new Buffer(config.readFile("loc3.idx"));
+		osrsBuffer = new Buffer(config.file("loc3.dat"));
+		Buffer osrsIdx = new Buffer(config.file("loc3.idx"));
 		try {
 
 

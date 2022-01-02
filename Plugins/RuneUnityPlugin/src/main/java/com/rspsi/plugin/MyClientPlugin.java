@@ -2,7 +2,7 @@ package com.rspsi.plugin;
 
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.rspsi.plugin.loader.*;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.IOException;
 

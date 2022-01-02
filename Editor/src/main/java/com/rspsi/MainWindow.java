@@ -9,7 +9,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.stage.WindowEvent;
-import org.displee.utilities.GZIPUtils;
 
 import java.awt.*;
 import java.io.File;
@@ -26,6 +25,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import org.displee.util.GZIPUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

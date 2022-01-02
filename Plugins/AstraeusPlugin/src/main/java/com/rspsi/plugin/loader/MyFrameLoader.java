@@ -27,7 +27,7 @@ public class MyFrameLoader extends FrameLoader {
 					.parseInt((hexString = Integer.toHexString(index)).substring(0, hexString.length() - 4), 16);
 			index = Integer.parseInt(hexString.substring(hexString.length() - 4), 16);
 			if (frames[fileId].length == 0) {
-				client.getProvider().requestFile(CacheFileType.ANIMATION, fileId);
+				client.getProvider().requestgetFile(CacheFileType.ANIMATION, fileId);
 				return null;
 			}
 			return frames[fileId][index];

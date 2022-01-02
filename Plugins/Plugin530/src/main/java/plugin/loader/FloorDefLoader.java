@@ -5,8 +5,8 @@ import com.jagex.cache.def.Floor;
 import com.jagex.cache.loader.floor.FloorType;
 import com.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -29,8 +29,8 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeUnderlays(Archive archive) {
-		for (int id : archive.getFileIds()) {
-			File underlay = archive.getFile(id);
+		for (int id : archive.fileIds()) {
+			File underlay = archive.file(id);
 			if (Objects.nonNull(underlay) && Objects.nonNull(underlay.getData())) {
 				try {
 					Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
@@ -45,8 +45,8 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeOverlays(Archive archive) {
-		for (int id : archive.getFileIds()) {
-			File overlay = archive.getFile(id);
+		for (int id : archive.fileIds()) {
+			File overlay = archive.file(id);
 			if (Objects.nonNull(overlay) && Objects.nonNull(overlay.getData())) {
 				try {
 					Floor floor = decodeOverlay(ByteBuffer.wrap(overlay.getData()));
