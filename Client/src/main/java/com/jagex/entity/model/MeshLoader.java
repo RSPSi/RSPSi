@@ -55,17 +55,16 @@ public class MeshLoader {
 		case TYPE_2:
 			return new MeshType2(data);
 		case TYPE_3:
-			return new MeshType3(data);
+			 return new MeshType3(data);
 		case OLD_FORMAT:
 		default:
 			return new MeshOldFormat(data);
-
 		}
 	}
 
 	public Mesh load(byte[] data, int id) {
 		MeshRevision revision = MeshUtils.getRevision(data);
-		//System.out.println("Attempting to load model " + id + " revision " + revision.name());
+		System.out.println("Attempting to load model " + id + " revision " + revision.name());
 		Mesh mesh = null;
 		try {
 			switch (revision) {
@@ -76,7 +75,7 @@ public class MeshLoader {
 					mesh = new MeshType2(data);
 					break;
 				case TYPE_3:
-					mesh = new MeshType3(data);
+					 mesh = new MeshType3(data);
 					break;
 				default:
 				case OLD_FORMAT:

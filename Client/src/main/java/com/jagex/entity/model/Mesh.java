@@ -1870,7 +1870,7 @@ public class Mesh extends Renderable {
 		}
 	}
 
-    public void convertTexturesTo317(short[] textureIds, int[] texa, int[] texb, int[] texc, boolean osrs) {
+    public void convertTexturesTo317(int[] textureIds, int[] texa, int[] texb, int[] texc) {
         int set = 0;
         int set2 = 0;
         int max = TextureLoader.instance.count();
