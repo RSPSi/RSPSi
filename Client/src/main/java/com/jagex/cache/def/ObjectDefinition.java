@@ -260,13 +260,13 @@ public final class ObjectDefinition {
 
 		if (contouredGround) {
 			int y = (aY + bY + cY + dY) / 4;
-			for (int vertex = 0; vertex < model.numVertices; vertex++) {
-				int x = model.verticesX[vertex];
-				int z = model.verticesZ[vertex];
+			for (int vertex = 0; vertex < model.vertexCount; vertex++) {
+				int x = model.vertexX[vertex];
+				int z = model.vertexZ[vertex];
 				int l2 = aY + (bY - aY) * (x + 64) / 128;
 				int i3 = dY + (cY - dY) * (x + 64) / 128;
 				int j3 = l2 + (i3 - l2) * (z + 64) / 128;
-				model.verticesY[vertex] += j3 - y;
+				model.vertexY[vertex] += j3 - y;
 			}
 
 			model.computeSphericalBounds();

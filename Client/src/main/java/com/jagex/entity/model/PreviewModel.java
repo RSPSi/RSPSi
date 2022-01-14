@@ -17,34 +17,34 @@ public class PreviewModel extends Mesh {
 		shadedFaceColoursX = copyArray(model.shadedFaceColoursX);
 		shadedFaceColoursY = copyArray(model.shadedFaceColoursY);
 		shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
-		faceAlphas = copyArray(model.faceAlphas);
+		faceTransparencies = copyArray(model.faceTransparencies);
 		faceColours = copyArray(model.faceColours);
 		faceTextures = copyArray(model.faceTextures);
-		texture_coordinates = copyArray(model.texture_coordinates);
+		textureCoords = copyArray(model.textureCoords);
 		textureRenderTypes = copyArray(model.textureRenderTypes);
 		faceGroups = copyArray(model.faceGroups);
-		facePriorities = copyArray(model.facePriorities);
-		numFaces = (model.numFaces);
-		faceSkin = copyArray(model.faceSkin);
-		faceIndicesA = copyArray(model.faceIndicesA);
-		faceIndicesB = copyArray(model.faceIndicesB);
-		faceIndicesC = copyArray(model.faceIndicesC);
+		faceRenderPriorities = copyArray(model.faceRenderPriorities);
+		faceCount = (model.faceCount);
+		packedTransparencyVertexGroups = copyArray(model.packedTransparencyVertexGroups);
+		faceIndices1 = copyArray(model.faceIndices1);
+		faceIndices2 = copyArray(model.faceIndices2);
+		faceIndices3 = copyArray(model.faceIndices3);
 		normals = (model.normals);
-		facePriority = (model.facePriority);
-		numTextures = model.numTextures;
-		textureMappingP = copyArray(model.textureMappingP);
-		textureMappingM = copyArray(model.textureMappingM);
-		textureMappingN = copyArray(model.textureMappingN);
-		faceTypes = copyArray(model.faceTypes);
+		priority = (model.priority);
+		numTextureFaces = model.numTextureFaces;
+		texIndices1 = copyArray(model.texIndices1);
+		texIndices2 = copyArray(model.texIndices2);
+		texIndices3 = copyArray(model.texIndices3);
+		faceRenderTypes = copyArray(model.faceRenderTypes);
 		vertexGroups = copyArray(model.vertexGroups);
-		vertexBones = copyArray(model.vertexBones);
-		verticesX = copyArray(model.verticesX);
-		verticesY = copyArray(model.verticesY);
-		verticesZ = copyArray(model.verticesZ);
-		numVertices = model.numVertices;
-		
+		packedVertexGroups = copyArray(model.packedVertexGroups);
+		vertexX = copyArray(model.vertexX);
+		vertexY = copyArray(model.vertexY);
+		vertexZ = copyArray(model.vertexZ);
+		vertexCount = model.vertexCount;
+
 	}
-	
+
 	@Override
 	public int getZVertexMax() {
 		return 500;

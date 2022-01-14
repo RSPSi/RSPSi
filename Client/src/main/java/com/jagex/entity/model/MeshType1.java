@@ -120,42 +120,42 @@ public class MeshType1 extends Mesh {
         var26 += var24;
         int var45 = var26;
         var26 = var26 + var24 * 2 + var25 * 2;
-        this.numVertices = var9;
-        this.numFaces = var10;
-        this.numTextures = var11;
-        this.verticesX = new int[var9];
-        this.verticesY = new int[var9];
-        this.verticesZ = new int[var9];
-        this.faceIndicesA = new int[var10];
-        this.faceIndicesB = new int[var10];
-        this.faceIndicesC = new int[var10];
+        this.vertexCount = var9;
+        this.faceCount = var10;
+        this.numTextureFaces = var11;
+        this.vertexX = new int[var9];
+        this.vertexY = new int[var9];
+        this.vertexZ = new int[var9];
+        this.faceIndices1 = new int[var10];
+        this.faceIndices2 = new int[var10];
+        this.faceIndices3 = new int[var10];
         if (var17 == 1)
         {
-            this.vertexBones = new int[var9];
+            this.packedVertexGroups = new int[var9];
         }
 
         if (var12 == 1)
         {
-            this.faceTypes = new int[var10];
+            this.faceRenderTypes = new int[var10];
         }
 
         if (var13 == 255)
         {
-            this.facePriorities = new int[var10];
+            this.faceRenderPriorities = new byte[var10];
         }
         else
         {
-            this.facePriority = (byte) var13;
+            this.priority = (byte) var13;
         }
 
         if (var14 == 1)
         {
-            this.faceAlphas = new int[var10];
+            this.faceTransparencies = new int[var10];
         }
 
         if (var15 == 1)
         {
-            this.faceSkin = new int[var10];
+            this.packedTransparencyVertexGroups = new int[var10];
         }
 
         if (var16 == 1)
@@ -165,15 +165,15 @@ public class MeshType1 extends Mesh {
 
         if (var16 == 1 && var11 > 0)
         {
-            this.texture_coordinates = new byte[var10];
+            this.textureCoords = new byte[var10];
         }
 
         this.faceColours = new int[var10];
         if (var11 > 0)
         {
-            this.textureMappingP = new int[var11];
-            this.textureMappingM = new int[var11];
-            this.textureMappingN = new int[var11];
+            this.texIndices1 = new int[var11];
+            this.texIndices2 = new int[var11];
+            this.texIndices3 = new int[var11];
         }
 
         var2.setPosition(var11);
@@ -211,15 +211,15 @@ public class MeshType1 extends Mesh {
                 var53 = var5.readSmart();
             }
 
-            this.verticesX[var49] = var46 + var51;
-            this.verticesY[var49] = var47 + var52;
-            this.verticesZ[var49] = var48 + var53;
-            var46 = this.verticesX[var49];
-            var47 = this.verticesY[var49];
-            var48 = this.verticesZ[var49];
+            this.vertexX[var49] = var46 + var51;
+            this.vertexY[var49] = var47 + var52;
+            this.vertexZ[var49] = var48 + var53;
+            var46 = this.vertexX[var49];
+            var47 = this.vertexY[var49];
+            var48 = this.vertexZ[var49];
             if (var17 == 1)
             {
-                this.faceTypes[var49] = var6.readUByte();
+                this.packedVertexGroups[var49] = var6.readUByte();
             }
         }
 
@@ -236,35 +236,36 @@ public class MeshType1 extends Mesh {
             this.faceColours[var49] = (short) var2.readUShort();
             if (var12 == 1)
             {
-                this.faceTypes[var49] = var3.readByte();
+                this.faceRenderTypes[var49] = var3.readByte();
             }
 
             if (var13 == 255)
             {
-                this.facePriorities[var49] = var4.readByte();
+                this.faceRenderPriorities[var49] = var4.readByte();
             }
 
             if (var14 == 1)
             {
-                this.faceAlphas[var49] = var5.readByte();
-                if (this.faceAlphas[var49] < 0) {
-                    this.faceAlphas[var49] = (256 + this.faceAlphas[var40]);
-                }
+                this.faceTransparencies[var49] = var5.readByte();
+                // TODO might still need this
+//                if (this.faceTransparencies[var49] < 0) {
+//                    this.faceTransparencies[var49] = (256 + this.faceTransparencies[var40]);
+//                }
             }
 
             if (var15 == 1)
             {
-                this.faceSkin[var49] = var6.readUByte();
+                this.packedTransparencyVertexGroups[var49] = var6.readUByte();
             }
 
             if (var16 == 1)
             {
-                this.texture_coordinates[var49] = (byte) (var7.readUShort() - 1);
+                this.faceTextures[var49] = (byte) (var7.readUShort() - 1);
             }
 
-            if (this.faceTextures != null && this.texture_coordinates[var49] != -1)
+            if (this.textureCoords != null && this.faceTextures[var49] != -1)
             {
-                this.texture_coordinates[var49] = (byte) (var8.readUByte() - 1);
+                this.textureCoords[var49] = (byte) (var8.readUByte() - 1);
             }
         }
 
@@ -285,9 +286,9 @@ public class MeshType1 extends Mesh {
                 var50 = var2.readSmart() + var49;
                 var51 = var2.readSmart() + var50;
                 var52 = var51;
-                this.faceIndicesA[var53] = var49;
-                this.faceIndicesB[var53] = var50;
-                this.faceIndicesC[var53] = var51;
+                this.faceIndices1[var53] = var49;
+                this.faceIndices2[var53] = var50;
+                this.faceIndices3[var53] = var51;
             }
 
             if (var54 == 2)
@@ -295,9 +296,9 @@ public class MeshType1 extends Mesh {
                 var50 = var51;
                 var51 = var2.readSmart() + var52;
                 var52 = var51;
-                this.faceIndicesA[var53] = var49;
-                this.faceIndicesB[var53] = var50;
-                this.faceIndicesC[var53] = var51;
+                this.faceIndices1[var53] = var49;
+                this.faceIndices2[var53] = var50;
+                this.faceIndices3[var53] = var51;
             }
 
             if (var54 == 3)
@@ -305,9 +306,9 @@ public class MeshType1 extends Mesh {
                 var49 = var51;
                 var51 = var2.readSmart() + var52;
                 var52 = var51;
-                this.faceIndicesA[var53] = var49;
-                this.faceIndicesB[var53] = var50;
-                this.faceIndicesC[var53] = var51;
+                this.faceIndices1[var53] = var49;
+                this.faceIndices2[var53] = var50;
+                this.faceIndices3[var53] = var51;
             }
 
             if (var54 == 4)
@@ -317,9 +318,9 @@ public class MeshType1 extends Mesh {
                 var50 = var55;
                 var51 = var2.readSmart() + var52;
                 var52 = var51;
-                this.faceIndicesA[var53] = var49;
-                this.faceIndicesB[var53] = var55;
-                this.faceIndicesC[var53] = var51;
+                this.faceIndices1[var53] = var49;
+                this.faceIndices2[var53] = var55;
+                this.faceIndices3[var53] = var51;
             }
         }
 
@@ -335,9 +336,9 @@ public class MeshType1 extends Mesh {
             var54 = this.textureRenderTypes[var53] & 255;
             if (var54 == 0)
             {
-                this.textureMappingP[var53] = (short) var2.readUShort();
-                this.textureMappingM[var53] = (short) var2.readUShort();
-                this.textureMappingN[var53] = (short) var2.readUShort();
+                this.texIndices1[var53] = (short) var2.readUShort();
+                this.texIndices2[var53] = (short) var2.readUShort();
+                this.texIndices3[var53] = (short) var2.readUShort();
             }
         }
 
