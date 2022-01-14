@@ -1,7 +1,5 @@
 package com.rspsi.plugin;
 
-import com.jagex.entity.model.Mesh;
-import com.jagex.entity.model.MeshLoader;
 import com.jagex.entity.model.MeshRevision;
 import com.jagex.entity.model.MeshUtils;
 import com.jagex.io.Buffer;
@@ -210,7 +208,7 @@ public class OSRSPlugin implements ClientPlugin {
 	}
 
 	private FrameLoaderOSRS frameLoader;
-	
+
 	@Override
 	public void initializePlugin() {
 		ObjectDefinitionLoader.instance = new ObjectDefinitionLoaderOSRS();
@@ -242,14 +240,14 @@ public class OSRSPlugin implements ClientPlugin {
 
 							MeshRevision revision = MeshUtils.getRevision(arrayCopy);
 							Buffer buffer = new Buffer(arrayCopy);
-							buffer.setPosition(arrayCopy.length - (revision == MeshRevision.REVISION_317 ? 18 : 23));
+							buffer.setPosition(arrayCopy.length - (revision == MeshRevision.OLD_FORMAT ? 18 : 23));
 							int x = buffer.readUShort();
 							int y = buffer.readUShort();
 							x = kll(x);
 							y = kll455(y);
 							x = err(x);
 							y = err(y);
-							buffer.setPosition(arrayCopy.length - (revision == MeshRevision.REVISION_317 ? 18 : 23));
+							buffer.setPosition(arrayCopy.length - (revision == MeshRevision.OLD_FORMAT ? 18 : 23));
 							buffer.writeShort(x);
 							buffer.writeShort(y);
 							return Optional.ofNullable(arrayCopy);
@@ -267,20 +265,20 @@ public class OSRSPlugin implements ClientPlugin {
 			AnimationDefinitionLoader.instance.init(config);
 			GraphicLoader.instance.init(config);
 			VariableBitLoader.instance.init(config);
-			
+
 			Archive version = client.getCache().createArchive(5, "update list");
 			MapIndexLoader.instance.init(version);
-			
+
 
 			Archive textures = client.getCache().createArchive(6, "textures");
 			TextureLoader.instance.init(textures);
-		
+
 	}
 
 	@Override
 	public void onResourceDelivered(ResourceResponse arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

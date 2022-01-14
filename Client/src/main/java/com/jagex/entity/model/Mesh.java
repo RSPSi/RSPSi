@@ -42,6 +42,8 @@ public class Mesh extends Renderable {
 	static int centroidY;
 	static int centroidZ;
 	public MeshRevision revision;
+	protected int[][] animayaGroups;
+	protected int[][] animayaScales;
 
 	public static int checkedLight(int colour, int light, int index) {
 		if ((index & 0x2) != 0) {
@@ -2030,7 +2032,7 @@ public class Mesh extends Renderable {
 			List<Vertex> vertices = getVertices();
 			return IntStream.of(0, faces).mapToObj(index -> new Triangle(vertices.get(this.faceIndexX[index]), vertices.get(this.faceIndexY[index]), vertices.get(this.faceIndexZ[index]))).collect(Collectors.toList());
 		}
-	
+
 		public List<Vertex> getVertices(){
 			return IntStream.range(0, vertices).mapToObj(index -> new Vertex(this.vertexX[index], this.vertexY[index], this.vertexZ[index])).collect(Collectors.toList());
 		}
