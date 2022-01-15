@@ -18,13 +18,13 @@ public class PreviewModel extends Mesh {
 		shadedFaceColoursY = copyArray(model.shadedFaceColoursY);
 		shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
 		faceTransparencies = copyArray(model.faceTransparencies);
-		faceColours = copyArray(model.faceColours);
-		faceTextures = copyArray(model.faceTextures);
-		textureCoords = copyArray(model.textureCoords);
-		textureRenderTypes = copyArray(model.textureRenderTypes);
+		triangleColors = copyArray(model.triangleColors);
+		faceMaterial = copyArray(model.faceMaterial);
+		faceTexture = copyArray(model.faceTexture);
+		textureMap = copyArray(model.textureMap);
 		faceGroups = copyArray(model.faceGroups);
 		faceRenderPriorities = copyArray(model.faceRenderPriorities);
-		faceCount = (model.faceCount);
+		triangleCount = (model.triangleCount);
 		packedTransparencyVertexGroups = copyArray(model.packedTransparencyVertexGroups);
 		faceIndices1 = copyArray(model.faceIndices1);
 		faceIndices2 = copyArray(model.faceIndices2);
@@ -35,7 +35,7 @@ public class PreviewModel extends Mesh {
 		texIndices1 = copyArray(model.texIndices1);
 		texIndices2 = copyArray(model.texIndices2);
 		texIndices3 = copyArray(model.texIndices3);
-		faceRenderTypes = copyArray(model.faceRenderTypes);
+		triangleInfo = copyArray(model.triangleInfo);
 		vertexGroups = copyArray(model.vertexGroups);
 		packedVertexGroups = copyArray(model.packedVertexGroups);
 		vertexX = copyArray(model.vertexX);
