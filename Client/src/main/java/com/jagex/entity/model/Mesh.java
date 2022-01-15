@@ -26,7 +26,7 @@ public class Mesh extends Renderable {
 
 	// Class30_Sub2_Sub4_Sub6
 
-	public byte[] textureRenderTypes;
+	public byte[] textureMap;
 	public static boolean aBoolean1684;
 	public static int resourceCount;
 	public static ObjectKey[] resourceIDTag = new ObjectKey[1000];
@@ -93,11 +93,11 @@ public class Mesh extends Renderable {
 	public int[] shadedFaceColoursY;
 	public int[] shadedFaceColoursZ;
 	public int[] faceTransparencies;
-	public int[] faceColours;
-	public int[] faceTextures;
+	public int[] triangleColors;
+	public int[] faceMaterial;
 	public int[][] faceGroups;
 	public byte[] faceRenderPriorities;
-	public int faceCount;
+	public int triangleCount;
 	public int[] packedTransparencyVertexGroups;
 	public int[] faceIndices1;
 	public int[] faceIndices2;
@@ -108,7 +108,7 @@ public class Mesh extends Renderable {
 	public int[] texIndices1;
 	public int[] texIndices2;
 	public int[] texIndices3;
-	public int[] faceRenderTypes;
+	public int[] triangleInfo;
 	public int[][] vertexGroups;
 	public int[] packedVertexGroups;
 	public int[] vertexX;
@@ -124,7 +124,7 @@ public class Mesh extends Renderable {
 
 	public Mesh(boolean contouredGround, boolean delayShading, Mesh model) {
 		vertexCount = model.vertexCount;
-		faceCount = model.faceCount;
+		triangleCount = model.triangleCount;
 		numTextureFaces = model.numTextureFaces;
 
 		if (contouredGround) {
@@ -138,24 +138,24 @@ public class Mesh extends Renderable {
 		}
 
 		if (delayShading) {
-			shadedFaceColoursX = new int[faceCount];
-			shadedFaceColoursY = new int[faceCount];
-			shadedFaceColoursZ = new int[faceCount];
+			shadedFaceColoursX = new int[triangleCount];
+			shadedFaceColoursY = new int[triangleCount];
+			shadedFaceColoursZ = new int[triangleCount];
 
-			for (int k = 0; k < faceCount; k++) {
+			for (int k = 0; k < triangleCount; k++) {
 				shadedFaceColoursX[k] = model.shadedFaceColoursX[k];
 				shadedFaceColoursY[k] = model.shadedFaceColoursY[k];
 				shadedFaceColoursZ[k] = model.shadedFaceColoursZ[k];
 			}
 
-			faceRenderTypes = new int[faceCount];
-			if (model.faceRenderTypes == null) {
-				for (int triangle = 0; triangle < faceCount; triangle++) {
-					faceRenderTypes[triangle] = 0;
+			triangleInfo = new int[triangleCount];
+			if (model.triangleInfo == null) {
+				for (int triangle = 0; triangle < triangleCount; triangle++) {
+					triangleInfo[triangle] = 0;
 				}
 			} else {
-				for (int index = 0; index < faceCount; index++) {
-					faceRenderTypes[index] = model.faceRenderTypes[index];
+				for (int index = 0; index < triangleCount; index++) {
+					triangleInfo[index] = model.triangleInfo[index];
 				}
 			}
 
@@ -174,21 +174,21 @@ public class Mesh extends Renderable {
 			shadedFaceColoursX = model.shadedFaceColoursX;
 			shadedFaceColoursY = model.shadedFaceColoursY;
 			shadedFaceColoursZ = model.shadedFaceColoursZ;
-			faceRenderTypes = model.faceRenderTypes;
+			triangleInfo = model.triangleInfo;
 		}
 
 		vertexX = model.vertexX;
 		vertexZ = model.vertexZ;
-		faceTextures = model.faceTextures;
-		faceColours = model.faceColours;
+		faceMaterial = model.faceMaterial;
+		triangleColors = model.triangleColors;
 		faceTransparencies = model.faceTransparencies;
 		faceRenderPriorities = model.faceRenderPriorities;
 		priority = model.priority;
 		faceIndices1 = model.faceIndices1;
 		faceIndices2 = model.faceIndices2;
 		faceIndices3 = model.faceIndices3;
-		textureCoords = model.textureCoords;
-		textureRenderTypes = model.textureRenderTypes;
+		faceTexture = model.faceTexture;
+		textureMap = model.textureMap;
 		texIndices1 = model.texIndices1;
 		texIndices2 = model.texIndices2;
 		texIndices3 = model.texIndices3;
@@ -204,7 +204,7 @@ public class Mesh extends Renderable {
 
 	public Mesh(int modelCount, Mesh[] models) {
 		this.vertexCount = 0;
-		this.faceCount = 0;
+		this.triangleCount = 0;
 		this.priority = 0;
 		//this.field1490 = false;
 		boolean var3 = false;
@@ -214,7 +214,7 @@ public class Mesh extends Renderable {
 		boolean var7 = false;
 		boolean var8 = false;
 		this.vertexCount = 0;
-		this.faceCount = 0;
+		this.triangleCount = 0;
 		this.numTextureFaces = 0;
 		this.priority = -1;
 
@@ -224,7 +224,7 @@ public class Mesh extends Renderable {
 			var10 = models[var9];
 			if(var10 != null) {
 				this.vertexCount += var10.vertexCount;
-				this.faceCount += var10.faceCount;
+				this.triangleCount += var10.triangleCount;
 				this.numTextureFaces += var10.numTextureFaces;
 				if(var10.faceRenderPriorities != null) {
 					var4 = true;
@@ -238,11 +238,11 @@ public class Mesh extends Renderable {
 					}
 				}
 
-				var3 |= var10.faceRenderTypes != null;
+				var3 |= var10.triangleInfo != null;
 				var5 |= var10.faceTransparencies != null;
 				var6 |= var10.packedTransparencyVertexGroups != null;
-				var7 |= var10.faceTextures != null;
-				var8 |= var10.textureCoords != null;
+				var7 |= var10.faceMaterial != null;
+				var8 |= var10.faceTexture != null;
 			}
 		}
 
@@ -250,95 +250,95 @@ public class Mesh extends Renderable {
 		this.vertexY = new int[this.vertexCount];
 		this.vertexZ = new int[this.vertexCount];
 		this.packedVertexGroups = new int[this.vertexCount];
-		this.faceIndices1 = new int[this.faceCount];
-		this.faceIndices2 = new int[this.faceCount];
-		this.faceIndices3 = new int[this.faceCount];
+		this.faceIndices1 = new int[this.triangleCount];
+		this.faceIndices2 = new int[this.triangleCount];
+		this.faceIndices3 = new int[this.triangleCount];
 		if(var3) {
-			this.faceRenderTypes = new int[this.faceCount];
+			this.triangleInfo = new int[this.triangleCount];
 		}
 
 		if(var4) {
-			this.faceRenderPriorities = new byte[this.faceCount];
+			this.faceRenderPriorities = new byte[this.triangleCount];
 		}
 
 		if(var5) {
-			this.faceTransparencies = new int[this.faceCount];
+			this.faceTransparencies = new int[this.triangleCount];
 		}
 
 		if(var6) {
-			this.packedTransparencyVertexGroups = new int[this.faceCount];
+			this.packedTransparencyVertexGroups = new int[this.triangleCount];
 		}
 
 		if(var7) {
-			this.faceTextures = new int[this.faceCount];
+			this.faceMaterial = new int[this.triangleCount];
 		}
 
 		if(var8) {
-			this.textureCoords = new byte[this.faceCount];
+			this.faceTexture = new byte[this.triangleCount];
 		}
 
-		this.faceColours = new int[this.faceCount];
+		this.triangleColors = new int[this.triangleCount];
 		if(this.numTextureFaces > 0) {
-			this.textureRenderTypes = new byte[this.numTextureFaces];
+			this.textureMap = new byte[this.numTextureFaces];
 			this.texIndices1 = new int[this.numTextureFaces];
 			this.texIndices2 = new int[this.numTextureFaces];
 			this.texIndices3 = new int[this.numTextureFaces];
 		}
 
 		this.vertexCount = 0;
-		this.faceCount = 0;
+		this.triangleCount = 0;
 		this.numTextureFaces = 0;
 
 		for(var9 = 0; var9 < modelCount; ++var9) {
 			var10 = models[var9];
 			if(var10 != null) {
 				int var11;
-				for(var11 = 0; var11 < var10.faceCount; ++var11) {
-					if(var3 && var10.faceRenderTypes != null) {
-						this.faceRenderTypes[this.faceCount] = var10.faceRenderTypes[var11];
+				for(var11 = 0; var11 < var10.triangleCount; ++var11) {
+					if(var3 && var10.triangleInfo != null) {
+						this.triangleInfo[this.triangleCount] = var10.triangleInfo[var11];
 					}
 
 					if(var4) {
 						if(var10.faceRenderPriorities != null) {
-							this.faceRenderPriorities[this.faceCount] = var10.faceRenderPriorities[var11];
+							this.faceRenderPriorities[this.triangleCount] = var10.faceRenderPriorities[var11];
 						} else {
-							this.faceRenderPriorities[this.faceCount] = var10.priority;
+							this.faceRenderPriorities[this.triangleCount] = var10.priority;
 						}
 					}
 
 					if(var5 && var10.faceTransparencies != null) {
-						this.faceTransparencies[this.faceCount] = var10.faceTransparencies[var11];
+						this.faceTransparencies[this.triangleCount] = var10.faceTransparencies[var11];
 					}
 
 					if(var6 && var10.packedTransparencyVertexGroups != null) {
-						this.packedTransparencyVertexGroups[this.faceCount] = var10.packedTransparencyVertexGroups[var11];
+						this.packedTransparencyVertexGroups[this.triangleCount] = var10.packedTransparencyVertexGroups[var11];
 					}
 
 					if(var7) {
-						if(var10.faceTextures != null) {
-							this.faceTextures[this.faceCount] = var10.faceTextures[var11];
+						if(var10.faceMaterial != null) {
+							this.faceMaterial[this.triangleCount] = var10.faceMaterial[var11];
 						} else {
-							this.faceTextures[this.faceCount] = -1;
+							this.faceMaterial[this.triangleCount] = -1;
 						}
 					}
 
 					if(var8) {
-						if(var10.textureCoords != null && var10.textureCoords[var11] != -1) {
-							this.textureCoords[this.faceCount] = (byte)(this.numTextureFaces + var10.textureCoords[var11]);
+						if(var10.faceTexture != null && var10.faceTexture[var11] != -1) {
+							this.faceTexture[this.triangleCount] = (byte)(this.numTextureFaces + var10.faceTexture[var11]);
 						} else {
-							this.textureCoords[this.faceCount] = -1;
+							this.faceTexture[this.triangleCount] = -1;
 						}
 					}
 
-					this.faceColours[this.faceCount] = var10.faceColours[var11];
-					this.faceIndices1[this.faceCount] = this.findMatchingVertex(var10, var10.faceIndices1[var11]);
-					this.faceIndices2[this.faceCount] = this.findMatchingVertex(var10, var10.faceIndices2[var11]);
-					this.faceIndices3[this.faceCount] = this.findMatchingVertex(var10, var10.faceIndices3[var11]);
-					++this.faceCount;
+					this.triangleColors[this.triangleCount] = var10.triangleColors[var11];
+					this.faceIndices1[this.triangleCount] = this.findMatchingVertex(var10, var10.faceIndices1[var11]);
+					this.faceIndices2[this.triangleCount] = this.findMatchingVertex(var10, var10.faceIndices2[var11]);
+					this.faceIndices3[this.triangleCount] = this.findMatchingVertex(var10, var10.faceIndices3[var11]);
+					++this.triangleCount;
 				}
 
 				for(var11 = 0; var11 < var10.numTextureFaces; ++var11) {
-					byte var12 = this.textureRenderTypes[this.numTextureFaces] = var10.textureRenderTypes[var11];
+					byte var12 = this.textureMap[this.numTextureFaces] = var10.textureMap[var11];
 					if(var12 == 0) {
 						this.texIndices1[this.numTextureFaces] = (short)this.findMatchingVertex(var10, var10.texIndices1[var11]);
 						this.texIndices2[this.numTextureFaces] = (short)this.findMatchingVertex(var10, var10.texIndices2[var11]);
@@ -354,7 +354,7 @@ public class Mesh extends Renderable {
 
 	public Mesh(Mesh model, boolean shareColours, boolean shareAlphas, boolean shareVertices, boolean shareTextures) {
 		vertexCount = model.vertexCount;
-		faceCount = model.faceCount;
+		triangleCount = model.triangleCount;
 		numTextureFaces = model.numTextureFaces;
 
 		if (shareVertices) {
@@ -367,25 +367,25 @@ public class Mesh extends Renderable {
 			vertexZ = copyArray(model.vertexZ);
 		}
 
-		if (!shareColours && model.faceColours != null) {
-			faceColours = copyArray(model.faceColours);
+		if (!shareColours && model.triangleColors != null) {
+			triangleColors = copyArray(model.triangleColors);
 		} else {
-			faceColours = model.faceColours;
+			triangleColors = model.triangleColors;
 		}
 
-		if(!shareTextures && model.faceTextures != null) {
-			this.faceTextures = copyArray(model.faceTextures);
+		if(!shareTextures && model.faceMaterial != null) {
+			this.faceMaterial = copyArray(model.faceMaterial);
 		} else {
-			this.faceTextures = model.faceTextures;
+			this.faceMaterial = model.faceMaterial;
 		}
 
 		if (shareAlphas) {
 			faceTransparencies = model.faceTransparencies;
 		} else {
 			if (model.faceTransparencies == null) {
-				faceTransparencies = new int[faceCount];
+				faceTransparencies = new int[triangleCount];
 				Arrays.fill(faceTransparencies, 0);
-				for (int face = 0; face < faceCount; face++) {
+				for (int face = 0; face < triangleCount; face++) {
 					faceTransparencies[face] = 0;
 				}
 			} else {
@@ -395,9 +395,9 @@ public class Mesh extends Renderable {
 
 		packedVertexGroups = model.packedVertexGroups;
 		packedTransparencyVertexGroups = model.packedTransparencyVertexGroups;
-		textureRenderTypes = model.textureRenderTypes;
-		textureCoords = model.textureCoords;
-		faceRenderTypes = model.faceRenderTypes;
+		textureMap = model.textureMap;
+		faceTexture = model.faceTexture;
+		triangleInfo = model.triangleInfo;
 		faceIndices1 = model.faceIndices1;
 		faceIndices2 = model.faceIndices2;
 		faceIndices3 = model.faceIndices3;
@@ -700,7 +700,7 @@ public class Mesh extends Renderable {
 			vertexZ[vertex] = -vertexZ[vertex];
 		}
 
-		for (int vertex = 0; vertex < faceCount; vertex++) {
+		for (int vertex = 0; vertex < triangleCount; vertex++) {
 			int x = faceIndices1[vertex];
 			faceIndices1[vertex] = faceIndices3[vertex];
 			faceIndices3[vertex] = x;
@@ -712,9 +712,9 @@ public class Mesh extends Renderable {
 		int k1 = diffusion * length >> 8;
 
 		if (shadedFaceColoursX == null) {
-			shadedFaceColoursX = new int[faceCount];
-			shadedFaceColoursY = new int[faceCount];
-			shadedFaceColoursZ = new int[faceCount];
+			shadedFaceColoursX = new int[triangleCount];
+			shadedFaceColoursY = new int[triangleCount];
+			shadedFaceColoursZ = new int[triangleCount];
 		}
 
 		if (super.normals == null) {
@@ -724,7 +724,7 @@ public class Mesh extends Renderable {
 			}
 		}
 
-		for (int face = 0; face < faceCount; face++) {
+		for (int face = 0; face < triangleCount; face++) {
 			int faceX = faceIndices1[face];
 			int faceY = faceIndices2[face];
 			int faceZ = faceIndices3[face];
@@ -753,7 +753,7 @@ public class Mesh extends Renderable {
 			dy = dy * 256 / deltaLength;
 			dz = dz * 256 / deltaLength;
 
-			if (faceRenderTypes == null || (faceRenderTypes[face] & 1) == 0) {
+			if (triangleInfo == null || (triangleInfo[face] & 1) == 0) {
 				VertexNormal normal = super.normals[faceX];
 				normal.setX(normal.getX() + dx);
 				normal.setY(normal.getY() + dy);
@@ -771,7 +771,7 @@ public class Mesh extends Renderable {
 				normal.setMagnitude(normal.getMagnitude() + 1);
 			} else {
 				int l5 = lighting + (x * dx + y * dy + z * dz) / (k1 + k1 / 2);
-				shadedFaceColoursX[face] = checkedLight(faceColours[face], l5, faceRenderTypes[face]);
+				shadedFaceColoursX[face] = checkedLight(triangleColors[face], l5, triangleInfo[face]);
 			}
 		}
 
@@ -798,7 +798,7 @@ public class Mesh extends Renderable {
 
 	public void method464(Mesh model, boolean shareAlphas) {
 		vertexCount = model.vertexCount;
-		faceCount = model.faceCount;
+		triangleCount = model.triangleCount;
 		numTextureFaces = model.numTextureFaces;
 
 		if (anIntArray1622.length < vertexCount) {
@@ -819,27 +819,27 @@ public class Mesh extends Renderable {
 		if (shareAlphas) {
 			faceTransparencies = model.faceTransparencies;
 		} else {
-			if (anIntArray1625.length < faceCount) {
-				anIntArray1625 = new int[faceCount + 100];
+			if (anIntArray1625.length < triangleCount) {
+				anIntArray1625 = new int[triangleCount + 100];
 			}
 			faceTransparencies = anIntArray1625;
 
 			if (model.faceTransparencies == null) {
-				for (int index = 0; index < faceCount; index++) {
+				for (int index = 0; index < triangleCount; index++) {
 					faceTransparencies[index] = 0;
 				}
 			} else {
-				for (int index = 0; index < faceCount; index++) {
+				for (int index = 0; index < triangleCount; index++) {
 					faceTransparencies[index] = model.faceTransparencies[index];
 				}
 			}
 		}
 
-		faceRenderTypes = model.faceRenderTypes;
-		textureRenderTypes = model.textureRenderTypes;
-		textureCoords = model.textureCoords;
-		faceColours = model.faceColours;
-		faceTextures = model.faceTextures;
+		triangleInfo = model.triangleInfo;
+		textureMap = model.textureMap;
+		faceTexture = model.faceTexture;
+		triangleColors = model.triangleColors;
+		faceMaterial = model.faceMaterial;
 		faceRenderPriorities = model.faceRenderPriorities;
 		priority = model.priority;
 		faceGroups = model.faceGroups;
@@ -864,8 +864,8 @@ public class Mesh extends Renderable {
 
 		activeKey = key;
 
-		for (int face = 0; face < faceCount; face++) {
-			if (faceRenderTypes == null || faceRenderTypes[face] != -1) {
+		for (int face = 0; face < triangleCount; face++) {
+			if (triangleInfo == null || triangleInfo[face] != -1) {
 				int indexX = faceIndices1[face];
 				int indexY = faceIndices2[face];
 				int indexZ = faceIndices3[face];
@@ -1081,10 +1081,10 @@ public class Mesh extends Renderable {
 			}
 		}
 		int type;
-		if (faceRenderTypes == null) {
-			type = faceTextures != null && faceTextures[index] != -1 ? 2 : 0;
+		if (triangleInfo == null) {
+			type = faceMaterial != null && faceMaterial[index] != -1 ? 2 : 0;
 		} else {
-			type = faceRenderTypes[index] & 3;
+			type = triangleInfo[index] & 3;
 
 		}
 		boolean ignoreTextures = translucent || selected;
@@ -1100,8 +1100,8 @@ public class Mesh extends Renderable {
 
 			int texFaceX = 0, texFaceY = 0, texFaceZ = 0;
 			try {
-			if(textureCoords != null &&  textureCoords[index] != -1) {
-				int k1 = textureCoords[index] & 0xFF;
+			if(faceTexture != null &&  faceTexture[index] != -1) {
+				int k1 = faceTexture[index] & 0xFF;
 				texFaceX = texIndices1[k1];
 				texFaceY = texIndices2[k1];
 				texFaceZ = texIndices3[k1];
@@ -1127,7 +1127,7 @@ public class Mesh extends Renderable {
 				colourZ =  shadedFaceColoursZ[index];
 			}
 
-			int texId = faceTextures[index];
+			int texId = faceMaterial[index];
 			//texId = 23;
 			rasterizer.drawTexturedTriangle(
 					rasterizer.vertexScreenY[faceX],
@@ -1244,10 +1244,10 @@ public class Mesh extends Renderable {
 					rasterizer.restrictEdges = true;
 				}
 				int type;
-				if (faceRenderTypes == null) {
-					type = faceTextures != null && faceTextures[index] != -1 ? 2 : 0;
+				if (triangleInfo == null) {
+					type = faceMaterial != null && faceMaterial[index] != -1 ? 2 : 0;
 				} else {
-					type = faceRenderTypes[index] & 3;
+					type = triangleInfo[index] & 3;
 				}
 
 				if (type == 0 && !ignoreTextures) {
@@ -1258,8 +1258,8 @@ public class Mesh extends Renderable {
 							selected ? 0xc5dce6 : translucent ? 16118771 : rasterizer.colourPalette[shadedFaceColoursX[index]]);
 				} else if (type == 2) {
 					int texFaceX, texFaceY, texFaceZ;
-					if(textureCoords != null && textureCoords[index] != -1) {
-						int texFaceIndex = textureCoords[index] & 0xFF;
+					if(faceTexture != null && faceTexture[index] != -1) {
+						int texFaceIndex = faceTexture[index] & 0xFF;
 						texFaceX = texIndices1[texFaceIndex];
 						texFaceY = texIndices2[texFaceIndex];
 						texFaceZ = texIndices3[texFaceIndex];
@@ -1279,11 +1279,11 @@ public class Mesh extends Renderable {
 					rasterizer.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[1],
 							rasterizer.anIntArray1680[2], rasterizer.camera_vertex_x[texFaceX], rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ],
 							rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY], rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX],
-							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceTextures[index]);
+							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceMaterial[index]);
 				} else if (type == 3) {
 					int texFaceX, texFaceY, texFaceZ;
-					if(textureCoords != null && textureCoords[index] != -1) {
-						int texFaceIndex = textureCoords[index] & 0xFF;
+					if(faceTexture != null && faceTexture[index] != -1) {
+						int texFaceIndex = faceTexture[index] & 0xFF;
 						texFaceX = texIndices1[texFaceIndex];
 						texFaceY = texIndices2[texFaceIndex];
 						texFaceZ = texIndices3[texFaceIndex];
@@ -1303,7 +1303,7 @@ public class Mesh extends Renderable {
 					rasterizer.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, shadedFaceColoursX[index], shadedFaceColoursX[index],
 							shadedFaceColoursX[index], rasterizer.camera_vertex_x[texFaceX], rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ],
 							rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY], rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX],
-							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceTextures[index]);
+							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceMaterial[index]);
 				}
 			}
 			if (l == 4) {
@@ -1312,10 +1312,10 @@ public class Mesh extends Renderable {
 					rasterizer.restrictEdges = true;
 				}
 				int type;
-				if (faceRenderTypes == null) {
-					type = faceTextures != null && faceTextures[index] != -1 ? 2 : 0;
+				if (triangleInfo == null) {
+					type = faceMaterial != null && faceMaterial[index] != -1 ? 2 : 0;
 				} else {
-					type = faceRenderTypes[index] & 3;
+					type = triangleInfo[index] & 3;
 				}
 				if (type == 0 && !ignoreTextures) {
 					rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[1],
@@ -1330,8 +1330,8 @@ public class Mesh extends Renderable {
 					return;
 				} else if (type == 2) {
 					int texFaceX, texFaceY, texFaceZ;
-					if(textureCoords != null && textureCoords[index] != -1) {
-						int texFaceIndex = textureCoords[index] & 0xFF;
+					if(faceTexture != null && faceTexture[index] != -1) {
+						int texFaceIndex = faceTexture[index] & 0xFF;
 						texFaceX = texIndices1[texFaceIndex];
 						texFaceY = texIndices2[texFaceIndex];
 						texFaceZ = texIndices3[texFaceIndex];
@@ -1351,17 +1351,17 @@ public class Mesh extends Renderable {
 					rasterizer.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[1],
 							rasterizer.anIntArray1680[2], rasterizer.camera_vertex_x[texFaceX], rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ],
 							rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY], rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX],
-							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceTextures[index]);
+							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceMaterial[index]);
 					rasterizer.drawTexturedTriangle(i7, k7, rasterizer.anIntArray1679[3], j3, j5, rasterizer.anIntArray1678[3],
 							rasterizer.anIntArray1680[0], rasterizer.anIntArray1680[2], rasterizer.anIntArray1680[3], rasterizer.camera_vertex_x[texFaceX],
 							rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ], rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY],
 							rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX], rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ],
-							faceTextures[index]);
+							faceMaterial[index]);
 					return;
 				} else if (type == 3) {
 					int texFaceX, texFaceY, texFaceZ;
-					if(textureCoords != null && textureCoords[index] != -1) {
-						int texFaceIndex = textureCoords[index] & 0xFF;
+					if(faceTexture != null && faceTexture[index] != -1) {
+						int texFaceIndex = faceTexture[index] & 0xFF;
 						texFaceX = texIndices1[texFaceIndex];
 						texFaceY = texIndices2[texFaceIndex];
 						texFaceZ = texIndices3[texFaceIndex];
@@ -1381,12 +1381,12 @@ public class Mesh extends Renderable {
 					rasterizer.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, shadedFaceColoursX[index], shadedFaceColoursX[index],
 							shadedFaceColoursX[index], rasterizer.camera_vertex_x[texFaceX], rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ],
 							rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY], rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX],
-							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceTextures[index]);
+							rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ], faceMaterial[index]);
 					rasterizer.drawTexturedTriangle(i7, k7, rasterizer.anIntArray1679[3], j3, j5, rasterizer.anIntArray1678[3],
 							shadedFaceColoursX[index], shadedFaceColoursX[index], shadedFaceColoursX[index], rasterizer.camera_vertex_x[texFaceX],
 							rasterizer.camera_vertex_x[texFaceY], rasterizer.camera_vertex_x[texFaceZ], rasterizer.camera_vertex_y[texFaceX], rasterizer.camera_vertex_y[texFaceY],
 							rasterizer.camera_vertex_y[texFaceZ], rasterizer.camera_vertex_z[texFaceX], rasterizer.camera_vertex_z[texFaceY], rasterizer.camera_vertex_z[texFaceZ],
-							faceTextures[index]);
+							faceMaterial[index]);
 				}
 			}
 		}
@@ -1435,7 +1435,7 @@ public class Mesh extends Renderable {
 			int[] sizes = new int[256];
 			int count = 0;
 
-			for (int index = 0; index < faceCount; index++) {
+			for (int index = 0; index < triangleCount; index++) {
 				int skin = packedTransparencyVertexGroups[index];
 				sizes[skin]++;
 
@@ -1450,7 +1450,7 @@ public class Mesh extends Renderable {
 				sizes[index] = 0;
 			}
 
-			for (int index = 0; index < faceCount; index++) {
+			for (int index = 0; index < triangleCount; index++) {
 				int skin = packedTransparencyVertexGroups[index];
 				faceGroups[skin][sizes[skin]++] = index;
 			}
@@ -1460,9 +1460,9 @@ public class Mesh extends Renderable {
 	}
 
 	public void recolour(int oldColour, int newColour) {
-		for (int index = 0; index < faceCount; index++) {
-			if (faceColours[index] == oldColour) {
-				faceColours[index] = newColour;
+		for (int index = 0; index < triangleCount; index++) {
+			if (triangleColors[index] == oldColour) {
+				triangleColors[index] = newColour;
 			}
 		}
 	}
@@ -1682,13 +1682,13 @@ public class Mesh extends Renderable {
 
 
 	public final void shade(int lighting, int j, int x, int y, int z) {
-		for (int face = 0; face < faceCount; face++) {
+		for (int face = 0; face < triangleCount; face++) {
 			int indexX = faceIndices1[face];
 			int indexY = faceIndices2[face];
 			int indexZ = faceIndices3[face];
 
-			if (faceRenderTypes == null) {
-				int colour = faceColours[face];
+			if (triangleInfo == null) {
+				int colour = triangleColors[face];
 				VertexNormal normal = super.normals[indexX];
 
 				int light = lighting
@@ -1704,9 +1704,9 @@ public class Mesh extends Renderable {
 				light = lighting
 						+ (x * normal.getX() + y * normal.getY() + z * normal.getZ()) / (j * normal.getMagnitude());
 				shadedFaceColoursZ[face] = checkedLight(colour, light, 0);
-			} else if ((faceRenderTypes[face] & 1) == 0) {
-				int colour = faceColours[face];
-				int point = faceRenderTypes[face];
+			} else if ((triangleInfo[face] & 1) == 0) {
+				int colour = triangleColors[face];
+				int point = triangleInfo[face];
 
 				VertexNormal normal = super.normals[indexX];
 				int light = lighting
@@ -1729,14 +1729,14 @@ public class Mesh extends Renderable {
 		normals = null;
 		packedVertexGroups = null;
 		packedTransparencyVertexGroups = null;
-		if (faceRenderTypes != null) {
-			for (int index = 0; index < faceCount; index++) {
-				if ((faceRenderTypes[index] & 2) == 2)
+		if (triangleInfo != null) {
+			for (int index = 0; index < triangleCount; index++) {
+				if ((triangleInfo[index] & 2) == 2)
 					return;
 			}
 		}
 
-		faceColours = null;
+		triangleColors = null;
 	}
 
 	private void transform(int transformation, int[] groups, int dx, int dy, int dz) {
@@ -1870,34 +1870,59 @@ public class Mesh extends Renderable {
 		}
 	}
 
+	public void convertTexturesToOldFormat() {
+
+		if (faceMaterial == null || faceTexture == null) {
+			return;
+		}
+
+		for (int material : faceMaterial) {
+			if (material > TextureLoader.instance.count()) {
+				return;
+			}
+		}
+
+		if (triangleInfo == null) {
+			triangleInfo = new int[triangleCount];
+		}
+
+		for (int i = 0; i < triangleCount; i++) {
+			if (faceMaterial[i] != -1 && faceTexture[i] >= 0) {
+				int mask = 2 + (faceTexture[i] << 2);
+				triangleInfo[i] = mask;
+				triangleColors[i] = faceMaterial[i];
+			}
+		}
+	}
+
     public void convertTexturesTo317(int[] textureIds, int[] texa, int[] texb, int[] texc) {
         int set = 0;
         int set2 = 0;
         int max = TextureLoader.instance.count();
         if (textureIds != null) {
-            texIndices1 = new int[faceCount];
-            texIndices2 = new int[faceCount];
-            texIndices3 = new int[faceCount];
+            texIndices1 = new int[triangleCount];
+            texIndices2 = new int[triangleCount];
+            texIndices3 = new int[triangleCount];
 
-            for (int i = 0; i < faceCount; i++) {
-                if (textureIds[i] == -1 && this.faceRenderTypes[i] == 2) {
-                    this.faceColours[i] = 65535;
-                    faceRenderTypes[i] = 0;
+            for (int i = 0; i < triangleCount; i++) {
+                if (textureIds[i] == -1 && this.triangleInfo[i] == 2) {
+                    this.triangleColors[i] = 65535;
+                    triangleInfo[i] = 0;
                 }
                 if (textureIds[i] >= max || textureIds[i] < 0 || textureIds[i] == 39) {
-                	faceRenderTypes[i] = 0;
+                	triangleInfo[i] = 0;
                     continue;
                 }
-                faceRenderTypes[i] = 2 + set2;
+                triangleInfo[i] = 2 + set2;
                 set2 += 4;
                 int a = this.faceIndices1[i];
                 int b = faceIndices2[i];
                 int c = faceIndices3[i];
-                faceColours[i] = textureIds[i];
+                triangleColors[i] = textureIds[i];
 
                 int texture_type = -1;
-                if (this.textureCoords != null) {
-                    texture_type = textureCoords[i] & 0xff;
+                if (this.faceTexture != null) {
+                    texture_type = faceTexture[i] & 0xff;
                     if (texture_type != 0xff)
                         if (texa[texture_type] >= 4096 || texb[texture_type] >= 4096
                                 || texc[texture_type] >= 4096)
@@ -1938,9 +1963,9 @@ public class Mesh extends Renderable {
 				}
 			}
 			if (b) {
-				if (faceRenderTypes != null)
+				if (triangleInfo != null)
 					// face_render_type[triangleId] = -1;
-					faceRenderTypes[triangleId] = 255;
+					triangleInfo[triangleId] = 255;
 
 			}
 		}
@@ -1969,13 +1994,13 @@ public class Mesh extends Renderable {
     	mesh.shadedFaceColoursY = copyArray(model.shadedFaceColoursY);
     	mesh.shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
     	mesh.faceTransparencies = copyArray(model.faceTransparencies);
-	    mesh.faceColours = copyArray(model.faceColours);
-	    mesh.faceTextures = copyArray(model.faceTextures);
-		mesh.textureCoords = copyArray(model.textureCoords);
-		mesh.textureRenderTypes = copyArray(model.textureRenderTypes);
+	    mesh.triangleColors = copyArray(model.triangleColors);
+	    mesh.faceMaterial = copyArray(model.faceMaterial);
+		mesh.faceTexture = copyArray(model.faceTexture);
+		mesh.textureMap = copyArray(model.textureMap);
 		mesh.faceGroups = copyArray(model.faceGroups);
 		mesh.faceRenderPriorities = copyArray(model.faceRenderPriorities);
-		mesh.faceCount = (model.faceCount);
+		mesh.triangleCount = (model.triangleCount);
 		mesh.packedTransparencyVertexGroups = copyArray(model.packedTransparencyVertexGroups);
 		mesh.faceIndices1 = copyArray(model.faceIndices1);
 		mesh.faceIndices2 = copyArray(model.faceIndices2);
@@ -1986,7 +2011,7 @@ public class Mesh extends Renderable {
 		mesh.texIndices1 = copyArray(model.texIndices1);
 		mesh.texIndices2 = copyArray(model.texIndices2);
 		mesh.texIndices3 = copyArray(model.texIndices3);
-		mesh.faceRenderTypes = copyArray(model.faceRenderTypes);
+		mesh.triangleInfo = copyArray(model.triangleInfo);
 		mesh.vertexGroups = copyArray(model.vertexGroups);
 		mesh.packedVertexGroups = copyArray(model.packedVertexGroups);
 		mesh.vertexX = copyArray(model.vertexX);
@@ -2016,17 +2041,17 @@ public class Mesh extends Renderable {
 
     public int id;
 	public void retexture(int found, int replace) {
-		if(faceTextures != null)
-			for (int face = 0; face < faceTextures.length; face++) {
-				if (faceTextures[face] == found) {
-					log.info("[{}] {} | Replaced {} with {}", id, revision, faceTextures[face], replace);
-					faceTextures[face] = replace;
+		if(faceMaterial != null)
+			for (int face = 0; face < faceMaterial.length; face++) {
+				if (faceMaterial[face] == found) {
+					log.info("[{}] {} | Replaced {} with {}", id, revision, faceMaterial[face], replace);
+					faceMaterial[face] = replace;
 				}
 			}
 
 	}
 
-    protected byte[] textureCoords;
+    protected byte[] faceTexture;
 
 	/*	public List<Triangle> getTriangles() {
 			List<Vertex> vertices = getVertices();

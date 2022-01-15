@@ -70,7 +70,7 @@ public class MeshType2 extends Mesh {
         var24 += var19;
         int var10000 = var24 + var20;
         this.vertexCount = var9;
-        this.faceCount = var10;
+        this.triangleCount = var10;
         this.numTextureFaces = var11;
         this.vertexX = new int[var9];
         this.vertexY = new int[var9];
@@ -80,7 +80,7 @@ public class MeshType2 extends Mesh {
         this.faceIndices3 = new int[var10];
         if (numTextureFaces > 0)
         {
-            this.textureRenderTypes = new byte[var11];
+            this.textureMap = new byte[var11];
             this.texIndices1 = new int[var11];
             this.texIndices2 = new int[var11];
             this.texIndices3 = new int[var11];
@@ -93,9 +93,9 @@ public class MeshType2 extends Mesh {
 
         if (var12 == 1)
         {
-            this.faceRenderTypes = new int[var10];
-            this.textureCoords = new byte[var10];
-            this.faceTextures = new int[var10];
+            this.triangleInfo = new int[var10];
+            this.faceTexture = new byte[var10];
+            this.faceMaterial = new int[var10];
         }
 
         if (var13 == 255)
@@ -123,7 +123,7 @@ public class MeshType2 extends Mesh {
             this.animayaScales = new int[var9][];
         }
 
-        this.faceColours = new int[var10];
+        this.triangleColors = new int[var10];
         var4.setPosition(var23);
         var5.setPosition(var34);
         var6.setPosition(var35);
@@ -195,34 +195,34 @@ public class MeshType2 extends Mesh {
 
         for (var40 = 0; var40 < var10; ++var40)
         {
-            this.faceColours[var40] = (short) var4.readUShort();
+            this.triangleColors[var40] = (short) var4.readUShort();
             if (var12 == 1)
             {
                 var41 = var5.readUByte();
                 if ((var41 & 1) == 1)
                 {
-                    this.faceRenderTypes[var40] = 1;
+                    this.triangleInfo[var40] = 1;
                     var2 = true;
                 }
                 else
                 {
-                    this.faceRenderTypes[var40] = 0;
+                    this.triangleInfo[var40] = 0;
                 }
 
                 if ((var41 & 2) == 2)
                 {
-                    this.textureCoords[var40] = (byte) (var41 >> 2);
-                    this.faceTextures[var40] = this.faceColours[var40];
-                    this.faceColours[var40] = 127;
-                    if (this.faceTextures[var40] != -1)
+                    this.faceTexture[var40] = (byte) (var41 >> 2);
+                    this.faceMaterial[var40] = this.triangleColors[var40];
+                    this.triangleColors[var40] = 127;
+                    if (this.faceMaterial[var40] != -1)
                     {
                         var3 = true;
                     }
                 }
                 else
                 {
-                    this.textureCoords[var40] = -1;
-                    this.faceTextures[var40] = -1;
+                    this.faceTexture[var40] = -1;
+                    this.faceMaterial[var40] = -1;
                 }
             }
 
@@ -306,24 +306,24 @@ public class MeshType2 extends Mesh {
 
         for (var44 = 0; var44 < var11; ++var44)
         {
-            this.textureRenderTypes[var44] = 0;
+            this.textureMap[var44] = 0;
             this.texIndices1[var44] = (short) var4.readUShort();
             this.texIndices2[var44] = (short) var4.readUShort();
             this.texIndices3[var44] = (short) var4.readUShort();
         }
 
-        if (this.textureCoords != null)
+        if (this.faceTexture != null)
         {
             boolean var47 = false;
 
             for (var45 = 0; var45 < var10; ++var45)
             {
-                var46 = this.textureCoords[var45] & 255;
+                var46 = this.faceTexture[var45] & 255;
                 if (var46 != 255)
                 {
                     if (this.faceIndices1[var45] == (this.texIndices1[var46] & '\uffff') && this.faceIndices2[var45] == (this.texIndices2[var46] & '\uffff') && this.faceIndices3[var45] == (this.texIndices3[var46] & '\uffff'))
                     {
-                        this.textureCoords[var45] = -1;
+                        this.faceTexture[var45] = -1;
                     }
                     else
                     {
@@ -334,20 +334,20 @@ public class MeshType2 extends Mesh {
 
             if (!var47)
             {
-                this.textureCoords = null;
+                this.faceTexture = null;
             }
         }
 
         if (!var3)
         {
-            this.faceTextures = null;
+            this.faceMaterial = null;
         }
 
         if (!var2)
         {
-            this.faceRenderTypes = null;
+            this.triangleInfo = null;
         }
-//        convertTexturesTo317(faceTextures, faceIndices1, faceIndices2, faceIndices3);
+        convertTexturesToOldFormat();
     }
 
 }

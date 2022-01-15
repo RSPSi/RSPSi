@@ -2336,17 +2336,17 @@ public class SceneGraph {
 		if (count < 3 || !flag)
 			return;
 
-		for (int k1 = 0; k1 < first.faceCount; k1++) {
+		for (int k1 = 0; k1 < first.triangleCount; k1++) {
 			if (anIntArray486[first.faceIndices1[k1]] == anInt488 && anIntArray486[first.faceIndices2[k1]] == anInt488
 					&& anIntArray486[first.faceIndices3[k1]] == anInt488) {
-				first.faceRenderTypes[k1] = -1;
+				first.triangleInfo[k1] = -1;
 			}
 		}
 
-		for (int l1 = 0; l1 < second.faceCount; l1++) {
+		for (int l1 = 0; l1 < second.triangleCount; l1++) {
 			if (anIntArray487[second.faceIndices1[l1]] == anInt488 && anIntArray487[second.faceIndices2[l1]] == anInt488
 					&& anIntArray487[second.faceIndices3[l1]] == anInt488) {
-				second.faceRenderTypes[l1] = -1;
+				second.triangleInfo[l1] = -1;
 			}
 		}
 	}
