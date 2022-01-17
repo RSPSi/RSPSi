@@ -12,7 +12,7 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.draw.textures.SpriteTexture;
 import com.jagex.draw.textures.Texture;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

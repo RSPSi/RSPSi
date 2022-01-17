@@ -1,7 +1,5 @@
 package com.rspsi.tools;
 
-import com.rspsi.misc.Location;
-
 public class SpawnObjectTool extends Tool {
 	
 

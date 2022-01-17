@@ -19,7 +19,7 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.options.Options;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 import com.rspsi.util.ChangeListenerUtil;
 
 public class MyClientPlugin implements ClientPlugin {

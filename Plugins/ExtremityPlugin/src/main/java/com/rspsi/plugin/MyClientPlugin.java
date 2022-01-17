@@ -20,7 +20,7 @@ import com.rspsi.plugin.loader.MyGraphicLoader;
 import com.rspsi.plugin.loader.MyMapIndexLoader;
 import com.rspsi.plugin.loader.MyObjectDefinitionLoader;
 import com.rspsi.plugin.loader.MyTextureLoader;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 	
 public class MyClientPlugin implements ClientPlugin {

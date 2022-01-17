@@ -22,7 +22,7 @@ import com.rspsi.plugin.loader.ObjectDefLoader;
 import com.rspsi.plugin.loader.RSAreaLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 //For 718
 public class Plugin718 implements ClientPlugin {

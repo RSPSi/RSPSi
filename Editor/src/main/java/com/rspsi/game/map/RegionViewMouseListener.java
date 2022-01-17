@@ -8,7 +8,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.jagex.cache.loader.map.MapIndexLoader;
-import com.rspsi.EditRegionsWindow;
+import com.rspsi.ui.EditRegionsWindow;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;

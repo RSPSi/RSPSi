@@ -3,7 +3,7 @@ package com.rspsi.dialogs;
 import com.jagex.Client;
 import com.jagex.map.SceneGraph;
 import com.rspsi.controls.WindowControls;
-import com.rspsi.misc.DeleteOptions;
+import com.rspsi.core.misc.DeleteOptions;
 
 import com.rspsi.util.FXUtils;
 import javafx.application.Application;

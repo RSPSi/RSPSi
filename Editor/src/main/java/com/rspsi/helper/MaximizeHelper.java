@@ -1,9 +1,8 @@
 package com.rspsi.helper;
 
-import com.rspsi.misc.SGVConstants;
+import com.rspsi.ui.misc.SGVConstants;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.css.PseudoClass;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;

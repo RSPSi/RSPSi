@@ -1,19 +1,15 @@
 package plugin;
 
-import com.google.common.reflect.ClassPath;
 import com.jagex.Client;
-import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.loader.anim.FrameLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
-import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.SpriteTexture;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.cache.CacheFileType;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 import com.displee.cache.index.Index;
 import plugin.loader.*;
 import plugin.loader.texture.*;

@@ -6,8 +6,8 @@ import com.google.common.collect.Lists;
 import com.jagex.map.SceneTileData;
 import com.jagex.util.BitFlag;
 import com.rspsi.datasets.ObjectDataset;
-import com.rspsi.misc.BrushType;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.BrushType;
+import com.rspsi.core.misc.ToolType;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

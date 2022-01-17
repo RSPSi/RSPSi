@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 import com.rspsi.options.Config;
 
 public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {

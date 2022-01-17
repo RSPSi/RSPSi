@@ -4,7 +4,7 @@ import com.displee.cache.index.archive.file.File;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.map.MapType;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.RegionData;
+import com.rspsi.core.misc.RegionData;
 import org.apache.commons.compress.utils.Lists;
 import com.displee.cache.index.Index;
 import com.displee.cache.index.archive.Archive;

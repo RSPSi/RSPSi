@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.jagex.map.tile.SceneTile;
-import com.rspsi.misc.CopyOptions;
-import com.rspsi.misc.ExportOptions;
-import com.rspsi.misc.Location;
+import com.rspsi.core.misc.CopyOptions;
+import com.rspsi.core.misc.ExportOptions;
+import com.rspsi.core.misc.Location;
 
 public class SceneTileData {
 

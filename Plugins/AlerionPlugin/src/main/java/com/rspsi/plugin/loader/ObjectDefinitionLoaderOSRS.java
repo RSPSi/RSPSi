@@ -11,9 +11,8 @@ import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 import com.displee.cache.index.archive.Archive;
-import com.displee.cache.index.archive.file.File;
 
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     private int count;

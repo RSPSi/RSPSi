@@ -1,27 +1,17 @@
 package plugin.loader;
 
 import com.google.common.collect.Maps;
-import com.jagex.cache.graphics.IndexedImage;
-import com.jagex.cache.graphics.Sprite;
 import com.jagex.cache.loader.textures.TextureLoader;
-import com.jagex.draw.textures.PalettedTexture;
-import com.jagex.draw.textures.RGBTexture;
-import com.jagex.draw.textures.SpriteTexture;
 import com.jagex.draw.textures.Texture;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import com.displee.cache.index.Index;
 import com.displee.cache.index.archive.Archive;
-import com.displee.cache.index.archive.file.File;
 import plugin.loader.texture.NewTexture;
 import plugin.loader.texture.SpriteTextureOperation;
 import plugin.loader.texture.TextureDefinition;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 

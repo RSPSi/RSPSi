@@ -9,7 +9,7 @@ import com.jagex.cache.graphics.IndexedImage;
 import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.draw.textures.PalettedTexture;
 import com.jagex.draw.textures.Texture;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 import java.util.Arrays;
 import com.displee.cache.index.archive.Archive;
 

@@ -51,9 +51,9 @@ import com.jagex.util.ObjectKey;
 import com.jagex.util.TextRenderUtils;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.game.DisplayCanvas;
-import com.rspsi.misc.Vector2;
+import com.rspsi.core.misc.Vector2;
 import com.rspsi.options.Options;
-import com.rspsi.plugins.ClientPluginLoader;
+import com.rspsi.plugins.core.ClientPluginLoader;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

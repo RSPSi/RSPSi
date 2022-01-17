@@ -13,7 +13,7 @@ import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.plugin.loader.*;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 import com.displee.cache.index.archive.Archive;
 
 import java.io.IOException;

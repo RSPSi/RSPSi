@@ -5,7 +5,7 @@ import com.displee.cache.index.archive.Archive;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 
 
 public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {

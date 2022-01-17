@@ -22,7 +22,7 @@ import com.rspsi.plugin.loader.MyMapIndexLoader;
 import com.rspsi.plugin.loader.MyObjectDefinitionLoader;
 import com.rspsi.plugin.loader.MyTextureLoader;
 import com.rspsi.plugin.loader.MyVarbitLoader;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 	
 public class AstraeusPlugin implements ClientPlugin {

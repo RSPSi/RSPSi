@@ -1,7 +1,6 @@
 package com.rspsi.plugin;
 
 import com.displee.cache.index.Index;
-import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -26,7 +25,7 @@ import com.rspsi.plugin.loader.ObjectDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.RSAreaLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 public class Plugin414 implements ClientPlugin {
 

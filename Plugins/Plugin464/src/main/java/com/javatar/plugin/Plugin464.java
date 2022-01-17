@@ -18,7 +18,7 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.javatar.plugin.loader.*;
 import com.rspsi.cache.CacheFileType;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 import com.displee.cache.index.Index;
 
 public class Plugin464 implements ClientPlugin {

@@ -1,8 +1,6 @@
 package com.jagex.draw.raster;
 
 import com.jagex.map.MapRegion;
-import javafx.scene.paint.Color;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.loader.textures.TextureLoader;

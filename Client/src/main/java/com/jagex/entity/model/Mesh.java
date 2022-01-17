@@ -15,7 +15,7 @@ import com.jagex.draw.raster.GameRasterizer;
 import com.jagex.entity.Renderable;
 import com.jagex.util.Constants;
 import com.jagex.util.ObjectKey;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.ToolType;
 import com.rspsi.options.Options;
 
 import lombok.Getter;

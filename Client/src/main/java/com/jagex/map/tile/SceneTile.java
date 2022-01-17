@@ -14,7 +14,7 @@ import com.jagex.map.object.GroundDecoration;
 import com.jagex.map.object.Wall;
 import com.jagex.map.object.WallDecoration;
 import com.jagex.util.ObjectKey;
-import com.rspsi.misc.Location;
+import com.rspsi.core.misc.Location;
 
 import lombok.Getter;
 import lombok.Setter;

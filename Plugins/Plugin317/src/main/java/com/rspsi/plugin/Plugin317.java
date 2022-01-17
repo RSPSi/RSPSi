@@ -22,7 +22,7 @@ import com.rspsi.plugin.loader.MapIndexLoader317;
 import com.rspsi.plugin.loader.ObjectDefinitionLoader317;
 import com.rspsi.plugin.loader.TextureLoader317;
 import com.rspsi.plugin.loader.VarbitLoader317;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 
 public class Plugin317 implements ClientPlugin {

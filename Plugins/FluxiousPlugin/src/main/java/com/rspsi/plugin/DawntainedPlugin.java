@@ -22,7 +22,7 @@ import com.rspsi.plugin.loader.MapIndexLoaderOSRS;
 import com.rspsi.plugin.loader.ObjectDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 	
 public class DawntainedPlugin implements ClientPlugin {
