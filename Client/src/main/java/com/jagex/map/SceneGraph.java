@@ -4491,6 +4491,7 @@ public class SceneGraph {
 					if (tile != null) {
 						for (GameObject object : tile.gameObjects)
 							if (object != null) {
+								if(object.getX() == x && object.getY() == y)
 								objs.add(object);
 							}
 						if (tile.groundDecoration != null) {
