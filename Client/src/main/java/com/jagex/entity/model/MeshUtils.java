@@ -1,7 +1,7 @@
 package com.jagex.entity.model;
 
 public class MeshUtils {
-	
+
 	public static MeshRevision getRevision(byte[] data) {
 		if(data[data.length - 1] == -3 && data[data.length - 2] == -1) {
 			return MeshRevision.REVISION_OSRS202_TYPE3;

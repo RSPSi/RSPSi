@@ -50,17 +50,17 @@ public class MeshLoader {
     public static Mesh load(byte[] data) {
         MeshRevision revision = MeshUtils.getRevision(data);
         switch (revision) {
-            case REVISION_525:
             case REVISION_622:
+                //return new Mesh622(data);
+            case REVISION_525:
                 return new Mesh525(data);
             case REVISION_OSRS202_TYPE3:
                 return new MeshOSRSType3(data);
             case REVISION_OSRS202_TYPE2:
                 return new MeshOSRSType2(data);
-            //return new Mesh622(data);
             case REVISION_317:
             default:
-                return new Mesh317(data);
+                return new MeshOldFormat(data);
 
         }
     }
@@ -72,6 +72,8 @@ public class MeshLoader {
         try {
             switch (revision) {
                 case REVISION_622:
+                    //mesh = new Mesh622(data);
+                    //	break;
                 case REVISION_525:
                     mesh = new Mesh525(data);
                     break;
@@ -81,12 +83,9 @@ public class MeshLoader {
                 case REVISION_OSRS202_TYPE2:
                     mesh = new MeshOSRSType2(data);
                     break;
-                //mesh = new Mesh622(data);
-                //	break;
-
                 default:
                 case REVISION_317:
-                    mesh = new Mesh317(data);
+                    mesh = new MeshOldFormat(data);
                     break;
 
             }

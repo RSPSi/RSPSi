@@ -208,7 +208,7 @@ public class OSRSPlugin implements ClientPlugin {
 	}
 
 	private FrameLoaderOSRS frameLoader;
-	
+
 	@Override
 	public void initializePlugin() {
 		ObjectDefinitionLoader.instance = new ObjectDefinitionLoaderOSRS();
@@ -265,20 +265,20 @@ public class OSRSPlugin implements ClientPlugin {
 			AnimationDefinitionLoader.instance.init(config);
 			GraphicLoader.instance.init(config);
 			VariableBitLoader.instance.init(config);
-			
+
 			Archive version = client.getCache().createArchive(5, "update list");
 			MapIndexLoader.instance.init(version);
-			
+
 
 			Archive textures = client.getCache().createArchive(6, "textures");
 			TextureLoader.instance.init(textures);
-		
+
 	}
 
 	@Override
 	public void onResourceDelivered(ResourceResponse arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

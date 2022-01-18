@@ -159,7 +159,7 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 			} else if (opcode == 60) {
 				//definition.setMinimapFunction(buffer.readUShort());
 			} else if (opcode == 61) {
-				buffer.readUShort();
+				definition.setCategory(buffer.readUShort());
 			} else if (opcode == 62) {
 				definition.setInverted(true);
 			} else if (opcode == 64) {
@@ -228,9 +228,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				buffer.skip(1);//Clip type?
 			} else if (opcode == 82) {
 				definition.setAreaId(buffer.readUShort());//AreaType
-
-			} else if(opcode == 89) {
-				//boolean3 = true
+			} else if (opcode == 89) {
+				definition.setRandomizeAnimStart(true);
 			} else if (opcode == 249) {
 				int var1 = buffer.readUByte();
 				for (int var2 = 0; var2 < var1; var2++) {
