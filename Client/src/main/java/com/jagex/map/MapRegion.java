@@ -430,7 +430,7 @@ public final class MapRegion {
 			int id = -1;
 
 			do {
-				int idOffset = buffer.readUSmartInt();
+				int idOffset = buffer.readUMultiSmart();
 				if (idOffset == 0) {
 					break decoding;
 				}
@@ -439,7 +439,7 @@ public final class MapRegion {
 				int position = 0;
 
 				do {
-					int offset = buffer.readUSmartInt();
+					int offset = buffer.readUMultiSmart();
 					if (offset == 0) {
 						break;
 					}
