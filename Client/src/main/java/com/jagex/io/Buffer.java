@@ -432,4 +432,28 @@ public final class Buffer {
 		position += bytesToSkip;
 	}
 
+	public void writeUMultiSmart(int value) {
+		int remaining = value;
+		while (remaining > 32767) {
+			writeUSmart(32767);
+			remaining -= 32767;
+		}
+
+		writeUSmart(remaining);
+	}
+
+	// same as: readUSmartInt, but cleaner
+	public int readUMultiSmart() {
+		int result = 0;
+		int accumulator;
+
+		accumulator = readUSmart();
+		while (accumulator == 32767) {
+			result += 32767;
+			accumulator = readUSmart();
+		}
+
+		result += accumulator;
+		return result;
+	}
 }
