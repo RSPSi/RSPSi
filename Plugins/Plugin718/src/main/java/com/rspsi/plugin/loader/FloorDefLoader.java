@@ -5,10 +5,12 @@ import com.jagex.cache.def.Floor;
 import com.jagex.cache.loader.floor.FloorType;
 import com.jagex.util.ByteBufferUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
+import lombok.val;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +31,14 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeUnderlays(Archive archive) {
-		int size = archive.getLastFile().getId();
+
+
+		val highestFile = Arrays.stream(archive.fileIds()).max().getAsInt();
+
+		int size = highestFile;
 		List<Floor> floors = Lists.newArrayList();
 		for (int id = 0; id < size; id++) {
-			File underlay = archive.getFile(id);
+			File underlay = archive.file(id);
 			if (Objects.nonNull(underlay) && Objects.nonNull(underlay.getData())) {
 				Floor floor = decodeUnderlay(ByteBuffer.wrap(underlay.getData()));
 				floor.generateHsl();
@@ -44,10 +50,11 @@ public class FloorDefLoader extends com.jagex.cache.loader.floor.FloorDefinition
 	}
 
 	public void decodeOverlays(Archive archive) {
-		int size = archive.getLastFile().getId();
+		val highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
+		int size = highestId;
 		List<Floor> floors = Lists.newArrayList();
 		for (int id = 0; id < size; id++) {
-			File overlays = archive.getFile(id);
+			File overlays = archive.file(id);
 			if (Objects.nonNull(overlays) && Objects.nonNull(overlays.getData())) {
 				Floor floor = decodeOverlay(ByteBuffer.wrap(overlays.getData()));
 				floor.generateHsl();

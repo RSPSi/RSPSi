@@ -1,6 +1,6 @@
 package com.rspsi.plugin;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -14,7 +14,7 @@ import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.plugin.loader.*;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 	
 public class OSRSPlugin implements ClientPlugin {

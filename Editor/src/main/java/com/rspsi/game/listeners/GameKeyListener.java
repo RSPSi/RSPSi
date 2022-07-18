@@ -2,9 +2,9 @@ package com.rspsi.game.listeners;
 
 import com.jagex.Client;
 import com.jagex.map.SceneGraph;
-import com.rspsi.MainWindow;
+import com.rspsi.ui.MainWindow;
 import com.rspsi.dialogs.TileDeleteDialog;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.ToolType;
 import com.rspsi.options.KeyBindings;
 import com.rspsi.options.KeyCombination;
 import com.rspsi.options.KeyboardState;
@@ -19,7 +19,6 @@ import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Slf4j

@@ -11,9 +11,8 @@ import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.rspsi.core.misc.FixedHashMap;
+import com.displee.cache.index.archive.Archive;
 
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     private int count;
@@ -25,8 +24,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        this.data = new Buffer(archive.readFile("loc.dat"));
-        Buffer buffer = new Buffer(archive.readFile("loc.idx"));
+        this.data = new Buffer(archive.file("loc.dat"));
+        Buffer buffer = new Buffer(archive.file("loc.idx"));
         this.count = buffer.readUShort();
         System.out.println("Expected " + this.count + " ids");
         this.indices = new int[this.count];

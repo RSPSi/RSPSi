@@ -12,9 +12,9 @@ import com.jagex.draw.textures.Texture;
 import com.jagex.io.Buffer;
 import com.rspsi.misc.FixedHashMap;
 import java.nio.ByteBuffer;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +70,8 @@ public class TextureLoaderOSRS extends TextureLoader {
     }
 
     public void init(Archive archive, Index spriteIndex) {
-        this.textures = new Texture[archive.getHighestId() + 1];
-        this.transparent = new boolean[archive.getHighestId() + 1];
+        this.textures = new Texture[highestId + 1];
+        this.transparent = new boolean[highestId + 1];
         File[] var3 = archive.getFiles();
         int var4 = var3.length;
 
@@ -88,7 +88,7 @@ public class TextureLoaderOSRS extends TextureLoader {
                     texIds[i] = buffer.readUShort();
                 }
 
-                Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.getArchive(texIds[0]).readFile(0)));
+                Sprite sprite = Sprite.decode(ByteBuffer.wrap(spriteIndex.getArchive(texIds[0]).file(0)));
                 if (sprite.getWidth() != 128 || sprite.getHeight() != 128) {
                     sprite.resize(128, 128);
                 }

@@ -1,5 +1,7 @@
 package com.jagex.io;
 
+import com.displee.cache.index.archive.file.File;
+
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -32,6 +34,11 @@ public final class Buffer {
 	}
 	public Buffer(byte[] payload) {
 		this.payload = payload;
+		position = 0;
+	}
+
+	public Buffer(File payload) {
+		this.payload = payload.getData();
 		position = 0;
 	}
 
@@ -197,6 +204,8 @@ public final class Buffer {
 
 		return readUShort() - 49152;
 	}
+
+
 	
 	public int readBigSmart() {
 		int value = payload[position] & 0xff;

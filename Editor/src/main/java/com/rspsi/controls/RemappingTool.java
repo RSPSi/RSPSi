@@ -1,14 +1,12 @@
 package com.rspsi.controls;
 
 import com.rspsi.util.FXUtils;
-import org.displee.utilities.GZIPUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +30,10 @@ import com.jagex.map.MapRegion;
 import com.jagex.map.SceneGraph;
 import com.jagex.map.object.DefaultWorldObject;
 import com.jagex.map.object.GameObject;
-import com.jagex.map.object.WorldObjectType;
-import com.jagex.map.tile.SceneTile;
 import com.jagex.util.MapObjectData;
 import com.jagex.util.MultiMapEncoder;
 import com.jagex.util.ObjectKey;
-import com.rspsi.misc.Location;
+import com.rspsi.core.misc.Location;
 import com.rspsi.resources.ResourceLoader;
 import com.rspsi.util.FileUtils;
 import com.rspsi.util.FilterMode;
@@ -52,6 +48,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.displee.util.GZIPUtils;
 
 public class RemappingTool extends Application {
 

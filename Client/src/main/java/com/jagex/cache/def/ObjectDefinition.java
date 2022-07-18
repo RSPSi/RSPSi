@@ -1,6 +1,5 @@
 package com.jagex.cache.def;
 
-import org.displee.cache.index.Index;
 
 import java.util.Arrays;
 
@@ -11,8 +10,8 @@ import com.jagex.entity.model.Mesh;
 import com.jagex.entity.model.MeshLoader;
 import com.jagex.net.ResourceProvider;
 import com.rspsi.cache.CacheFileType;
-import com.rspsi.misc.FixedIntegerKeyMap;
-import com.rspsi.misc.FixedLongKeyMap;
+import com.rspsi.core.misc.FixedIntegerKeyMap;
+import com.rspsi.core.misc.FixedLongKeyMap;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,12 +33,9 @@ public final class ObjectDefinition {
 		baseModels.clear();
 		models.clear();
 	}
-	
+
 	private Sprite mapFunctionSprite, mapSceneSprite;
-	
-	public void generateSprites(Index spriteIndex) {
-		
-	}
+
 
 	private byte ambientLighting;
 	private int animation;
@@ -80,7 +76,10 @@ public final class ObjectDefinition {
 	private int translateY;
 	private int translateZ;
 	private int width;
-	
+
+	private int category;
+	private boolean randomizeAnimStart;
+
 	private int areaId = -1;
 
 	public int[] getModelIds() {
@@ -204,12 +203,12 @@ public final class ObjectDefinition {
 			model.faceGroups = null;
 			model.vertexGroups = null;
 		}
-		
+
 		if(type == 4 && orientation > 3) {//OSRS
 			model.pitch(256);
 			model.offsetVertices(45, 0, -45);
 		}
-		
+
 		orientation &= 3;
 
 		while (orientation-- > 0) {
@@ -246,7 +245,7 @@ public final class ObjectDefinition {
 	public final Mesh modelAt(int type, int orientation, int aY, int bY, int cY, int dY, int frameId) {
 		Mesh model = model(type, frameId, orientation);
 		if (model == null) {
-			
+
 			//System.out.println("fail1 " + type + ":" + frameId + ":" + orientation);
 			return null;
 		}
@@ -257,13 +256,13 @@ public final class ObjectDefinition {
 
 		if (contouredGround) {
 			int y = (aY + bY + cY + dY) / 4;
-			for (int vertex = 0; vertex < model.numVertices; vertex++) {
-				int x = model.verticesX[vertex];
-				int z = model.verticesZ[vertex];
+			for (int vertex = 0; vertex < model.vertexCount; vertex++) {
+				int x = model.vertexX[vertex];
+				int z = model.vertexZ[vertex];
 				int l2 = aY + (bY - aY) * (x + 64) / 128;
 				int i3 = dY + (cY - dY) * (x + 64) / 128;
 				int j3 = l2 + (i3 - l2) * (z + 64) / 128;
-				model.verticesY[vertex] += j3 - y;
+				model.vertexY[vertex] += j3 - y;
 			}
 
 			model.computeSphericalBounds();
@@ -291,7 +290,7 @@ public final class ObjectDefinition {
 	}
 
 	protected int modelTries = 0;
-	
+
 	public final boolean readyOrThrow(int type) throws Exception {
 		if (modelTypes == null) {
 			if (getModelIds() == null || type != 10)
@@ -327,7 +326,7 @@ public final class ObjectDefinition {
 		modelTries = 0;
 		return true;
 	}
-	
+
 	public final boolean ready(int type) {
 		if (modelTypes == null) {
 			if (getModelIds() == null || type != 10)

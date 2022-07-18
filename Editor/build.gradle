@@ -7,95 +7,100 @@ buildscript {
     }
     dependencies {
         // provides javafx-gradle-plugin
-       // classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: "8.8.2"
+        // classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: "8.8.2"
         // provides proguard.gradle.ProGuardTask (including all requirements)
         classpath 'net.sf.proguard:proguard-gradle:6.1.1'
     }
 }
 
 apply plugin: 'application'
-//apply plugin: 'org.beryx.runtime'
+apply plugin: 'java-library'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
 
 run {
-	standardInput = System.in
+    standardInput = System.in
 
 }
 // In this section you declare the dependencies for your production and test code
-dependencies  {
+dependencies {
 
- 	compile project(':Client')
-	// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
-	compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.15'
-	compile 'com.jfoenix:jfoenix:8.0.9'
+    api project(':Client')
+    api(group: 'org.controlsfx', name: 'controlsfx', version: '11.1.1') {
+        exclude group: 'org.openjfx'
+    }
+    api('com.jfoenix:jfoenix:9.0.10') {
+        exclude group: 'org.openjfx'
+    }
 
 
 }
 
 mainClassName = 'com.rspsi.LauncherWindow'
 
-jar {
-	archiveName = "Editor.jar"
-	manifest {
-		attributes(
-			'Main-Class': 'com.rspsi.LauncherWindow'
-			
-		)
-	}
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it).matching{ exclude{it.path.contains('META-INF') } } }
+apply plugin: 'org.beryx.runtime'
 
-}
+runtime {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    modules = [
+            'javafx.base',
+            'java.desktop',
+            'javafx.graphics',
+            'javafx.controls',
+            'javafx.fxml',
+            'javafx.swing',
+            'java.naming',
+            'java.logging',
+            'java.management',
+            'java.xml',
+            'jdk.unsupported',
+            'java.sql',
+            'javafx.media',
+            'java.scripting',
+            'jdk.jfr',
+            'jdk.unsupported.desktop',
+            'java.datatransfer']
 
+    jpackage {
+        installerOptions = [
+        ]
+        installerType = project.findProperty('installerType') ?: "msi"// we will pass this from the command line (example: -PinstallerType=msi)
+        if (installerType == 'msi') {
+            imageOptions += ['--icon', 'src/main/resources/images/logo128.ico']
 
-task myProguardTask(type: proguard.gradle.ProGuardTask) {
-    configuration 'proguard.conf'
-    
-    
-    libraryjars project.sourceSets.main.compileClasspath
-    
+            installerOptions += [
+                    '-t','msi',
+                    '--win-per-user-install',
+                    '--win-dir-chooser',
+                    '--win-menu',
+                    '--win-shortcut']
+            imageOptions +=['--win-console']
+        }
+        if (installerType == 'pkg') {
+            imageOptions += ['--icon', 'src/main/resources/pdfdecorator/gui/icon.icns']
+        }
+        if (installerType in ['deb', 'rpm']) {
+            imageOptions += ['--icon', 'src/main/resources/images/logo128.png']
+            installerOptions += [
+                    '--linux-menu-group', 'Office',
+                    '--linux-shortcut'
+            ]
+        }
+        if (installerType == 'deb') {
+            installerOptions += [
+                    '--linux-deb-maintainer', 'office@walczak.it'
+            ]
+        }
+        if (installerType == 'rpm') {
+            installerOptions += [
+                    '--linux-rpm-license-type', 'GPLv3'
+            ]
+        }
+    }
 
-	if (JavaVersion.current().java9Compatible) {
-	    libraryjars(System.getProperty("java.home") + "/jmods")
-	} else {
-	    libraryjars(System.getProperty("java.home") + "/lib/rt.jar")
-	    libraryjars(System.getProperty("java.home") + "/lib/ext/jfxrt.jar")
-	}
-	
-	
-    injars 'build/libs/Editor.jar'
-    outjars 'build/libs/deploy/Editor.jar'
 }
 
 application {
-    mainClassName = "com.rspsi.LauncherWindow"
+    mainClassName = "com.rspsi.ui.LauncherWindow"
     applicationName = 'RSPSi'
 }
-//defaultTask 'jar'
-
-
-
-/*runtime {
-	javaHome = 'F:/jdks/windows/jdk-11.0.3.7-hotspot'
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-    modules = ['java.sql',
-				'java.naming',
-				'java.logging',
-				'java.management',
-				'java.xml',
-				'jdk.unsupported',
-				'java.desktop',
-				'java.scripting',
-				'jdk.unsupported.desktop',
-				'java.datatransfer']
-				 targetPlatform('linux', 'F:/jdks/linux/jdk-11.0.3+7-jre')
-				 targetPlatform('win', 'F:/jdks/windows/jdk-11.0.3.7-hotspot')
-				 targetPlatform('mac', 'F:/jdks/mac/jdk-11.0.3+7')
-				 
-				 jpackage {
-					jpackageHome = "F:/jdks/windows/jdk-11.0.3.7-hotspot"
-					imageOutputDir = file("$buildDir/my-packaging-image")
-					installerOutputDir = file("$buildDir/my-packaging-installer")
-					targetPlatformName = "win"
-				}
-}*/
-
-//jar.finalizedBy(myProguardTask)

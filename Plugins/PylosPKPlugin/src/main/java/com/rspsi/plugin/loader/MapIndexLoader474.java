@@ -4,8 +4,9 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
+import com.displee.cache.index.archive.file.File;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.map.MapType;
 import com.jagex.io.Buffer;
@@ -17,9 +18,9 @@ public class MapIndexLoader474 extends MapIndexLoader {
 
 	@Override
 	public void init(Archive archive) {
-		byte[] indices = archive.readFile("map_index");
+		File indices = archive.file("map_index");
 		Buffer buffer = new Buffer(indices);
-		int count = indices.length / 6;
+		int count = indices.getData().length / 6;
 		mapHashes = new int[count];
 		landscapes = new int[count];
 		objects = new int[count];

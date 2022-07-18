@@ -1,19 +1,20 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.displee.cache.index.archive.file.File;
 import org.apache.commons.compress.utils.Lists;
 
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.map.MapType;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.RegionData;
+import com.rspsi.core.misc.RegionData;
 
 public class MapIndexLoaderOSRS extends MapIndexLoader {
 	
@@ -22,7 +23,7 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 
 	@Override
 	public void init(Archive archive) {
-		byte[] indices = archive.readFile("map_index");
+		File indices = archive.file("map_index");
 		Buffer buffer = new Buffer(indices);
 		int count = buffer.readUShort();
 		mapHashes = new int[count];
@@ -130,8 +131,8 @@ public class MapIndexLoaderOSRS extends MapIndexLoader {
 			int x = (i >> 8);
 			int y = (i & 0xFF);
 
-			Archive map = mapIndex.getArchive("m" + x + "_" + y);
-			Archive land = mapIndex.getArchive("l" + x + "_" + y, null);
+			Archive map = mapIndex.archive("m" + x + "_" + y);
+			Archive land = mapIndex.archive("l" + x + "_" + y, null);
 			
 			RegionData data = new RegionData(i, map != null ? map.getId() : -1, land != null ? land.getId() : -1);
 			

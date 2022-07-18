@@ -6,7 +6,7 @@ import com.jagex.draw.textures.SpriteTexture;
 import com.jagex.draw.textures.Texture;
 import com.jagex.io.Buffer;
 import com.jagex.util.ColourUtils;
-import org.displee.cache.index.Index;
+import com.displee.cache.index.Index;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 

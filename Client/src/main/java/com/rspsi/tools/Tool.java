@@ -1,6 +1,6 @@
 package com.rspsi.tools;
 
-import com.rspsi.misc.Location;
+import com.rspsi.core.misc.Location;
 
 public abstract class Tool {
 	

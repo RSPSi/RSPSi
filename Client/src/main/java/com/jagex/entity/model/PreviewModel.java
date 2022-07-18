@@ -14,37 +14,37 @@ public class PreviewModel extends Mesh {
 		boundingSphereRadius = (model.boundingSphereRadius);
 		boundingCylinderRadius = (model.boundingCylinderRadius);
 		anInt1654 = (model.anInt1654);
-		shadedFaceColoursX = copyArray(model.shadedFaceColoursX);
-		shadedFaceColoursY = copyArray(model.shadedFaceColoursY);
-		shadedFaceColoursZ = copyArray(model.shadedFaceColoursZ);
-		faceAlphas = copyArray(model.faceAlphas);
-		faceColours = copyArray(model.faceColours);
-		faceTextures = copyArray(model.faceTextures);
-		texture_coordinates = copyArray(model.texture_coordinates);
-		textureRenderTypes = copyArray(model.textureRenderTypes);
+		shadedtriangleColorsX = copyArray(model.shadedtriangleColorsX);
+		shadedtriangleColorsY = copyArray(model.shadedtriangleColorsY);
+		shadedtriangleColorsZ = copyArray(model.shadedtriangleColorsZ);
+		faceTransparencies = copyArray(model.faceTransparencies);
+		triangleColors = copyArray(model.triangleColors);
+		faceMaterial = copyArray(model.faceMaterial);
+		faceTexture = copyArray(model.faceTexture);
+		textureMap = copyArray(model.textureMap);
 		faceGroups = copyArray(model.faceGroups);
-		facePriorities = copyArray(model.facePriorities);
-		numFaces = (model.numFaces);
-		faceSkin = copyArray(model.faceSkin);
-		faceIndicesA = copyArray(model.faceIndicesA);
-		faceIndicesB = copyArray(model.faceIndicesB);
-		faceIndicesC = copyArray(model.faceIndicesC);
+		faceRenderPriorities = copyArray(model.faceRenderPriorities);
+		triangleCount = (model.triangleCount);
+		packedTransparencyVertexGroups = copyArray(model.packedTransparencyVertexGroups);
+		faceIndices1 = copyArray(model.faceIndices1);
+		faceIndices2 = copyArray(model.faceIndices2);
+		faceIndices3 = copyArray(model.faceIndices3);
 		normals = (model.normals);
-		facePriority = (model.facePriority);
-		numTextures = model.numTextures;
-		textureMappingP = copyArray(model.textureMappingP);
-		textureMappingM = copyArray(model.textureMappingM);
-		textureMappingN = copyArray(model.textureMappingN);
-		faceTypes = copyArray(model.faceTypes);
+		priority = (model.priority);
+		numTextureFaces = model.numTextureFaces;
+		texIndices1 = copyArray(model.texIndices1);
+		texIndices2 = copyArray(model.texIndices2);
+		texIndices3 = copyArray(model.texIndices3);
+		triangleInfo = copyArray(model.triangleInfo);
 		vertexGroups = copyArray(model.vertexGroups);
-		vertexBones = copyArray(model.vertexBones);
-		verticesX = copyArray(model.verticesX);
-		verticesY = copyArray(model.verticesY);
-		verticesZ = copyArray(model.verticesZ);
-		numVertices = model.numVertices;
-		
+		packedVertexGroups = copyArray(model.packedVertexGroups);
+		vertexX = copyArray(model.vertexX);
+		vertexY = copyArray(model.vertexY);
+		vertexZ = copyArray(model.vertexZ);
+		vertexCount = model.vertexCount;
+
 	}
-	
+
 	@Override
 	public int getZVertexMax() {
 		return 500;

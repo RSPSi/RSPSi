@@ -2,7 +2,7 @@ package com.jagex.cache.anim;
 
 import com.jagex.entity.model.Mesh;
 import com.jagex.entity.model.MeshLoader;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 
 public class Graphic {
 	

@@ -3,13 +3,12 @@ package com.rspsi.controls;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import com.rspsi.helper.DragHelper;
 import com.rspsi.helper.MaximizeHelper;
 import com.rspsi.helper.ResizeHelper;
 import com.rspsi.helper.ResizeHelper.ResizeListener;
-import com.rspsi.misc.SGVConstants;
+import com.rspsi.ui.misc.SGVConstants;
 import com.rspsi.util.FontAwesomeUtil;
 
 import javafx.fxml.FXML;

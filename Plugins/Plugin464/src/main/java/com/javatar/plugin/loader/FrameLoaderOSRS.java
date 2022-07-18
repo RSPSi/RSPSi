@@ -29,7 +29,7 @@ public class FrameLoaderOSRS extends FrameLoader {
             int fileId = Integer.parseInt((hexString = Integer.toHexString(index)).substring(0, hexString.length() - 4), 16);
             index = Integer.parseInt(hexString.substring(hexString.length() - 4), 16);
             if (this.frames[fileId].length == 0) {
-                Client.getSingleton().getProvider().requestFile(CacheFileType.ANIMATION, fileId);
+                Client.getSingleton().getProvider().requestgetFile(CacheFileType.ANIMATION, fileId);
                 return null;
             } else {
                 return this.frames[fileId][index];

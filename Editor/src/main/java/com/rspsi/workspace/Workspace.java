@@ -2,17 +2,13 @@ package com.rspsi.workspace;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rspsi.ObjectPreviewWindow;
+import com.rspsi.ui.ObjectPreviewWindow;
 import com.rspsi.datasets.ObjectDataset;
-import com.rspsi.misc.JsonUtil;
+import com.rspsi.core.misc.JsonUtil;
 
 public class Workspace {
 

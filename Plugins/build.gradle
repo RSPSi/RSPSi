@@ -7,37 +7,32 @@ buildscript {
 }
 
 plugins {
- 	id "com.github.harbby.gradle.serviceloader" version "1.1.5"
+ 	id "com.github.harbby.gradle.serviceloader" version "1.1.8" apply false
 }
 
 subprojects {
     group = 'Plugins'
-    version = '1.0.0'
+    version = '1.7.0-BETA'
 
 
     apply plugin: "com.github.harbby.gradle.serviceloader"
 
     serviceLoader {
-        serviceInterface 'com.rspsi.plugins.ClientPlugin'
-        serviceInterface 'com.rspsi.plugins.ApplicationPlugin'
+        serviceInterface 'com.rspsi.plugins.core.ClientPlugin'
+        serviceInterface 'com.rspsi.plugins.ui.ApplicationPlugin'
     }
 
     jar {
-        archiveName = project.name + ".jar"
-        manifest {
-
-        }
-        baseName = project.name
-
+        archiveBaseName = project.name
     }
 
     dependencies {
-        compile project(':Editor')
+        implementation project(':Editor')
     }
 
 
     task copyJarToBin(type: Copy) {
-        from 'build/libs/' + project.name + ".jar"
+        from jar.outputs
         into new File(project(':Editor').projectDir, "/plugins/inactive")
     }
 

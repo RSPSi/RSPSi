@@ -63,15 +63,15 @@ import com.rspsi.game.save.tile.state.HeightState;
 import com.rspsi.game.save.tile.state.ImportTileState;
 import com.rspsi.game.save.tile.state.OverlayState;
 import com.rspsi.game.save.tile.state.UnderlayState;
-import com.rspsi.misc.BrushType;
-import com.rspsi.misc.CopyOptions;
-import com.rspsi.misc.DeleteOptions;
-import com.rspsi.misc.ExportOptions;
-import com.rspsi.misc.JsonUtil;
-import com.rspsi.misc.Location;
-import com.rspsi.misc.TileArea;
-import com.rspsi.misc.ToolType;
-import com.rspsi.misc.Vector2;
+import com.rspsi.core.misc.BrushType;
+import com.rspsi.core.misc.CopyOptions;
+import com.rspsi.core.misc.DeleteOptions;
+import com.rspsi.core.misc.ExportOptions;
+import com.rspsi.core.misc.JsonUtil;
+import com.rspsi.core.misc.Location;
+import com.rspsi.core.misc.TileArea;
+import com.rspsi.core.misc.ToolType;
+import com.rspsi.core.misc.Vector2;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -2290,28 +2290,28 @@ public class SceneGraph {
 	private void mergeNormals(Mesh first, Mesh second, int dx, int dy, int dz, boolean flag) {
 		anInt488++;
 		int count = 0;
-		int[] secondX = second.verticesX;
-		int secondVertices = second.numVertices;
+		int[] secondX = second.vertexX;
+		int secondVertices = second.vertexCount;
 
-		for (int vertexA = 0; vertexA < first.numVertices; vertexA++) {
+		for (int vertexA = 0; vertexA < first.vertexCount; vertexA++) {
 			VertexNormal parentNormalA = first.getNormal(vertexA);
 			VertexNormal normalA = first.normals[vertexA];
 
 			if (normalA.getMagnitude() != 0) {
-				int y = first.verticesY[vertexA] - dy;
+				int y = first.vertexY[vertexA] - dy;
 				if (y <= second.minimumY) {
-					int x = first.verticesX[vertexA] - dx;
+					int x = first.vertexX[vertexA] - dx;
 
 					if (x >= second.minimumX && x <= second.maximumX) {
-						int z = first.verticesZ[vertexA] - dz;
+						int z = first.vertexZ[vertexA] - dz;
 
 						if (z >= second.minimumZ && z <= second.maximumZ) {
 							for (int vertexB = 0; vertexB < secondVertices; vertexB++) {
 								VertexNormal parentNormalB = second.getNormal(vertexB);
 								VertexNormal normalB = second.normals[vertexB];
 
-								if (x == secondX[vertexB] && z == second.verticesZ[vertexB]
-										&& y == second.verticesY[vertexB] && normalB.getMagnitude() != 0) {
+								if (x == secondX[vertexB] && z == second.vertexZ[vertexB]
+										&& y == second.vertexY[vertexB] && normalB.getMagnitude() != 0) {
 									parentNormalA.setX(parentNormalA.getX() + normalB.getX());
 									parentNormalA.setY(parentNormalA.getY() + normalB.getY());
 									parentNormalA.setZ(parentNormalA.getZ() + normalB.getZ());
@@ -2336,17 +2336,17 @@ public class SceneGraph {
 		if (count < 3 || !flag)
 			return;
 
-		for (int k1 = 0; k1 < first.numFaces; k1++) {
-			if (anIntArray486[first.faceIndicesA[k1]] == anInt488 && anIntArray486[first.faceIndicesB[k1]] == anInt488
-					&& anIntArray486[first.faceIndicesC[k1]] == anInt488) {
-				first.faceTypes[k1] = -1;
+		for (int k1 = 0; k1 < first.triangleCount; k1++) {
+			if (anIntArray486[first.faceIndices1[k1]] == anInt488 && anIntArray486[first.faceIndices2[k1]] == anInt488
+					&& anIntArray486[first.faceIndices3[k1]] == anInt488) {
+				first.triangleInfo[k1] = -1;
 			}
 		}
 
-		for (int l1 = 0; l1 < second.numFaces; l1++) {
-			if (anIntArray487[second.faceIndicesA[l1]] == anInt488 && anIntArray487[second.faceIndicesB[l1]] == anInt488
-					&& anIntArray487[second.faceIndicesC[l1]] == anInt488) {
-				second.faceTypes[l1] = -1;
+		for (int l1 = 0; l1 < second.triangleCount; l1++) {
+			if (anIntArray487[second.faceIndices1[l1]] == anInt488 && anIntArray487[second.faceIndices2[l1]] == anInt488
+					&& anIntArray487[second.faceIndices3[l1]] == anInt488) {
+				second.triangleInfo[l1] = -1;
 			}
 		}
 	}
@@ -4491,6 +4491,7 @@ public class SceneGraph {
 					if (tile != null) {
 						for (GameObject object : tile.gameObjects)
 							if (object != null) {
+								if(object.getX() == x && object.getY() == y)
 								objs.add(object);
 							}
 						if (tile.groundDecoration != null) {

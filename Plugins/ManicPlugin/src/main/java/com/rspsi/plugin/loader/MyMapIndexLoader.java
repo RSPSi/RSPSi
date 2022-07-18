@@ -3,7 +3,7 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.loader.map.MapIndexLoader;
 import com.jagex.cache.loader.map.MapType;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class MyMapIndexLoader extends MapIndexLoader {
 	
 	@Override
 	public void init(Archive archive) {
-		Buffer buffer = new Buffer(archive.readFile("map_index"));
+		Buffer buffer = new Buffer(archive.file("map_index"));
 
 		int mapCount = buffer.getPayload().length / 6;
 		this.mapHashes = new int[mapCount];
@@ -33,7 +33,7 @@ public class MyMapIndexLoader extends MapIndexLoader {
 		}
 
 
-		buffer = new Buffer(archive.readFile("map_index_osrs"));
+		buffer = new Buffer(archive.file("map_index_osrs"));
 		int mapCountOSRS = buffer.readUShort();
 		this.mapHashesOSRS = new int[mapCountOSRS];
 		this.landscapeIdsOSRS = new int[mapCountOSRS];

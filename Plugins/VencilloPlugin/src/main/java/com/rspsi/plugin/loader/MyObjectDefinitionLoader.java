@@ -3,8 +3,8 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
-import org.displee.cache.index.archive.Archive;
+import com.rspsi.core.misc.FixedHashMap;
+import com.displee.cache.index.archive.Archive;
 
 
 public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
@@ -200,8 +200,8 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	
 	@Override
 	public void init(Archive config) {
-		data = new Buffer(config.readFile("loc.dat"));
-		Buffer buffer = new Buffer(config.readFile("loc.idx"));
+		data = new Buffer(config.file("loc.dat"));
+		Buffer buffer = new Buffer(config.file("loc.idx"));
 		count = buffer.readUShort();
 		System.out.println("Expected " + count + " ids");
 		indices = new int[count];

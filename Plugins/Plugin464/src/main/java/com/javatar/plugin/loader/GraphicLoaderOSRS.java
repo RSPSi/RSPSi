@@ -9,8 +9,8 @@ import com.jagex.cache.anim.Graphic;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.cache.loader.anim.GraphicLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 public class GraphicLoaderOSRS extends GraphicLoader {
     private Graphic[] graphics;
@@ -28,7 +28,7 @@ public class GraphicLoaderOSRS extends GraphicLoader {
     }
 
     public void init(Archive archive) {
-        this.graphics = new Graphic[archive.getHighestId() + 1];
+        this.graphics = new Graphic[highestId + 1];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 

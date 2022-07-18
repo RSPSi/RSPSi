@@ -8,8 +8,8 @@ package com.javatar.plugin.loader;
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     private int count;
@@ -19,7 +19,7 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        this.animations = new Animation[archive.getHighestId() + 1];
+        this.animations = new Animation[highestId + 1];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 

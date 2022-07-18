@@ -10,8 +10,8 @@ import com.jagex.cache.loader.config.RSAreaLoader;
 import com.jagex.io.Buffer;
 import com.jagex.util.ByteBufferUtils;
 import java.nio.ByteBuffer;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
 public class RSAreaLoaderOSRS extends RSAreaLoader {
     private RSArea[] areas;
@@ -28,7 +28,7 @@ public class RSAreaLoaderOSRS extends RSAreaLoader {
     }
 
     public void init(Archive archive) {
-        this.areas = new RSArea[archive.getHighestId() + 1];
+        this.areas = new RSArea[highestId + 1];
         File[] var2 = archive.getFiles();
         int var3 = var2.length;
 

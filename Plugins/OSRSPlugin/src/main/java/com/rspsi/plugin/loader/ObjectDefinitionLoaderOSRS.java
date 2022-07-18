@@ -1,9 +1,10 @@
 package com.rspsi.plugin.loader;
 
 import com.jagex.cache.def.RSArea;
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -15,6 +16,7 @@ import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 @Slf4j
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
@@ -25,8 +27,9 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 
 	@Override
 	public void init(Archive archive) {
-		count = archive.getHighestId() + 1;
-		for (File file : archive.getFiles()) {
+		val highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
+		count = highestId + 1;
+		for(File file : archive.files()){
 			if (file != null && file.getData() != null) {
 				try {
 					Buffer buffer = new Buffer(file.getData());
@@ -155,6 +158,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				definition.setTextureToReplace(replacementTex);
 			} else if (opcode == 60) {
 				//definition.setMinimapFunction(buffer.readUShort());
+			} else if (opcode == 61) {
+				definition.setCategory(buffer.readUShort());
 			} else if (opcode == 62) {
 				definition.setInverted(true);
 			} else if (opcode == 64) {
@@ -223,7 +228,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 				buffer.skip(1);//Clip type?
 			} else if (opcode == 82) {
 				definition.setAreaId(buffer.readUShort());//AreaType
-
+			} else if (opcode == 89) {
+				definition.setRandomizeAnimStart(true);
 			} else if (opcode == 249) {
 				int var1 = buffer.readUByte();
 				for (int var2 = 0; var2 < var1; var2++) {

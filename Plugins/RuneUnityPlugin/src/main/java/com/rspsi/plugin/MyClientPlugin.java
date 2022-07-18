@@ -2,7 +2,7 @@ package com.rspsi.plugin;
 
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.rspsi.plugin.loader.*;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.rspsi.cache.CacheFileType;
 import com.rspsi.options.Options;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 import com.rspsi.util.ChangeListenerUtil;
 
 public class MyClientPlugin implements ClientPlugin {

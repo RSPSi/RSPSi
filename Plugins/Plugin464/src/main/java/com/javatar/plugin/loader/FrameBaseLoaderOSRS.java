@@ -10,8 +10,8 @@ import com.jagex.cache.anim.FrameBase;
 import com.jagex.cache.loader.anim.FrameBaseLoader;
 import com.jagex.io.Buffer;
 import java.util.Map;
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
+import com.displee.cache.index.archive.Archive;
 
 public class FrameBaseLoaderOSRS extends FrameBaseLoader {
     private Map<Integer, FrameBase> skeletons = Maps.newConcurrentMap();

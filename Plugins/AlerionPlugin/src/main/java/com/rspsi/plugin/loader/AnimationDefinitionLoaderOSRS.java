@@ -8,7 +8,7 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     private int count;
@@ -18,7 +18,7 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
     }
 
     public void init(Archive archive) {
-        Buffer buffer = new Buffer(archive.readFile("seq.dat"));
+        Buffer buffer = new Buffer(archive.file("seq.dat"));
         this.count = buffer.readUShort();
         if (this.animations == null) {
             this.animations = new Animation[this.count];

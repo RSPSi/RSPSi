@@ -8,7 +8,7 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.config.VariableBits;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public class VarbitLoaderOSRS extends VariableBitLoader {
     private int count;
@@ -26,7 +26,7 @@ public class VarbitLoaderOSRS extends VariableBitLoader {
     }
 
     public void init(Archive archive) {
-        Buffer buffer = new Buffer(archive.readFile("varbit.dat"));
+        Buffer buffer = new Buffer(archive.file("varbit.dat"));
         this.count = buffer.readUShort();
         if (this.bits == null) {
             this.bits = new VariableBits[this.count];

@@ -3,13 +3,8 @@ package com.rspsi.plugin.loader;
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
-import com.rspsi.options.Config;
-import org.displee.cache.index.archive.Archive;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import com.rspsi.core.misc.FixedHashMap;
+import com.displee.cache.index.archive.Archive;
 
 public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 
@@ -622,11 +617,11 @@ public class MyObjectDefinitionLoader extends ObjectDefinitionLoader {
 	public void init(Archive config) {
 
 
-		Buffer buffer = new Buffer(config.readFile("loc.dat"));
-		Buffer index = new Buffer(config.readFile("loc.idx"));
+		Buffer buffer = new Buffer(config.file("loc.dat"));
+		Buffer index = new Buffer(config.file("loc.idx"));
 
-		osrsBuffer = new Buffer(config.readFile("loc2.dat"));
-		Buffer osrsIdx = new Buffer(config.readFile("loc2.idx"));
+		osrsBuffer = new Buffer(config.file("loc2.dat"));
+		Buffer osrsIdx = new Buffer(config.file("loc2.idx"));
 
 
 			int totalObjects = index.readUShort();

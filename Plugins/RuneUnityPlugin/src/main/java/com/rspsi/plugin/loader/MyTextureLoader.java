@@ -1,7 +1,7 @@
 package com.rspsi.plugin.loader;
 
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.graphics.IndexedImage;
@@ -14,7 +14,7 @@ import com.jagex.draw.textures.Texture;
 import com.jagex.io.Buffer;
 import com.jagex.net.ResourceProvider;
 import com.rspsi.cache.CacheFileType;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 import com.rspsi.options.Options;
 
 

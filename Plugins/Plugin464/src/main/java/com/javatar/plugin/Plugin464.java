@@ -18,8 +18,8 @@ import com.jagex.cache.loader.textures.TextureLoader;
 import com.jagex.net.ResourceResponse;
 import com.javatar.plugin.loader.*;
 import com.rspsi.cache.CacheFileType;
-import com.rspsi.plugins.ClientPlugin;
-import org.displee.cache.index.Index;
+import com.rspsi.plugins.core.ClientPlugin;
+import com.displee.cache.index.Index;
 
 public class Plugin464 implements ClientPlugin {
     private FrameLoaderOSRS frameLoader;
@@ -60,7 +60,7 @@ public class Plugin464 implements ClientPlugin {
 
     public void onGameLoaded(Client client) {
         this.frameLoader.init(2500);
-        Index configIndex = client.getCache().readFile(CacheFileType.CONFIG);
+        Index configIndex = client.getCache().getFile(CacheFileType.CONFIG);
         this.floorLoader.initOverlays(configIndex.getArchive(4));
         this.floorLoader.initUnderlays(configIndex.getArchive(1));
         this.objLoader.init(configIndex.getArchive(6));
@@ -69,12 +69,12 @@ public class Plugin464 implements ClientPlugin {
         this.varbitLoader.init(configIndex.getArchive(14));
         //this.areaLoader.init(configIndex.getArchive(35));
         //this.objLoader.renameMapFunctions(this.areaLoader);
-        Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
+        Index skeletonIndex = client.getCache().getFile(CacheFileType.SKELETON);
         this.skeletonLoader.init(skeletonIndex);
-        Index mapIndex = client.getCache().readFile(CacheFileType.MAP);
+        Index mapIndex = client.getCache().getFile(CacheFileType.MAP);
         this.mapIndexLoader.init(mapIndex);
-        Index textureIndex = client.getCache().readFile(CacheFileType.TEXTURE);
-        Index spriteIndex = client.getCache().readFile(CacheFileType.SPRITE);
+        Index textureIndex = client.getCache().getFile(CacheFileType.TEXTURE);
+        Index spriteIndex = client.getCache().getFile(CacheFileType.SPRITE);
         this.textureLoader.init(textureIndex.getArchive(0), spriteIndex);
     }
 

@@ -2,10 +2,15 @@
 
 plugins {
 	id 'java'
-	id 'io.franzbecker.gradle-lombok' version '3.3.0'
+	id 'io.franzbecker.gradle-lombok' version '5.0.0'
+    id "com.github.johnrengelman.shadow" version "7.1.1" apply false
 	//id 'org.openjfx.javafxplugin' version '0.0.7'
 	id 'application'
-	//id 'org.beryx.runtime' version '1.2.0' apply false
+    id 'java-library'
+
+    id 'org.beryx.runtime' version '1.12.7' apply false
+
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 
@@ -21,7 +26,7 @@ allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
-        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://repo.maven.apache.org/maven2" }
         maven { url "https://repo.adobe.com/nexus/content/repositories/public/"}
     }
 
@@ -30,41 +35,43 @@ allprojects {
 subprojects {
 
 	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'io.franzbecker.gradle-lombok'
-	//apply plugin: 'org.openjfx.javafxplugin'
-	
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
 
     dependencies {
     
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-	    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+        api group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
    		// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
-		compile group: 'org.checkerframework', name: 'checker-qual', version: '2.9.0'
-   		
-   		compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
-        compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+        api group: 'org.checkerframework', name: 'checker-qual', version: '3.21.1'
 
+        api group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
+        api group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
+
+        api 'javax.servlet:javax.servlet-api:4.0.1'
     }
     
     	
 	lombok { // optional: values below are the defaults
-        version = "1.18.12"
-        sha256 = "49381508ecb02b3c173368436ef71b24c0d4418ad260e6cc98becbcf4b345406"
+        version = "1.18.22"
 	}
 
     compileJava {
         options.fork = true
         options.incremental = true
     }
-	
-	/*javafx {
-	    version = "11.0.1"
-	    modules = [ 'javafx.fxml', 'javafx.controls', 'javafx.media', 'javafx.swing']
-	}*/
-	
+
+    apply plugin: 'org.openjfx.javafxplugin'
+    javafx {
+        version = "17"
+        modules = [ 'javafx.base', 'javafx.fxml', 'javafx.graphics', 'javafx.controls', 'javafx.media', 'javafx.swing']
+    }
+
 
 }
 

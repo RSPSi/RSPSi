@@ -1,6 +1,6 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.config.VariableBitLoader;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
 import com.jagex.io.Buffer;
-import com.rspsi.misc.FixedHashMap;
+import com.rspsi.core.misc.FixedHashMap;
 
 public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 
@@ -23,8 +23,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 	
 	@Override
 	public void init(Archive archive) {
-		data = new Buffer(archive.readFile("loc.dat"));
-		Buffer buffer = new Buffer(archive.readFile("loc.idx"));
+		data = new Buffer(archive.file("loc.dat"));
+		Buffer buffer = new Buffer(archive.file("loc.idx"));
 		count = buffer.readUShort();
 		System.out.println("Expected " + count + " ids");
 		indices = new int[count];
@@ -34,8 +34,8 @@ public class ObjectDefinitionLoaderOSRS extends ObjectDefinitionLoader {
 			offset += buffer.readUShort();
 		}
 
-		data728 = new Buffer(archive.readFile("loc.dat"));
-		Buffer buffer728 = new Buffer(archive.readFile("loc.idx"));
+		data728 = new Buffer(archive.file("loc.dat"));
+		Buffer buffer728 = new Buffer(archive.file("loc.idx"));
 		count728 = buffer728.readUShort();
 		System.out.println("Expected " + count + " ids");
 		indices728 = new int[count728];

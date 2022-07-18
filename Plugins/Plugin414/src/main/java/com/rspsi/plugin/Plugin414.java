@@ -1,7 +1,6 @@
 package com.rspsi.plugin;
 
-import org.displee.cache.index.Index;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.Index;
 
 import com.jagex.Client;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -26,7 +25,7 @@ import com.rspsi.plugin.loader.ObjectDefinitionLoaderOSRS;
 import com.rspsi.plugin.loader.RSAreaLoaderOSRS;
 import com.rspsi.plugin.loader.TextureLoaderOSRS;
 import com.rspsi.plugin.loader.VarbitLoaderOSRS;
-import com.rspsi.plugins.ClientPlugin;
+import com.rspsi.plugins.core.ClientPlugin;
 
 public class Plugin414 implements ClientPlugin {
 
@@ -71,27 +70,27 @@ public class Plugin414 implements ClientPlugin {
 	public void onGameLoaded(Client client) {
 		
 			frameLoader.init(2500);
-			
-			Index configIndex = client.getCache().readFile(CacheFileType.CONFIG);
 
-			floorLoader.initOverlays(configIndex.getArchive(4));
-			floorLoader.initUnderlays(configIndex.getArchive(1));
+			Index configIndex = client.getCache().getFile(CacheFileType.CONFIG);
+
+			floorLoader.initOverlays(configIndex.archive(4));
+			floorLoader.initUnderlays(configIndex.archive(1));
 			
-			objLoader.init(configIndex.getArchive(6));
-			animDefLoader.init(configIndex.getArchive(12));
-			graphicLoader.init(configIndex.getArchive(13));
-			varbitLoader.init(configIndex.getArchive(14));
-			areaLoader.init(configIndex.getArchive(35));
+			objLoader.init(configIndex.archive(6));
+			animDefLoader.init(configIndex.archive(12));
+			graphicLoader.init(configIndex.archive(13));
+			varbitLoader.init(configIndex.archive(14));
+			areaLoader.init(configIndex.archive(35));
 			
-			Index skeletonIndex = client.getCache().readFile(CacheFileType.SKELETON);
+			Index skeletonIndex = client.getCache().getFile(CacheFileType.SKELETON);
 			skeletonLoader.init(skeletonIndex);
 			
-			Index mapIndex = client.getCache().readFile(CacheFileType.MAP);
+			Index mapIndex = client.getCache().getFile(CacheFileType.MAP);
 			mapIndexLoader.init(mapIndex);
 			
-			Index textureIndex = client.getCache().readFile(CacheFileType.TEXTURE);
-			Index spriteIndex = client.getCache().readFile(CacheFileType.SPRITE);
-			textureLoader.init(textureIndex.getArchive(0), spriteIndex);
+			Index textureIndex = client.getCache().getFile(CacheFileType.TEXTURE);
+			Index spriteIndex = client.getCache().getFile(CacheFileType.SPRITE);
+			textureLoader.init(textureIndex.archive(0), spriteIndex);
 			
 
 	}
