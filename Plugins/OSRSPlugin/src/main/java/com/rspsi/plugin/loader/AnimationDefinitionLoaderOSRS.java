@@ -4,10 +4,9 @@ import com.displee.cache.index.archive.Archive;
 import com.displee.cache.index.archive.file.File;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 import lombok.val;
-import org.apache.commons.compress.utils.Lists;
 
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
@@ -120,7 +119,23 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 				for (int i = 0; i < len; i++) {
 					buffer.skip(3);
 				}
-			
+			} else if (opcode == 14) {
+				animation.setMayaId(buffer.readInt());
+			} else if (opcode == 15) {
+				int length = buffer.readUShort();
+				animation.setMayaFrameSounds(new HashMap<>());
+				for (int i = 0; i < length; i++) {
+					animation.getMayaFrameSounds().put(buffer.readUShort(), buffer.readUTriByte());
+				}
+			} else if (opcode == 16) {
+				animation.setMayaStart(buffer.readUShort());
+				animation.setMayaEnd(buffer.readUShort());
+			} else if (opcode == 17) {
+				animation.setMayaMasks(new boolean[256]);
+				int length = buffer.readUByte();
+				for (int i = 0; i < length; i++) {
+					animation.getMayaMasks()[buffer.readUByte()] = true;
+				}
 			} else {
 				System.out.println("Error unrecognised seq config code: " + opcode);
 			}

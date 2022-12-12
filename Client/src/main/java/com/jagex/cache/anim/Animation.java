@@ -2,6 +2,9 @@ package com.jagex.cache.anim;
 
 import com.jagex.cache.loader.anim.FrameLoader;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Animation {
 
 	/**
@@ -65,6 +68,14 @@ public class Animation {
 	 * continue).
 	 */
 	private int walkingPrecedence = -1;
+
+	private int mayaId = -1;
+
+	private Map<Integer, Integer> mayaFrameSounds;
+
+	private int mayaStart, mayaEnd;
+
+	private boolean[] mayaMasks;
 
 
 	public int duration(int frameId) {
@@ -185,6 +196,14 @@ public class Animation {
 		return walkingPrecedence;
 	}
 
+	public Map<Integer, Integer> getMayaFrameSounds() {
+		return mayaFrameSounds;
+	}
+
+	public boolean[] getMayaMasks() {
+		return mayaMasks;
+	}
+
 	public boolean stretches() {
 		return stretches;
 	}
@@ -244,7 +263,25 @@ public class Animation {
 	public void setWalkingPrecedence(int walkingPrecedence) {
 		this.walkingPrecedence = walkingPrecedence;
 	}
-	
-	
+
+	public void setMayaId(int mayaId) {
+		this.mayaId = mayaId;
+	}
+
+	public void setMayaStart(int mayaStart) {
+		this.mayaStart = mayaStart;
+	}
+
+	public void setMayaEnd(int mayaEnd) {
+		this.mayaEnd = mayaEnd;
+	}
+
+	public void setMayaFrameSounds(Map<Integer, Integer> mayaFrameSounds) {
+		this.mayaFrameSounds = mayaFrameSounds;
+	}
+
+	public void setMayaMasks(boolean[] mayaMasks) {
+		this.mayaMasks = mayaMasks;
+	}
 
 }
