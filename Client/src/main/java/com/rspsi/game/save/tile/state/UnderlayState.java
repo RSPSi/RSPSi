@@ -8,13 +8,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class UnderlayState extends TileState {
 	
-	private byte id;
+	private short id;
 	
 	public UnderlayState(int x, int y, int z) {
 		super(x, y, z);
 	}
 	
-	public byte getId() {
+	public short getId() {
 		return id;
 	}
 

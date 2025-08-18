@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jagex.Client;
 import com.jagex.chunk.Chunk;
-import com.rspsi.misc.Vector2;
+import com.rspsi.core.misc.Vector2;
 
 public class MultiMapEncoder {
 	

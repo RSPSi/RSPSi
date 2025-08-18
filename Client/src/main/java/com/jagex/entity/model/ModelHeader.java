@@ -9,9 +9,9 @@ public class ModelHeader {
 	private int texturePointerOffset;
 	private int faceAlphaOffset;
 	private int faceDataOffset;
-	private int facePriorityOffset;
+	private int priorityOffset;
 	private int faces;
-	private int faceSkinOffset;
+	private int packedTransparencyVertexGroupsOffset;
 	private int faceTypeOffset;
 	private int uvMapFaceOffset;
 	private int vertexDirectionOffset;
@@ -34,7 +34,7 @@ public class ModelHeader {
 	}
 
 	public int getFaceBoneOffset() {
-		return faceSkinOffset;
+		return packedTransparencyVertexGroupsOffset;
 	}
 
 	public int getFaceCount() {
@@ -45,8 +45,8 @@ public class ModelHeader {
 		return faceDataOffset;
 	}
 
-	public int getFacePriorityOffset() {
-		return facePriorityOffset;
+	public int getpriorityOffset() {
+		return priorityOffset;
 	}
 
 	public int getFaceTypeOffset() {
@@ -109,12 +109,12 @@ public class ModelHeader {
 		faceDataOffset = triangleDataOffset;
 	}
 
-	public void setFacePriorityOffset(int trianglePriorityOffset) {
-		facePriorityOffset = trianglePriorityOffset;
+	public void setpriorityOffset(int trianglePriorityOffset) {
+		priorityOffset = trianglePriorityOffset;
 	}
 
-	public void setFaceSkinOffset(int triangleSkinOffset) {
-		faceSkinOffset = triangleSkinOffset;
+	public void setpackedTransparencyVertexGroupsOffset(int triangleSkinOffset) {
+		packedTransparencyVertexGroupsOffset = triangleSkinOffset;
 	}
 
 	public void setFaceTypeOffset(int triangleTypeOffset) {

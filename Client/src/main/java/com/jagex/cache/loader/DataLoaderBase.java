@@ -1,12 +1,13 @@
 package com.jagex.cache.loader;
 
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public interface DataLoaderBase<T> {
 
-	T forId(int id);
-	int count();
-	
-	void init(Archive archive);
-	void init(byte[] data);
+    T forId(final int id);
+
+    int count();
+
+    void init(final Archive archive);
+
 }

@@ -14,7 +14,7 @@ import com.jagex.map.object.GroundDecoration;
 import com.jagex.map.object.Wall;
 import com.jagex.map.object.WallDecoration;
 import com.jagex.util.ObjectKey;
-import com.rspsi.misc.Location;
+import com.rspsi.core.misc.Location;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +36,8 @@ public final class SceneTile extends Linkable {
 	public int anInt1328;
 	private int attributes;// 4 == TILE_EAST
 	public int collisionPlane;
+	public int underlayId;
+	public int overlayId;
 	public boolean hasUpdated;
 
 	@ToString.Exclude

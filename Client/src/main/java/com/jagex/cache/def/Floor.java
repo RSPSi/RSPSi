@@ -1,8 +1,8 @@
 package com.jagex.cache.def;
 
-public class Floor {
+public final class Floor {
 
-	private final static int hsl24to16(int h, int s, int l) {
+	private static int hsl24to16(int h, int s, int l) {
 		if (l > 179) {
 			s /= 2;
 		}
@@ -218,6 +218,4 @@ public class Floor {
 		this.colour = colour;
 	}
 	
-	
-
 }

@@ -15,7 +15,7 @@ public class Mesh622 extends Mesh {
         Buffer nc6 = new Buffer(abyte0);
         Buffer nc7 = new Buffer(abyte0);
         nc1.setPosition(abyte0.length - 23);
-        int numVertices = nc1.readUShort();
+        int vertexCount = nc1.readUShort();
         int numTriangles = nc1.readUShort();
         int numTexTriangles = nc1.readUByte();
         
@@ -55,8 +55,8 @@ public class Mesh622 extends Mesh {
         int[] kb = null;
         int[] y = null;
         int[] N = null;
-        short[] textureIds = null;
-        int[] faceColours2 = new int[numTriangles];
+        int[] textureIds = null;
+        int[] triangleColors2 = new int[numTriangles];
         if (numTexTriangles > 0) {
             O = new byte[numTexTriangles];
             nc1.setPosition(0);
@@ -72,7 +72,7 @@ public class Mesh622 extends Mesh {
         }
         int k5 = numTexTriangles;
         int l5 = k5;
-        k5 += numVertices;
+        k5 += vertexCount;
         int i6 = k5;
         if (bool)
             k5 += numTriangles;
@@ -88,7 +88,7 @@ public class Mesh622 extends Mesh {
             k5 += numTriangles;
         int i7 = k5;
         if (i3 == 1)
-            k5 += numVertices;
+            k5 += vertexCount;
         int j7 = k5;
         if (j2 == 1)
             k5 += numTriangles;
@@ -125,35 +125,34 @@ public class Mesh622 extends Mesh {
         k5 += l4;
         int k10 = k5;
         k5 += l4 + i5 * 2;
-        int[] vertexX = new int[numVertices];
-        int[] vertexY = new int[numVertices];
-        int[] vertexZ = new int[numVertices];
+        int[] vertexX = new int[vertexCount];
+        int[] vertexY = new int[vertexCount];
+        int[] vertexZ = new int[vertexCount];
         int[] facePoint1 = new int[numTriangles];
         int[] facePoint2 = new int[numTriangles];
         int[] facePoint3 = new int[numTriangles];
-        vertexBones = new int[numVertices];
-        faceTypes = new int[numTriangles];
-        facePriorities = new int[numTriangles];
-        faceAlphas = new int[numTriangles];
-        faceSkin = new int[numTriangles];
+        packedVertexGroups = new int[vertexCount];
+        triangleInfo = new int[numTriangles];
+        faceRenderPriorities = new byte[numTriangles];
+        packedTransparencyVertexGroups = new int[numTriangles];
         if (i3 == 1)
-            vertexBones = new int[numVertices];
+            packedVertexGroups = new int[vertexCount];
         if (bool)
-            faceTypes = new int[numTriangles];
-        if (i2 == 255)
-            facePriorities = new int[numTriangles];
+            triangleInfo = new int[numTriangles];
+        if (i2 == 255)//Change this
+            faceRenderPriorities = new byte[numTriangles];
         else {
         }
         if (j2 == 1)
-            faceAlphas = new int[numTriangles];
+            faceTransparencies = new int[numTriangles];
         if (k2 == 1)
-            faceSkin = new int[numTriangles];
+            packedTransparencyVertexGroups = new int[numTriangles];
         if (l2 == 1)
-            textureIds = new short[numTriangles];
+            textureIds = new int[numTriangles];
         if (l2 == 1 && numTexTriangles > 0) {
-            textureCoordinates = texture_coordinates = new byte[numTriangles];
+            textureCoordinates = faceTexture = new byte[numTriangles];
         }
-        faceColours2 = new int[numTriangles];
+        triangleColors2 = new int[numTriangles];
         int[] texTrianglesPoint1 = null;
         int[] texTrianglesPoint2 = null;
         int[] texTrianglesPoint3 = null;
@@ -182,7 +181,7 @@ public class Mesh622 extends Mesh {
         int l10 = 0;
         int i11 = 0;
         int j11 = 0;
-        for (int k11 = 0; k11 < numVertices; k11++) {
+        for (int k11 = 0; k11 < vertexCount; k11++) {
             int l11 = nc1.readUByte();
             int j12 = 0;
             if ((l11 & 1) != 0)
@@ -199,8 +198,8 @@ public class Mesh622 extends Mesh {
             l10 = vertexX[k11];
             i11 = vertexY[k11];
             j11 = vertexZ[k11];
-            if (vertexBones != null)
-                vertexBones[k11] = nc5.readUByte();
+            if (packedVertexGroups != null)
+                packedVertexGroups[k11] = nc5.readUByte();
         }
         nc1.setPosition(j8);
         nc2.setPosition(i6);
@@ -210,30 +209,30 @@ public class Mesh622 extends Mesh {
         nc6.setPosition(l7);
         nc7.setPosition(i8);
         for (int i12 = 0; i12 < numTriangles; i12++) {
-            faceColours2[i12] = nc1.readUShort();
+            triangleColors2[i12] = nc1.readUShort();
             if (l1 == 1) {
-                faceTypes[i12] = nc2.readByte();
-                if (faceTypes[i12] == 2)
-                    faceColours2[i12] = 65535;
-                faceTypes[i12] = 0;
+                triangleInfo[i12] = nc2.readByte();
+                if (triangleInfo[i12] == 2)
+                    triangleColors2[i12] = 65535;
+                triangleInfo[i12] = 0;
             }
             if (i2 == 255) {
-                facePriorities[i12] = nc3.readByte();
+                faceRenderPriorities[i12] = nc3.readByte();
             }
             if (j2 == 1) {
-                faceAlphas[i12] = nc4.readByte();
-                if (faceAlphas[i12] < 0)
-                    faceAlphas[i12] = (256 + faceAlphas[i12]);
+                faceTransparencies[i12] = nc4.readByte();
+                if (faceTransparencies[i12] < 0)
+                    faceTransparencies[i12] = (256 + faceTransparencies[i12]);
             }
             if (k2 == 1)
-                faceSkin[i12] = nc5.readUByte();
+                packedTransparencyVertexGroups[i12] = nc5.readUByte();
             if (l2 == 1)
                 textureIds[i12] = (short) (nc6.readUShort() - 1);
             if (textureCoordinates != null)
                 if (textureIds[i12] != -1)
-                    textureCoordinates[i12] = texture_coordinates[i12] = (byte) (nc7.readUByte() - 1);
+                    textureCoordinates[i12] = faceTexture[i12] = (byte) (nc7.readUByte() - 1);
                 else
-                    textureCoordinates[i12] = texture_coordinates[i12] = -1;
+                    textureCoordinates[i12] = faceTexture[i12] = -1;
         }
         nc1.setPosition(k7);
         nc2.setPosition(j6);
@@ -359,19 +358,19 @@ public class Mesh622 extends Mesh {
         }
         if (i2 != 255) {
             for (int i12 = 0; i12 < numTriangles; i12++)
-                facePriorities[i12] = i2;
+                faceRenderPriorities[i12] = (byte) i2;
         }
-        this.faceColours = faceColours2;
-        this.numVertices = numVertices;
-        this.numFaces = numTriangles;
-        this.verticesX = vertexX;
-        this.verticesY = vertexY;
-        this.verticesZ = vertexZ;
-        faceIndicesA = facePoint1;
-        faceIndicesB = facePoint2;
-        faceIndicesC = facePoint3;
+        this.triangleColors = triangleColors2;
+        this.vertexCount = vertexCount;
+        this.triangleCount = numTriangles;
+        this.vertexX = vertexX;
+        this.vertexY = vertexY;
+        this.vertexZ = vertexZ;
+        faceIndices1 = facePoint1;
+        faceIndices2 = facePoint2;
+        faceIndices3 = facePoint3;
         filterTriangles();
         scale2(4);
-        convertTexturesTo317(textureIds, texTrianglesPoint1, texTrianglesPoint2, texTrianglesPoint3, false);
+        convertTexturesTo317(textureIds, texTrianglesPoint1, texTrianglesPoint2, texTrianglesPoint3);
 	}
 }

@@ -1,6 +1,5 @@
 package com.rspsi.controls;
 
-import org.displee.utilities.GZIPUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.displee.util.GZIPUtils;
 
 public class SelectFilesNode extends Group {
 	

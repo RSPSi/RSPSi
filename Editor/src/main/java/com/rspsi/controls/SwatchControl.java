@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.jagex.map.SceneGraph;
-import com.rspsi.MainWindow;
+import com.rspsi.ui.MainWindow;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 
@@ -16,13 +16,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.jagex.Client;
-import com.rspsi.ObjectPreviewWindow;
+import com.rspsi.ui.ObjectPreviewWindow;
 import com.rspsi.controllers.SwatchController;
 import com.rspsi.datasets.ObjectDataset;
 import com.rspsi.helper.Draggable;
 import com.rspsi.helper.DraggableNature;
-import com.rspsi.misc.JsonUtil;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.JsonUtil;
+import com.rspsi.core.misc.ToolType;
 import com.rspsi.options.Options;
 import com.rspsi.swatches.BaseSwatch;
 import com.rspsi.swatches.ObjectSwatch;
@@ -65,7 +65,7 @@ public class SwatchControl extends AnchorPane {
 	private SwatchController controller = new SwatchController();
 	private ToggleGroup group = new ToggleGroup();
 	
-	private SimpleObjectProperty<BaseSwatch> selectedSwatch = new SimpleObjectProperty<BaseSwatch>(null); 
+	private SimpleObjectProperty<BaseSwatch> selectedSwatch = new SimpleObjectProperty<BaseSwatch>(null);
 	
 	private Map<ToggleButton, BaseSwatch> swatchDataset = Maps.newLinkedHashMap();
 	

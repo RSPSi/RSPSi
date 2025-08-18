@@ -494,6 +494,7 @@
                               <CheckMenuItem fx:id="showObjectsCheckItem" mnemonicParsing="false" selected="true" text="Show objects" />
                               <CheckMenuItem fx:id="showOverlaysCheckItem" mnemonicParsing="false" selected="true" text="Show overlays" />
                               <CheckMenuItem fx:id="showFPSCheckItem" mnemonicParsing="false" text="Show FPS/debug" />
+                              <CheckMenuItem fx:id="showTileDataCheckItem" mnemonicParsing="false" text="Show tile info in debug mode" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem fx:id="changeViewDist" mnemonicParsing="false" text="Set view distance" />
                           </items>
@@ -533,6 +534,7 @@
                               <MenuItem fx:id="showFullMap" mnemonicParsing="false" text="Show full map" />
                               <MenuItem fx:id="showObjectViewBtn" mnemonicParsing="false" text="Show object view" />
                               <MenuItem fx:id="showRemapperBtn" mnemonicParsing="false" text="Show remapper" />
+                              <MenuItem fx:id="convertLandscapeBtn" mnemonicParsing="false" text="Convert Landscape" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem fx:id="reloadSwatchesBtn" mnemonicParsing="false" text="Reload swatches" />
                               <MenuItem fx:id="reloadModelsBtn" mnemonicParsing="false" text="Reload models" />
@@ -542,6 +544,7 @@
                           <items>
                               <CheckMenuItem fx:id="rememberSize" mnemonicParsing="false" text="Remember Editor Size" />
                               <CheckMenuItem fx:id="rememberLocation" mnemonicParsing="false" text="Remember Editor Location" />
+                              <CheckMenuItem fx:id="saveByGroupName" mnemonicParsing="false" text="Save as Group Name" />
                           </items>
                       </Menu>
                     <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">

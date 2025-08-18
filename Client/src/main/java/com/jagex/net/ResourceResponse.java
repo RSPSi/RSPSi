@@ -1,6 +1,8 @@
 package com.jagex.net;
 
-import org.displee.utilities.GZIPUtils;
+
+
+import org.displee.util.GZIPUtils;
 
 import java.io.IOException;
 

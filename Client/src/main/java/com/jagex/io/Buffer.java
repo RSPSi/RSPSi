@@ -1,5 +1,8 @@
 package com.jagex.io;
 
+import com.displee.cache.index.archive.file.File;
+import com.google.common.base.Preconditions;
+
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -32,6 +35,11 @@ public final class Buffer {
 	}
 	public Buffer(byte[] payload) {
 		this.payload = payload;
+		position = 0;
+	}
+
+	public Buffer(File payload) {
+		this.payload = payload.getData();
 		position = 0;
 	}
 
@@ -171,6 +179,10 @@ public final class Buffer {
 		}
 	}
 
+	public short readShortRegular() {
+		return (short) ((payload[position++] << 8) | (payload[position++] & 0xFF));
+	}
+
 	public int readShort() {
 		position += 2;
 		int value = ((payload[position - 2] & 0xff) << 8) + (payload[position - 1] & 0xff);
@@ -197,6 +209,8 @@ public final class Buffer {
 
 		return readUShort() - 49152;
 	}
+
+
 	
 	public int readBigSmart() {
 		int value = payload[position] & 0xff;
@@ -205,28 +219,44 @@ public final class Buffer {
 
 		return readInt() & Integer.MAX_VALUE;
 	}
-	
-	private static char CHARACTERS[] = { '\u20AC', '\0', '\u201A', '\u0192', '\u201E', '\u2026', '\u2020', '\u2021',
-			'\u02C6', '\u2030', '\u0160', '\u2039', '\u0152', '\0', '\u017D', '\0', '\0', '\u2018', '\u2019', '\u201C',
-			'\u201D', '\u2022', '\u2013', '\u2014', '\u02DC', '\u2122', '\u0161', '\u203A', '\u0153', '\0', '\u017E',
-			'\u0178' };
-	
-	public String readOSRSString() {
-		StringBuilder bldr = new StringBuilder();
-		int b;
-		while ((b = payload[position++]) != 0) {
-			if (b >= 127 && b < 160) {
-				char curChar = CHARACTERS[b - 128];
-				if (curChar == 0) {
-					curChar = 63;
-				}
-				
-				bldr.append(curChar);
-			} else {
-				bldr.append((char) b);
+
+	private static final char[] CHARACTERS = new char[]
+			{
+					'\u20ac', '\u0000', '\u201a', '\u0192', '\u201e', '\u2026',
+					'\u2020', '\u2021', '\u02c6', '\u2030', '\u0160', '\u2039',
+					'\u0152', '\u0000', '\u017d', '\u0000', '\u0000', '\u2018',
+					'\u2019', '\u201c', '\u201d', '\u2022', '\u2013', '\u2014',
+					'\u02dc', '\u2122', '\u0161', '\u203a', '\u0153', '\u0000',
+					'\u017e', '\u0178'
+			};
+
+	public String readOSRSString()
+	{
+		StringBuilder sb = new StringBuilder();
+
+		for (; ; )
+		{
+			int ch = this.readUByte();
+
+			if (ch == 0)
+			{
+				break;
 			}
+
+			if (ch >= 128 && ch < 160)
+			{
+				char var7 = CHARACTERS[ch - 128];
+				if (0 == var7)
+				{
+					var7 = '?';
+				}
+
+				ch = var7;
+			}
+
+			sb.append((char) ch);
 		}
-		return bldr.toString();
+		return sb.toString();
 	}
 
 	public String readString() {
@@ -292,6 +322,41 @@ public final class Buffer {
 			return readUByte();
 
 		return readUShort() - 0x8000;
+	}
+
+	public byte peek()
+	{
+		return payload[position];
+	}
+
+	public int readUnsignedByte()
+	{
+		return this.readByte() & 0xFF;
+	}
+
+	public int readUnsignedShort()
+	{
+		return this.readShortRegular() & 0xFFFF;
+	}
+
+	public int readUnsignedShortSmart()
+	{
+		int peek = this.peek() & 0xFF;
+		return peek < 128 ? this.readUnsignedByte() : this.readUnsignedShort() - 0x8000;
+	}
+
+	public int readUnsignedIntSmartShortCompat()
+	{
+		int var1 = 0;
+
+		int var2;
+		for (var2 = this.readUnsignedShortSmart(); var2 == 32767; var2 = this.readUnsignedShortSmart())
+		{
+			var1 += 32767;
+		}
+
+		var1 += var2;
+		return var1;
 	}
 	
 	public int readUSmartInt() {
@@ -422,10 +487,18 @@ public final class Buffer {
 
 	public void writeUSmartInt(int value) {
 		if (value > Short.MAX_VALUE) {
-			this.writeInt(value);
+			writeIntSmart(value);
 		} else {
-			this.writeUSmart(value);
+			writeUSmart(value);
 		}
+	}
+
+	public void writeIntSmart(int value) {
+		Preconditions.checkArgument(value > 32767);
+		Preconditions.checkArgument(value < (Integer.MAX_VALUE - 32767));
+		int diff = value - 32767;
+		writeShort(65535);
+		writeUSmart(diff);
 	}
 
 	public void skip(int bytesToSkip) {

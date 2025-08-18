@@ -6,8 +6,8 @@ import com.google.common.collect.Lists;
 import com.jagex.map.SceneTileData;
 import com.jagex.util.BitFlag;
 import com.rspsi.datasets.ObjectDataset;
-import com.rspsi.misc.BrushType;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.BrushType;
+import com.rspsi.core.misc.ToolType;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -41,6 +41,7 @@ public class Options {
 	public static BooleanProperty showMinimapFunctionModels = new SimpleBooleanProperty(false);
 
 	public static BooleanProperty showDebug = new SimpleBooleanProperty(false);
+	public static BooleanProperty showTileInformation = new SimpleBooleanProperty(false);
 
 	public static IntegerProperty currentHeight = new SimpleIntegerProperty(0);
 	public static IntegerProperty tileHeightLevel = new SimpleIntegerProperty(50);
@@ -80,5 +81,7 @@ public class Options {
 
 	public static BooleanProperty rememberEditorSize = new SimpleBooleanProperty(true);
 	public static BooleanProperty rememberEditorLocation = new SimpleBooleanProperty(false);
+
+	public static BooleanProperty saveByGroupName = new SimpleBooleanProperty(false);
 
 }

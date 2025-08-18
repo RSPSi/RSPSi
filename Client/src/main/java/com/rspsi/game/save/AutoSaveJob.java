@@ -10,14 +10,12 @@ import java.util.List;
 import java.util.Objects;
 
 import org.greenrobot.eventbus.EventBus;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
 
 import com.google.common.collect.Lists;
 import com.jagex.Client;
 import com.jagex.chunk.Chunk;
 import com.jagex.util.MultiMapEncoder;
-import com.rspsi.misc.StatusUpdate;
+import com.rspsi.core.misc.StatusUpdate;
 
 public class AutoSaveJob {
 

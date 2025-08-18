@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class OverlayState extends TileState {
 	
-	private byte id;
+	private short id;
 	private byte rotation;
 	private byte shape;
 	
@@ -16,7 +16,7 @@ public class OverlayState extends TileState {
 		super(x, y, z);
 	}
 
-	public byte getId() {
+	public short getId() {
 		return id;
 	}
 	public byte getRotation() {

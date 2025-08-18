@@ -161,6 +161,7 @@
                                     <MenuItem fx:id="showMapIndexEditor" mnemonicParsing="false" text="Show map index editor" />
                                     <MenuItem fx:id="showObjectViewBtn" mnemonicParsing="false" text="Show object view" />
                                     <CheckMenuItem fx:id="showFPSCheckItem" mnemonicParsing="false" text="Show FPS/debug" />
+                                    <CheckMenuItem fx:id="showTileDataCheckItem" mnemonicParsing="false" text="Show tile info in debug mode" />
                                 </items>
                               </Menu>
                           <Menu mnemonicParsing="false" text="Help">

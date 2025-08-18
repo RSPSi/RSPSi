@@ -72,7 +72,10 @@ public class RetentionFileChooser {
 	
 	public static File showOpenDialog(Window ownerWindow, String defaultLoc, FilterMode... filterModes) {
 		if(!defaultLoc.isEmpty()) {
-			getInstance(filterModes).setInitialDirectory(new File(defaultLoc).getParentFile());
+			File parentDir = new File(defaultLoc).getParentFile();
+			if (parentDir != null && parentDir.isDirectory()) {
+				getInstance(filterModes).setInitialDirectory(parentDir);
+			}
 		}
 		File chosenFile = getInstance(filterModes).showOpenDialog(ownerWindow);
 		if (chosenFile != null) {

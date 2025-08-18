@@ -1,8 +1,6 @@
 package com.jagex.draw.raster;
 
 import com.jagex.map.MapRegion;
-import javafx.scene.paint.Color;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import com.jagex.cache.def.TextureDef;
 import com.jagex.cache.loader.textures.TextureLoader;
@@ -23,16 +21,16 @@ public class GameRasterizer extends GameRaster {
 		instance = rasterizer;
 	}
 
-	public boolean[] aBooleanArray1663 = new boolean[4096];
-	 public boolean[] cullFaces = new boolean[4096];
-	 public boolean[] cullFacesOther = new boolean[4096];
-	 public int[] vertexScreenX = new int[4096];
-	 public int[] vertexScreenY = new int[4096];
-	 public int[] vertexScreenZ = new int[4096];
-	 public int[] camera_vertex_x = new int[4096];
-	 public int[] camera_vertex_y = new int[4096];
-	 public int[] camera_vertex_z = new int[4096];
-	 public int[] depthListIndices = new int[1500];
+	public boolean[] aBooleanArray1663 = new boolean[6500];
+	 public boolean[] cullFaces = new boolean[6500];
+	 public boolean[] cullFacesOther = new boolean[6500];
+	 public int[] vertexScreenX = new int[6500];
+	 public int[] vertexScreenY = new int[6500];
+	 public int[] vertexScreenZ = new int[6500];
+	 public int[] camera_vertex_x = new int[6500];
+	 public int[] camera_vertex_y = new int[6500];
+	 public int[] camera_vertex_z = new int[6500];
+	 public int[] depthListIndices = new int[6000];
 	 public int[] anIntArray1673 = new int[12];
 	 public int[] anIntArray1675 = new int[2000];
 	 public int[] anIntArray1676 = new int[2000];
@@ -40,7 +38,7 @@ public class GameRasterizer extends GameRaster {
 	 public int[] anIntArray1678 = new int[10];
 	 public int[] anIntArray1679 = new int[10];
 	 public int[] anIntArray1680 = new int[10];
-	 public int[][] faceList = new int[1500][512];
+	 public int[][] faceList = new int[6000][512];
 	 public int[][] anIntArrayArray1674 = new int[12][2000];
 
 	public boolean restrictEdges;

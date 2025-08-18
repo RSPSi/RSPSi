@@ -2,7 +2,6 @@ package com.jagex.cache.loader.textures;
 
 import com.jagex.cache.loader.DataLoaderBase;
 import com.jagex.draw.textures.Texture;
-import com.jagex.io.Buffer;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -30,11 +29,4 @@ public abstract class TextureLoader implements DataLoaderBase<Texture> {
 		return instance.isTransparent(textureId);
 	}
 	
-
-	@Override
-	public void init(byte[] data) {
-		
-	}
-	
-
 }

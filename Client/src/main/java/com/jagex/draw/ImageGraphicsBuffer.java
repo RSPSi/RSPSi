@@ -17,9 +17,6 @@ import com.jagex.util.ColourUtils;
 
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
-import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
-import net.coobird.thumbnailator.resizers.DefaultResizerFactory;
-import net.coobird.thumbnailator.resizers.Resizer;
 
 public class ImageGraphicsBuffer extends ProducingGraphicsBuffer {
 	

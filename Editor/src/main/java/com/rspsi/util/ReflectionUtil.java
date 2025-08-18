@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.rspsi.misc.NamedValueObject;
+import com.rspsi.ui.misc.NamedValueObject;
 
 public class ReflectionUtil {
 

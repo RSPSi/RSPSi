@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.rspsi.misc.JsonUtil;
+import com.rspsi.core.misc.JsonUtil;
 
 public class Settings {
 

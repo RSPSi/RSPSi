@@ -78,7 +78,7 @@ public class ResourceProvider implements Runnable {
 					MapResourceRequest mapReq = (MapResourceRequest) request;
 					data = cache.readMap(request.getFile(), mapReq.getRegionId());
 				} else {
-					data = cache.readFile(request.getType(), request.getFile());
+					data = cache.getFile(request.getType(), request.getFile());
 				}
 				//System.out.println("data null ? " + (data == null));
 				if(data != null) {

@@ -1,7 +1,7 @@
 package com.jagex.cache.loader;
 
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public interface IndexedLoaderBase<T> {
 

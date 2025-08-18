@@ -1,7 +1,7 @@
 package com.jagex.cache.loader.map;
 
 import com.jagex.io.Buffer;
-import org.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.Archive;
 
 public abstract class MapIndexLoader {
 	
@@ -10,6 +10,7 @@ public abstract class MapIndexLoader {
 	public abstract void init(Archive archive);
 	public abstract void init(Buffer buffer);
 	public abstract int getFileId(int hash, MapType type);
+	public abstract String getGroupName(int hash, MapType type);
 	public abstract boolean landscapePresent(int id);
 	public abstract boolean objectPresent(int id);
 	public abstract void set(int regionX, int regionY, int landscapeId, int objectsId);

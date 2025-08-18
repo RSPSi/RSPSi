@@ -13,12 +13,12 @@ import com.jagex.Client;
 import com.jagex.map.SceneGraph;
 import com.jagex.util.BitFlag;
 import com.jfoenix.controls.JFXCheckBox;
-import com.rspsi.MainWindow;
-import com.rspsi.Testing;
+import com.rspsi.ui.MainWindow;
+import com.rspsi.ui.Testing;
 import com.rspsi.controls.SwatchControl;
 import com.rspsi.controls.WindowControls;
-import com.rspsi.misc.BrushType;
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.BrushType;
+import com.rspsi.core.misc.ToolType;
 import com.rspsi.options.Options;
 import com.rspsi.swatches.SwatchType;
 import com.rspsi.tools.BridgeBuilder;
@@ -138,6 +138,9 @@ public class MainController {
 	private CheckMenuItem rememberLocation;
 
 	@FXML
+	private CheckMenuItem saveByGroupName;
+
+	@FXML
 	private CheckMenuItem showOverlaysCheckItem;
 
 	@FXML
@@ -154,6 +157,8 @@ public class MainController {
 
 	@FXML
 	private CheckMenuItem showFPSCheckItem;
+	@FXML
+	private CheckMenuItem showTileDataCheckItem;
 
 	@FXML
 	private MenuItem openTutorialBtn;
@@ -354,6 +359,9 @@ public class MainController {
 	private MenuItem showRemapperBtn;
 
 	@FXML
+	private MenuItem convertLandscapeBtn;
+
+	@FXML
 	private MenuItem setRelativeHeight;
 	
 	@FXML
@@ -506,6 +514,7 @@ public class MainController {
 				Options.brushSize);
 
 		Options.showDebug.bindBidirectional(showFPSCheckItem.selectedProperty());
+		Options.showTileInformation.bindBidirectional(showTileDataCheckItem.selectedProperty());
 
 		Options.tileHeightLevel.bindBidirectional(heightLevelSlider.valueProperty());
 		// ChangeListenerUtil.addListener(() ->
@@ -534,9 +543,10 @@ public class MainController {
 
 		boolean remeberSize = (Boolean) Settings.properties.getOrDefault("remember_size",true);
 		boolean remeberLocation = (Boolean) Settings.properties.getOrDefault("remember_location",false);
+		boolean saveGroupName = (Boolean) Settings.properties.getOrDefault("save_group_name",false);
 
 		ChangeListenerUtil.addListener(() -> {
-			if(remeberSize == true) {
+			if(remeberSize) {
 				Settings.properties.put("remember_size", false);
 			} else {
 				Settings.properties.put("remember_size", true);
@@ -546,7 +556,7 @@ public class MainController {
 		}, Options.rememberEditorSize);
 
 		ChangeListenerUtil.addListener(() -> {
-			if(remeberLocation == true) {
+			if(remeberLocation) {
 				Settings.properties.put("remember_location", false);
 			} else {
 				Settings.properties.put("remember_location", true);
@@ -555,12 +565,24 @@ public class MainController {
 			Settings.saveSettings();
 		}, Options.rememberEditorLocation);
 
+
+		ChangeListenerUtil.addListener(() -> {
+			if(saveGroupName) {
+				Settings.properties.put("save_group_name", false);
+			} else {
+				Settings.properties.put("save_group_name", true);
+			}
+			saveByGroupName.setSelected(saveGroupName);
+			Settings.saveSettings();
+		}, Options.saveByGroupName);
+
 		rememberSize.setSelected(remeberSize);
 		rememberLocation.setSelected(remeberLocation);
+		saveByGroupName.setSelected(saveGroupName);
 
 		Options.rememberEditorSize.bindBidirectional(this.rememberSize.selectedProperty());
 		Options.rememberEditorLocation.bindBidirectional(this.rememberLocation.selectedProperty());
-
+		Options.saveByGroupName.bindBidirectional(this.saveByGroupName.selectedProperty());
 
 		decreaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() - 1));
 		increaseBrushSizeBtn.setOnAction(act -> brushSizeSlider.adjustValue(brushSizeSlider.getValue() + 1));

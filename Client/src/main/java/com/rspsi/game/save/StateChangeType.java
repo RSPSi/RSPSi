@@ -1,6 +1,6 @@
 package com.rspsi.game.save;
 
-import com.rspsi.misc.ToolType;
+import com.rspsi.core.misc.ToolType;
 
 public enum StateChangeType {
 	

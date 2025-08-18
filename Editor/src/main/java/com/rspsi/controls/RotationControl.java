@@ -1,6 +1,6 @@
 package com.rspsi.controls;
 
-import com.rspsi.misc.Vector3;
+import com.rspsi.core.misc.Vector3;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import lombok.Getter;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class RotationControl extends AnchorPane implements EventHandler<MouseEvent> {
 

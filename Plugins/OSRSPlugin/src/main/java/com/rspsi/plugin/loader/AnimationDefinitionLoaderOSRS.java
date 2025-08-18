@@ -1,49 +1,34 @@
 package com.rspsi.plugin.loader;
 
-import org.displee.cache.index.archive.Archive;
-import org.displee.cache.index.archive.file.File;
-
-import java.util.List;
-
-import org.apache.commons.compress.utils.Lists;
-
+import com.displee.cache.index.archive.Archive;
+import com.displee.cache.index.archive.file.File;
 import com.jagex.cache.anim.Animation;
 import com.jagex.cache.loader.anim.AnimationDefinitionLoader;
 import com.jagex.io.Buffer;
+import lombok.val;
+
+import java.util.Arrays;
 
 public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 
 
 	private int count;
 	private Animation[] animations;
-	
+
 	@Override
 	public void init(Archive archive) {
-		animations = new Animation[archive.getHighestId() + 1];
-		for(File file : archive.getFiles()) {
-			if(file != null && file.getData() != null) {
-				animations[file.getId()] = decode(new Buffer(file.getData()));
-			}
-		}
-		
-	}
-
-	@Override
-	public void init(byte[] data) {
-		Buffer buffer = new Buffer(data);
-		count = buffer.readUShort();
-
-		if (animations == null) {
-			animations = new Animation[count];
-		}
-
-		for (int id = 0; id < count; id++) {
-
-			animations[id] = decode(buffer);
+		val highestId = Arrays.stream(archive.fileIds()).max().getAsInt();
+		animations = new Animation[highestId + 1];
+		for (File file : archive.files()) {
+			if (file == null) continue;
+			byte[] data = file.getData();
+			if (data == null) continue;
+			int id = file.getId();
+			animations[id] = decode(id, new Buffer(data));
 		}
 	}
 	
-	protected Animation decode(Buffer buffer) {
+	protected Animation decode(final int id, Buffer buffer) {
 		Animation animation = new Animation();
 		do {
 			int opcode = buffer.readUByte();
@@ -112,14 +97,21 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 					buffer.readUShort();
 				}
 			} else if (opcode == 13) {
-				int len = buffer.readUByte();
-
-				for (int i = 0; i < len; i++) {
-					buffer.skip(3);
-				}
-			
+				buffer.skip(4);
+			} else if (opcode == 14) {
+				int count = buffer.readUShort();
+				buffer.skip(count * 8);
+			} else if (opcode == 15) {
+				buffer.skip(4);
+			} else if (opcode == 17) {
+				int count = buffer.readUByte();
+				buffer.skip(count);
+			} else if (opcode == 18) {
+				buffer.readOSRSString();
+			} else if (opcode == 19) {
+				// cross world sounds
 			} else {
-				System.out.println("Error unrecognised seq config code: " + opcode);
+				System.err.println("Error unrecognised seq config code for ID " + id + ": " + opcode);
 			}
 		} while (true);
 
@@ -157,7 +149,5 @@ public class AnimationDefinitionLoaderOSRS extends AnimationDefinitionLoader {
 			id = 0;
 		return animations[id];
 	}
-
-
 
 }

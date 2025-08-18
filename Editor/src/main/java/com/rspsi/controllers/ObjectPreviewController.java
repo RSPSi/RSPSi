@@ -1,7 +1,7 @@
 package com.rspsi.controllers;
 
 import com.rspsi.datasets.ObjectDataset;
-import com.rspsi.misc.NamedValueObject;
+import com.rspsi.ui.misc.NamedValueObject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

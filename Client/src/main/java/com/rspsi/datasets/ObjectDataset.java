@@ -2,10 +2,9 @@ package com.rspsi.datasets;
 
 import com.jagex.cache.def.ObjectDefinition;
 import com.jagex.cache.loader.object.ObjectDefinitionLoader;
-import com.rspsi.misc.Vector3;
+import com.rspsi.core.misc.Vector3;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 @Getter
 @Setter
